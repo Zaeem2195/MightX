@@ -1,0 +1,90 @@
+{
+  "id": "demo-salesloft",
+  "name": "Salesloft",
+  "contactEmail": "you@example.com",
+  "reportCcEmails": [],
+  "active": true,
+  "tier": "growth",
+  "billing": {
+    "cycle": "monthly",
+    "monthlyRate": 2500,
+    "setupFee": 2500,
+    "startDate": "2026-04-05"
+  },
+  "context": {
+    "clientProduct": "Revenue workflow and sales engagement platform for B2B revenue teams",
+    "clientICP": "VP Sales, CROs, and revenue leaders at 50-500 employee B2B SaaS companies",
+    "clientDifferentiators": [
+      "Strong sales engagement brand recognition",
+      "Broader workflow narrative beyond basic sequencing",
+      "Established enterprise sales relationships"
+    ],
+    "clientWeaknesses": [
+      "Competitive pressure from Outreach and newer AI-native sales tools",
+      "Buyers may question differentiation if competitor launches outpace messaging"
+    ]
+  },
+  "competitors": [
+    {
+      "name": "Outreach",
+      "website": "https://www.outreach.io",
+      "g2Slug": "outreach",
+      "linkedinSlug": "outreach-inc",
+      "githubOrg": null,
+      "crunchbaseSlug": "outreach",
+      "newsKeywords": ["Outreach sales engagement", "Outreach pricing", "Outreach product launch"]
+    },
+    {
+      "name": "Apollo.io",
+      "website": "https://www.apollo.io",
+      "g2Slug": "apollo-io",
+      "linkedinSlug": "apollo-io",
+      "githubOrg": null,
+      "crunchbaseSlug": "apollo-io",
+      "newsKeywords": ["Apollo.io sales platform", "Apollo pricing", "Apollo product update"]
+    },
+    {
+      "name": "Gong",
+      "website": "https://www.gong.io",
+      "g2Slug": "gong",
+      "linkedinSlug": "gong-io",
+      "githubOrg": null,
+      "crunchbaseSlug": "gong-io",
+      "newsKeywords": ["Gong revenue intelligence", "Gong launch", "Gong pricing"]
+    },
+    {
+      "name": "Clari",
+      "website": "https://www.clari.com",
+      "g2Slug": "clari",
+      "linkedinSlug": "clari",
+      "githubOrg": null,
+      "crunchbaseSlug": "clari",
+      "newsKeywords": ["Clari revenue platform", "Clari product update", "Clari pricing"]
+    }
+  ],
+  "jobMonitoring": {
+    "enabled": true,
+    "roles": ["AI", "machine learning", "product manager", "engineer", "sales"],
+    "note": "Job postings reveal product direction and go-to-market shifts"
+  },
+  "additionalCollectors": {
+    "linkedin": true,
+    "github": false,
+    "crunchbase": true
+  },
+  "reportPreferences": {
+    "tone": "strategic and direct — written for a senior sales leader evaluating competitor pressure in sales tech",
+    "maxCompetitorsInReport": 4,
+    "includeTriggerEmails": true,
+    "triggerEmailCount": 3,
+    "includeDashboard": true
+  },
+  "retention": {
+    "winStories": [],
+    "lastQuarterlySummary": null,
+    "championName": "Demo Buyer",
+    "championTitle": "VP of Sales",
+    "renewalDate": null,
+    "healthStatus": "healthy"
+  }
+}

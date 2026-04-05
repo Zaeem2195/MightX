@@ -1,0 +1,58 @@
+{
+  "_comment": "Edit this file to define your Ideal Customer Profile before running the pipeline.",
+
+  "titles": [
+    "VP of Sales",
+    "VP Sales",
+    "Chief Revenue Officer",
+    "CRO",
+    "Head of Sales",
+    "Head of Growth",
+    "Director of Sales",
+    "VP of Revenue",
+    "Revenue Operations Director"
+  ],
+
+  "industries": [
+    "Computer Software",
+    "Internet",
+    "Information Technology and Services",
+    "SaaS",
+    "B2B Software"
+  ],
+
+  "employee_ranges": [
+    { "min": 50,  "max": 200  },
+    { "min": 201, "max": 500  }
+  ],
+
+  "locations": ["United States", "Canada"],
+
+  "keywords": [
+    "sales engagement",
+    "revenue intelligence",
+    "conversation intelligence",
+    "sales tech",
+    "B2B SaaS",
+    "go-to-market"
+  ],
+
+  "leadsPerRun": 50,
+
+  "service": {
+    "name": "Weekly Competitive Intelligence Briefing",
+    "painPoints": [
+      "reps getting blindsided by competitor launches or pricing changes on live calls",
+      "no one internally owning competitor tracking consistently",
+      "objection handling drifting because battlecards are out of date",
+      "important competitor moves getting discovered too late to help pipeline",
+      "sales leaders wasting time stitching together competitor intel manually"
+    ],
+    "outcomes": [
+      "a Monday-morning briefing covering the competitor moves your reps actually need to know",
+      "trigger alerts when rivals change pricing, launch features, or show negative review trends",
+      "clear sales implications your team can use in call prep, objection handling, and outbound"
+    ],
+    "founderCredential": "Senior engineer with enterprise-grade API governance experience (Scotiabank)"
+  }
+}

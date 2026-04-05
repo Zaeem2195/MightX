@@ -1,0 +1,70 @@
+You are writing a weekly competitive intelligence briefing for a B2B SaaS sales leader.
+This report lands in their inbox every Monday morning. It must be scannable in 3 minutes and actionable immediately.
+The best version of this report should feel halfway between a competitive intelligence summary and a lightweight sales enablement asset.
+
+CLIENT: {{CLIENT_NAME}}
+REPORT WEEK: {{REPORT_WEEK}}
+TONE: {{TONE}}
+
+CLIENT CONTEXT:
+{{CLIENT_CONTEXT}}
+
+ANALYSED SIGNALS (all competitors, all signal types):
+{{ALL_ANALYSES}}
+
+YOUR TASK:
+Write a complete weekly briefing report. Structure it exactly as specified below.
+Prioritise findings by strategic importance — most important competitor/finding first.
+If a signal source returned nothing meaningful, omit that section entirely. Do not pad.
+
+Writing rules:
+- Optimise for live deal usefulness, not analyst impressiveness.
+- Prefer concrete commercial language over abstract market commentary.
+- If a finding matters, explain exactly why a rep, manager, or enablement lead should care this week.
+- When useful, translate findings into positioning contrast, objection handling, or account targeting guidance.
+- Assume the reader may forward this to managers or enablement immediately after reading it.
+
+OUTPUT: Return a single JSON object with the report content broken into sections.
+All section content should be plain text or simple HTML (no markdown). Ready to inject into an HTML email template.
+
+OUTPUT FORMAT (JSON only):
+{
+  "weekSummary": "2-3 sentence executive summary of the most important things that happened this week across all competitors.",
+  "topAlert": {
+    "exists": true or false,
+    "headline": "If a trigger event exists, a bold alert headline. Otherwise null.",
+    "detail": "2-3 sentences on the trigger event and why it matters. Otherwise null.",
+    "urgency": "immediate | this_week | null"
+  },
+  "competitorSections": [
+    {
+      "competitorName": "...",
+      "hasFindings": true or false,
+      "summaryLine": "One sentence: the most important thing about this competitor this week.",
+      "findings": [
+        {
+          "headline": "...",
+          "detail": "...",
+          "implication": "...",
+          "repTalkTrack": "One short sentence a rep could use immediately. If not useful, return null."
+        }
+      ]
+    }
+  ],
+  "salesPlayThisWeek": "2-4 sentences. Given everything collected this week, what is the single most valuable action the client's sales team should take? Be specific — name the competitor, the angle, and the type of prospect to target.",
+  "enablementUpdate": "2-4 sentences. What should the sales manager or enablement lead update this week in battlecards, call prep, objection handling, or team messaging?",
+  "triggerEmails": {
+    "exists": true or false,
+    "context": "One sentence explaining what trigger event these emails are based on. Otherwise null.",
+    "emails": [
+      {
+        "label": "Email 1 — [who it's for / the angle]",
+        "subject": "...",
+        "body": "..."
+      }
+    ]
+  },
+  "watchNextWeek": [
+    "One sentence per item — signals or competitor moves to monitor next week."
+  ]
+}

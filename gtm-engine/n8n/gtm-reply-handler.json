@@ -1,0 +1,251 @@
+{
+  "name": "GTM Engine — Reply Handler",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "gtm-reply",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook",
+      "name": "Instantly Reply Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "notes": "Set this webhook URL in Instantly → Settings → Integrations → Webhooks → Reply Received"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and normalise Instantly reply payload\nconst body = $input.item.json.body || $input.item.json;\n\nreturn [{\n  json: {\n    leadEmail:    body.lead_email    || body.email    || '',\n    leadName:     body.lead_name     || body.name     || '',\n    replyText:    body.reply_text    || body.body     || body.message || '',\n    campaignId:   body.campaign_id   || '',\n    campaignName: body.campaign_name || '',\n    timestamp:    body.timestamp     || new Date().toISOString(),\n  }\n}];"
+      },
+      "id": "node-extract",
+      "name": "Extract Reply Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3001/classify",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "reply",      "value": "={{ $json.replyText }}" },
+            { "name": "leadEmail",  "value": "={{ $json.leadEmail }}" },
+            { "name": "leadName",   "value": "={{ $json.leadName }}" }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "node-classify",
+      "name": "Classify Reply (Claude)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [680, 300],
+      "notes": "Calls the local classify server (npm run classify-reply -- --serve). For cloud n8n, replace localhost with your server's IP."
+    },
+    {
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": false },
+                "conditions": [
+                  {
+                    "leftValue":  "={{ $json.classification }}",
+                    "rightValue": "INTERESTED",
+                    "operator":   { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "interested"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": false },
+                "conditions": [
+                  {
+                    "leftValue":  "={{ $json.classification }}",
+                    "rightValue": "QUESTION",
+                    "operator":   { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "question"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": false },
+                "conditions": [
+                  {
+                    "leftValue":  "={{ $json.classification }}",
+                    "rightValue": "OUT_OF_OFFICE",
+                    "operator":   { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "ooo"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": false },
+                "conditions": [
+                  {
+                    "leftValue":  "={{ $json.classification }}",
+                    "rightValue": "REFERRAL",
+                    "operator":   { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "referral"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": false },
+                "conditions": [
+                  {
+                    "leftValue":  "={{ $json.classification }}",
+                    "rightValue": "UNSUBSCRIBE",
+                    "operator":   { "type": "string", "operation": "equals" }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "unsubscribe"
+            }
+          ]
+        },
+        "fallbackOutput": "extra"
+      },
+      "id": "node-switch",
+      "name": "Route by Classification",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "=🔥 *HOT LEAD — INTERESTED*\n\n*Name:* {{ $json.leadName }}\n*Email:* {{ $json.leadEmail }}\n*Confidence:* {{ $json.confidence }}\n*Reasoning:* {{ $json.reasoning }}\n*Next action:* {{ $json.next_action }}\n*Urgency:* {{ $json.urgency }}\n\n*Their reply:* {{ $('Extract Reply Data').item.json.replyText }}"
+            }
+          ]
+        }
+      },
+      "id": "node-slack-hot",
+      "name": "Slack — Hot Lead Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1120, 100],
+      "notes": "Set SLACK_WEBHOOK_URL in n8n environment variables or replace with your Slack webhook URL directly."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "=❓ *QUESTION — Needs a reply*\n\n*Name:* {{ $json.leadName }}\n*Email:* {{ $json.leadEmail }}\n*Reasoning:* {{ $json.reasoning }}\n*Suggested action:* {{ $json.next_action }}\n\n*Their message:* {{ $('Extract Reply Data').item.json.replyText }}\n\n_Review and reply manually, or draft a response._"
+            }
+          ]
+        }
+      },
+      "id": "node-slack-question",
+      "name": "Slack — Question Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1120, 240]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "days"
+      },
+      "id": "node-ooo-wait",
+      "name": "Wait 5 Days (OOO)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1120, 380],
+      "notes": "OOO replies get re-queued after 5 days. The lead stays active in Instantly."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "=🔁 *REFERRAL*\n\n*Original contact:* {{ $json.leadName }} ({{ $json.leadEmail }})\n*Reasoning:* {{ $json.reasoning }}\n*Action:* {{ $json.next_action }}\n\n*Reply:* {{ $('Extract Reply Data').item.json.replyText }}\n\n_Find the referred person and add them to a new sequence._"
+            }
+          ]
+        }
+      },
+      "id": "node-referral",
+      "name": "Slack — Referral Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1120, 520]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"received\": true, \"classification\": \"{{ $('Classify Reply (Claude)').item.json.classification }}\" }"
+      },
+      "id": "node-respond",
+      "name": "Respond to Instantly",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1120, 660]
+    }
+  ],
+  "connections": {
+    "Instantly Reply Webhook": {
+      "main": [[{ "node": "Extract Reply Data", "type": "main", "index": 0 }]]
+    },
+    "Extract Reply Data": {
+      "main": [[{ "node": "Classify Reply (Claude)", "type": "main", "index": 0 }]]
+    },
+    "Classify Reply (Claude)": {
+      "main": [[{ "node": "Route by Classification", "type": "main", "index": 0 }]]
+    },
+    "Route by Classification": {
+      "interested":   [[ { "node": "Slack — Hot Lead Alert",   "type": "main", "index": 0 } ]],
+      "question":     [[ { "node": "Slack — Question Alert",   "type": "main", "index": 0 } ]],
+      "ooo":          [[ { "node": "Wait 5 Days (OOO)",        "type": "main", "index": 0 } ]],
+      "referral":     [[ { "node": "Slack — Referral Alert",   "type": "main", "index": 0 } ]],
+      "unsubscribe":  [[ { "node": "Respond to Instantly",     "type": "main", "index": 0 } ]],
+      "extra":        [[ { "node": "Respond to Instantly",     "type": "main", "index": 0 } ]]
+    },
+    "Slack — Hot Lead Alert":  { "main": [[{ "node": "Respond to Instantly", "type": "main", "index": 0 }]] },
+    "Slack — Question Alert":  { "main": [[{ "node": "Respond to Instantly", "type": "main", "index": 0 }]] },
+    "Wait 5 Days (OOO)":       { "main": [[{ "node": "Respond to Instantly", "type": "main", "index": 0 }]] },
+    "Slack — Referral Alert":  { "main": [[{ "node": "Respond to Instantly", "type": "main", "index": 0 }]] }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": ["gtm-engine", "outbound", "reply-handling"]
+}

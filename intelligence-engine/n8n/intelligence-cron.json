@@ -1,0 +1,123 @@
+{
+  "name": "Intelligence Engine — Weekly Cron",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 6 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "node-cron",
+      "name": "Every Monday 6am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "notes": "Fires every Monday at 6:00 AM server time. Adjust timezone in n8n Settings → General."
+    },
+    {
+      "parameters": {
+        "command": "cd /path/to/mightx/intelligence-engine && node scripts/run-all-clients.js"
+      },
+      "id": "node-run",
+      "name": "Run All Clients",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "notes": "UPDATE THE PATH: Replace /path/to/mightx with the actual path to your intelligence-engine directory on this server. On Windows with WSL: /mnt/c/mightx/intelligence-engine"
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.item.json.stdout || '';\nconst stderr = $input.item.json.stderr || '';\nconst exitCode = $input.item.json.exitCode || 0;\n\nconst passed = (output.match(/Passed: ([^\\n]+)/)?.[1] || '').split(',').map(s => s.trim()).filter(Boolean);\nconst failed = (output.match(/Failed: ([^\\n]+)/)?.[1] || '').split(',').map(s => s.trim()).filter(Boolean);\nconst triggers = (output.match(/TRIGGER EVENT DETECTED/g) || []).length;\n\nreturn [{ json: { exitCode, passed, failed, triggers, hasErrors: failed.length > 0 || exitCode !== 0 } }];"
+      },
+      "id": "node-parse",
+      "name": "Parse Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": false },
+          "conditions": [
+            {
+              "leftValue":  "={{ $json.hasErrors }}",
+              "rightValue": true,
+              "operator":   { "type": "boolean", "operation": "true" }
+            }
+          ]
+        }
+      },
+      "id": "node-check-errors",
+      "name": "Any Errors?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "=⚠️ *Intelligence Engine — Run Errors*\n\n*Failed clients:* {{ $json.failed.join(', ') || 'unknown' }}\n*Exit code:* {{ $json.exitCode }}\n\nCheck the n8n execution log for details."
+            }
+          ]
+        }
+      },
+      "id": "node-slack-error",
+      "name": "Slack — Error Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1120, 200],
+      "notes": "Set SLACK_WEBHOOK_URL in n8n environment variables."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "=✅ *Intelligence Engine — Weekly Run Complete*\n\n*Reports sent for:* {{ $json.passed.join(', ') }}\n*Trigger events detected:* {{ $json.triggers }}\n*Time:* {{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      },
+      "id": "node-slack-success",
+      "name": "Slack — Success Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1120, 400]
+    }
+  ],
+  "connections": {
+    "Every Monday 6am": {
+      "main": [[ { "node": "Run All Clients", "type": "main", "index": 0 } ]]
+    },
+    "Run All Clients": {
+      "main": [[ { "node": "Parse Results", "type": "main", "index": 0 } ]]
+    },
+    "Parse Results": {
+      "main": [[ { "node": "Any Errors?", "type": "main", "index": 0 } ]]
+    },
+    "Any Errors?": {
+      "main": [
+        [ { "node": "Slack — Error Alert",   "type": "main", "index": 0 } ],
+        [ { "node": "Slack — Success Summary", "type": "main", "index": 0 } ]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "tags": ["intelligence-engine", "cron", "weekly"]
+}

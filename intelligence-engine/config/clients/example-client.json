@@ -1,0 +1,90 @@
+{
+  "_instructions": "Duplicate this file for each client. Filename = client slug (e.g. acme-corp.json). Use 'node scripts/onboard-client.js' for interactive setup.",
+
+  "id": "example-client",
+  "name": "Acme Corp",
+  "contactEmail": "vp-sales@acmecorp.com",
+  "reportCcEmails": [],
+  "active": true,
+
+  "tier": "growth",
+  "billing": {
+    "cycle": "monthly",
+    "monthlyRate": 2500,
+    "setupFee": 2500,
+    "startDate": "2026-04-01"
+  },
+
+  "context": {
+    "clientProduct": "B2B sales engagement platform for mid-market SaaS companies",
+    "clientICP": "VP Sales and CROs at 50–500 person B2B SaaS companies",
+    "clientDifferentiators": [
+      "AI-powered sequence personalisation",
+      "Native HubSpot and Salesforce integration",
+      "Enterprise-grade security and SSO"
+    ],
+    "clientWeaknesses": [
+      "No LinkedIn integration yet",
+      "Pricing higher than Outreach starter tier"
+    ]
+  },
+
+  "competitors": [
+    {
+      "name": "Outreach",
+      "website": "https://www.outreach.io",
+      "g2Slug": "outreach",
+      "linkedinSlug": "outreach-inc",
+      "githubOrg": null,
+      "crunchbaseSlug": "outreach",
+      "newsKeywords": ["Outreach sales engagement", "Outreach.io funding", "Outreach layoffs"]
+    },
+    {
+      "name": "Salesloft",
+      "website": "https://salesloft.com",
+      "g2Slug": "salesloft",
+      "linkedinSlug": "salesloft",
+      "githubOrg": null,
+      "crunchbaseSlug": "salesloft",
+      "newsKeywords": ["Salesloft announcement", "Salesloft product update"]
+    },
+    {
+      "name": "Apollo.io",
+      "website": "https://www.apollo.io",
+      "g2Slug": "apollo-io",
+      "linkedinSlug": "apollo-io",
+      "githubOrg": null,
+      "crunchbaseSlug": "apollo-io",
+      "newsKeywords": ["Apollo.io news", "Apollo io funding"]
+    }
+  ],
+
+  "jobMonitoring": {
+    "enabled": true,
+    "roles": ["AI", "machine learning", "product manager", "engineer", "sales"],
+    "note": "Job postings reveal what competitors are building and where they are investing"
+  },
+
+  "additionalCollectors": {
+    "linkedin": true,
+    "github": false,
+    "crunchbase": true
+  },
+
+  "reportPreferences": {
+    "tone": "strategic and direct — written for a senior sales leader",
+    "maxCompetitorsInReport": 6,
+    "includeTriggerEmails": true,
+    "triggerEmailCount": 3,
+    "includeDashboard": true
+  },
+
+  "retention": {
+    "winStories": [],
+    "lastQuarterlySummary": null,
+    "championName": "Jane Doe",
+    "championTitle": "VP of Sales",
+    "renewalDate": null,
+    "healthStatus": "healthy"
+  }
+}

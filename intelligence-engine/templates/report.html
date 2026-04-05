@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weekly Intelligence Briefing — {{CLIENT_NAME}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .wrapper {
+      max-width: 680px;
+      margin: 32px auto;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .header {
+      background: #0f172a;
+      padding: 28px 36px;
+      color: #ffffff;
+    }
+    .header .label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+    .header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+    .header .week {
+      font-size: 13px;
+      color: #64748b;
+    }
+    .body { padding: 32px 36px; }
+    .section { margin-bottom: 32px; }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6b7280;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
+    .summary-box {
+      background: #f8fafc;
+      border-left: 3px solid #3b82f6;
+      padding: 14px 16px;
+      border-radius: 0 6px 6px 0;
+      color: #1e293b;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .alert-box {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-left: 4px solid #f59e0b;
+      padding: 16px 18px;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 24px;
+    }
+    .alert-box .alert-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #92400e;
+      margin-bottom: 6px;
+    }
+    .alert-box .alert-headline {
+      font-size: 15px;
+      font-weight: 600;
+      color: #78350f;
+      margin-bottom: 6px;
+    }
+    .alert-box .alert-detail {
+      font-size: 13px;
+      color: #92400e;
+      line-height: 1.6;
+    }
+    .competitor-block {
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .competitor-header {
+      background: #f9fafb;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .competitor-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+    }
+    .competitor-summary {
+      font-size: 12px;
+      color: #6b7280;
+      margin-left: auto;
+      font-style: italic;
+    }
+    .finding {
+      padding: 12px 16px;
+      border-top: 1px solid #f3f4f6;
+    }
+    .finding-headline {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 4px;
+    }
+    .finding-detail {
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 6px;
+      line-height: 1.55;
+    }
+    .finding-implication {
+      font-size: 12px;
+      color: #2563eb;
+      background: #eff6ff;
+      padding: 6px 10px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .finding-implication::before { content: "→ "; font-weight: 700; }
+    .finding-talk-track {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #374151;
+      background: #f9fafb;
+      border-left: 3px solid #cbd5e1;
+      padding: 8px 10px;
+      border-radius: 0 4px 4px 0;
+      line-height: 1.55;
+    }
+    .play-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-left: 4px solid #22c55e;
+      padding: 14px 16px;
+      border-radius: 0 6px 6px 0;
+      font-size: 14px;
+      color: #14532d;
+      line-height: 1.65;
+    }
+    .email-block {
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .email-label {
+      background: #f3f4f6;
+      padding: 8px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #374151;
+    }
+    .email-subject {
+      padding: 10px 14px 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+    }
+    .email-subject::before {
+      content: "Subject: ";
+      font-weight: 400;
+      color: #6b7280;
+      font-size: 12px;
+    }
+    .email-body {
+      padding: 8px 14px 14px;
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.65;
+      white-space: pre-line;
+      font-family: 'Courier New', Courier, monospace;
+      background: #fafafa;
+      border-top: 1px solid #f3f4f6;
+      margin-top: 8px;
+    }
+    .watch-list { list-style: none; }
+    .watch-list li {
+      padding: 7px 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 13px;
+      color: #4b5563;
+    }
+    .watch-list li::before { content: "○  "; color: #9ca3af; }
+    .watch-list li:last-child { border-bottom: none; }
+    .footer {
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      padding: 20px 36px;
+      font-size: 12px;
+      color: #9ca3af;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .no-findings {
+      font-size: 13px;
+      color: #9ca3af;
+      font-style: italic;
+      padding: 8px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="label">Competitive Intelligence Briefing</div>
+    <h1>{{CLIENT_NAME}}</h1>
+    <div class="week">Week of {{REPORT_WEEK}}</div>
+  </div>
+
+  <div class="body">
+
+    <!-- Executive Summary -->
+    <div class="section">
+      <div class="section-title">This Week's Summary</div>
+      <div class="summary-box">{{WEEK_SUMMARY}}</div>
+    </div>
+
+    <!-- Top Alert (only rendered if exists) -->
+    {{TOP_ALERT_SECTION}}
+
+    <!-- Competitor Sections -->
+    <div class="section">
+      <div class="section-title">Competitor Activity</div>
+      {{COMPETITOR_SECTIONS}}
+    </div>
+
+    <!-- Sales Play -->
+    <div class="section">
+      <div class="section-title">Sales Play This Week</div>
+      <div class="play-box">{{SALES_PLAY}}</div>
+    </div>
+
+    <!-- Enablement Update -->
+    {{ENABLEMENT_UPDATE_SECTION}}
+
+    <!-- Trigger Emails (only rendered if exist) -->
+    {{TRIGGER_EMAILS_SECTION}}
+
+    <!-- Watch Next Week -->
+    <div class="section">
+      <div class="section-title">Watch Next Week</div>
+      <ul class="watch-list">
+        {{WATCH_LIST_ITEMS}}
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Generated automatically by your AI Intelligence Engine.<br/>
+    Signals collected: competitor websites · Google News · G2 reviews · job postings · LinkedIn · GitHub · funding news<br/>
+    <br/>
+    Questions or feedback? Reply to this email.
+  </div>
+
+</div>
+</body>
+</html>
