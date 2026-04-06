@@ -248,6 +248,17 @@ If you are closing your first 2–3 clients and running your own outbound, the A
 
 ---
 
+## Troubleshooting
+
+### `push-instantly` returns `401` / `Invalid API key`
+
+1. Use an **API v2** key from [Integrations → API Keys](https://app.instantly.ai/app/settings/integrations) (v1 keys do not work with `api/v2`).
+2. Paste **only** the key into `INSTANTLY_API_KEY` — no `Bearer ` prefix, no quotes unless your tooling requires them.
+3. Confirm the key in the [API docs “Try it”](https://developer.instantly.ai) panel; if it fails there too, create a **new** key and revoke the old one.
+4. Run commands from `gtm-engine` so `dotenv` loads `gtm-engine/.env`.
+
+---
+
 ## Liability checklist
 
 Before running outbound on behalf of a client, confirm:

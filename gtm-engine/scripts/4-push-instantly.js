@@ -28,8 +28,17 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 
 const INSTANTLY_API_BASE    = 'https://api.instantly.ai/api/v2';
-const INSTANTLY_API_KEY     = process.env.INSTANTLY_API_KEY;
-const INSTANTLY_CAMPAIGN_ID = process.env.INSTANTLY_CAMPAIGN_ID;
+
+function normalizeInstantlyApiKey(raw) {
+  if (!raw || typeof raw !== 'string') return raw;
+  let k = raw.trim();
+  if (k.startsWith('"') && k.endsWith('"')) k = k.slice(1, -1).trim();
+  if (k.toLowerCase().startsWith('bearer ')) k = k.slice(7).trim();
+  return k;
+}
+
+const INSTANTLY_API_KEY     = normalizeInstantlyApiKey(process.env.INSTANTLY_API_KEY);
+const INSTANTLY_CAMPAIGN_ID = process.env.INSTANTLY_CAMPAIGN_ID?.trim();
 const BATCH_DELAY           = 500;   // ms between Instantly API calls
 
 if (!INSTANTLY_API_KEY || !INSTANTLY_CAMPAIGN_ID) {
