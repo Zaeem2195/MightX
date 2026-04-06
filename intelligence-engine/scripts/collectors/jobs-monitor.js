@@ -1,19 +1,169 @@
 /**
  * Collector: Job Postings Monitor
  * ─────────────────────────────────
- * Fetches recent job postings for each competitor via
- * Google News RSS (searching for their hiring announcements)
- * and direct scraping of their /careers page.
- *
- * Job postings are one of the best competitive signals:
- * - Hiring ML engineers = building AI features
- * - Hiring enterprise sales reps = moving upmarket
- * - Hiring integration engineers = expanding their ecosystem
- * - Mass layoffs in engineering = product slowdown incoming
+ * Tries hosted ATS JSON APIs (Greenhouse, Lever, Ashby) when detectable,
+ * then falls back to HTML heuristics on the careers page,
+ * then Google News RSS for hiring / job-site signals.
  */
+
+import { extractDomain } from './_utils.js';
 
 const FETCH_TIMEOUT = 10000;
 const MAX_JOBS = 15;
+
+async function fetchJson(url) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        Accept: 'application/json',
+      },
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** Greenhouse public board API */
+async function fetchGreenhouseJobs(token) {
+  const data = await fetchJson(`https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(token)}/jobs`);
+  if (!data?.jobs?.length) return null;
+  return data.jobs.map((j) => j.title).filter(Boolean).slice(0, MAX_JOBS);
+}
+
+/** Lever public postings API */
+async function fetchLeverJobs(site) {
+  const data = await fetchJson(`https://api.lever.co/v0/postings/${encodeURIComponent(site)}?mode=json`);
+  if (!Array.isArray(data) || !data.length) return null;
+  return data.map((p) => p.text || p.title).filter(Boolean).slice(0, MAX_JOBS);
+}
+
+/** Ashby public job board API */
+async function fetchAshbyJobs(org) {
+  const data = await fetchJson(`https://api.ashbyhq.com/posting-api/job-board/${encodeURIComponent(org)}`);
+  const jobs = data?.jobs || data?.data?.jobs || [];
+  if (!Array.isArray(jobs) || !jobs.length) return null;
+  return jobs.map((j) => j.title || j.name).filter(Boolean).slice(0, MAX_JOBS);
+}
+
+async function fetchAtsJobs(provider, token) {
+  if (!token) return null;
+  switch (provider) {
+    case 'greenhouse':
+      return fetchGreenhouseJobs(token);
+    case 'lever':
+      return fetchLeverJobs(token);
+    case 'ashby':
+      return fetchAshbyJobs(token);
+    default:
+      return null;
+  }
+}
+
+const ATS_RETRY_DELAY_MS = 2000;
+
+/** One retry after delay when ATS JSON is flaky (timeouts, empty responses). */
+async function fetchAtsJobsWithRetry(provider, token) {
+  let titles = await fetchAtsJobs(provider, token);
+  if (titles?.length) return titles;
+  await new Promise((r) => setTimeout(r, ATS_RETRY_DELAY_MS));
+  titles = await fetchAtsJobs(provider, token);
+  return titles?.length ? titles : null;
+}
+
+/**
+ * Detect ATS provider + board token from careers page HTML.
+ */
+function detectAtsFromHtml(html) {
+  if (!html) return null;
+
+  const ghEmbed = html.match(/boards\.greenhouse\.io\/embed\/job_board\?for=([a-z0-9_-]+)/i);
+  if (ghEmbed) return { provider: 'greenhouse', token: ghEmbed[1] };
+
+  const ghPath = html.match(/boards\.greenhouse\.io\/([a-z0-9_-]+)\/?(?:["'\s>]|$)/i);
+  if (ghPath && ghPath[1] !== 'embed') return { provider: 'greenhouse', token: ghPath[1] };
+
+  const ghApi = html.match(/boards-api\.greenhouse\.io\/v1\/boards\/([a-z0-9_-]+)\//i);
+  if (ghApi) return { provider: 'greenhouse', token: ghApi[1] };
+
+  const lever = html.match(/jobs\.lever\.co\/([a-z0-9_-]+)/i) || html.match(/api\.lever\.co\/v0\/postings\/([a-z0-9_-]+)/i);
+  if (lever) return { provider: 'lever', token: lever[1] };
+
+  const ashby = html.match(/jobs\.ashbyhq\.com\/([a-z0-9_-]+)/i) || html.match(/api\.ashbyhq\.com\/posting-api\/job-board\/([a-z0-9_-]+)/i);
+  if (ashby) return { provider: 'ashby', token: ashby[1] };
+
+  return null;
+}
+
+/** If user set atsSlug only, try APIs in likely order. Skip a provider already tried (e.g. configured ATS empty). */
+async function tryAtsSlugAcrossProviders(slug, skipProvider = null) {
+  const order = [
+    ['greenhouse', slug],
+    ['lever', slug],
+    ['ashby', slug],
+  ];
+  for (const [provider, token] of order) {
+    if (skipProvider && provider === skipProvider) continue;
+    const titles = await fetchAtsJobsWithRetry(provider, token);
+    if (titles?.length) return { titles, provider, token };
+  }
+  return null;
+}
+
+/** RSS job headlines must name the competitor or its domain (drops unrelated Greenhouse noise). */
+function jobsRssTitleMatchesCompetitor(title, competitorName, domain) {
+  const t = title.toLowerCase();
+  const n = (competitorName || '').toLowerCase().trim();
+  if (n && t.includes(n)) return true;
+  if (domain) {
+    const d = domain.toLowerCase();
+    if (t.includes(d)) return true;
+    const short = d.replace(/\.(com|io|ai|co)$/i, '');
+    if (short.length >= 3 && t.includes(short)) return true;
+  }
+  return false;
+}
+
+/** When structured ATS + careers scrape fail: surface hiring signals from Google News RSS. */
+async function fetchGoogleJobsRssFallback(name, website) {
+  const domain = extractDomain(website);
+  const scope =
+    '(site:linkedin.com/jobs OR site:greenhouse.io OR site:lever.co OR site:jobs.ashbyhq.com OR site:boards.greenhouse.io)';
+  const q = encodeURIComponent(`"${name}" jobs ${scope}${domain ? ` ${domain}` : ''}`);
+  const url = `https://news.google.com/rss/search?q=${q}&hl=en-US&gl=US&ceid=US:en`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; IntelligenceBot/1.0)' },
+    });
+    if (!res.ok) return null;
+    const xml = await res.text();
+    const lines = [];
+    const itemRegex = /<item>([\s\S]*?)<\/item>/g;
+    let match;
+    while ((match = itemRegex.exec(xml)) !== null && lines.length < 12) {
+      const block = match[1];
+      const title = (/<title><!\[CDATA\[(.*?)\]\]><\/title>/.exec(block) || /<title>(.*?)<\/title>/.exec(block))?.[1]?.trim() || '';
+      if (!title || title.toLowerCase().includes('google news')) continue;
+      if (!jobsRssTitleMatchesCompetitor(title, name, domain)) continue;
+      lines.push(`- ${title}`);
+    }
+    return lines.length ? lines : null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 // ── Fetch and parse careers page ─────────────────────────────────────────────
 async function fetchCareersPage(website) {
@@ -53,7 +203,6 @@ function extractJobTitles(html) {
 
   const titles = new Set();
 
-  // Common patterns for job title elements
   const patterns = [
     /<h[23][^>]*class="[^"]*job[^"]*"[^>]*>([\s\S]{5,80}?)<\/h[23]>/gi,
     /<a[^>]*class="[^"]*job[^"]*"[^>]*>([\s\S]{5,80}?)<\/a>/gi,
@@ -61,7 +210,6 @@ function extractJobTitles(html) {
     /<li[^>]*class="[^"]*job[^"]*"[^>]*>([\s\S]{5,80}?)<\/li>/gi,
     /<span[^>]*class="[^"]*job-title[^"]*"[^>]*>([\s\S]{5,80}?)<\/span>/gi,
     /data-job-title="([^"]{5,80})"/gi,
-    /"title":"([^"]{5,80})"/g,
   ];
 
   for (const pattern of patterns) {
@@ -142,47 +290,115 @@ function interpretSignals(categories, competitorName) {
 
 // ── Main export ───────────────────────────────────────────────────────────────
 export async function collectJobs(competitor) {
-  const { name, website, jobMonitoring } = competitor;
+  const { name, website, atsSlug, atsProvider } = competitor;
 
-  if (!website) {
-    return { type: 'jobs', competitor: name, data: 'No website URL configured.' };
+  if (!website && !atsSlug) {
+    return { type: 'jobs', competitor: name, data: 'No website URL or atsSlug configured.' };
   }
 
-  const result = await fetchCareersPage(website);
+  let titles = [];
+  let sourceNote = '';
 
-  if (!result) {
+  if (atsProvider && atsSlug) {
+    const t = await fetchAtsJobsWithRetry(atsProvider, atsSlug);
+    if (t?.length) {
+      titles = t;
+      sourceNote = `ATS: ${atsProvider} (board: ${atsSlug})`;
+    }
+  }
+
+  /* Cross-provider fallback: e.g. Lever flaky empty but Greenhouse same slug works, or wrong atsProvider in config. */
+  if (!titles.length && atsSlug) {
+    const tried = await tryAtsSlugAcrossProviders(atsSlug, atsProvider || null);
+    if (tried) {
+      titles = tried.titles;
+      sourceNote = atsProvider
+        ? `ATS: ${tried.provider} (board: ${tried.token}; cross-provider fallback — ${atsProvider} had no listings)`
+        : `ATS: ${tried.provider} (board: ${tried.token})`;
+    }
+  }
+
+  const result = website ? await fetchCareersPage(website) : null;
+
+  if (!titles.length && result?.html) {
+    const det = detectAtsFromHtml(result.html);
+    if (det) {
+      const t = await fetchAtsJobsWithRetry(det.provider, det.token);
+      if (t?.length) {
+        titles = t;
+        sourceNote = `ATS: ${det.provider} (auto-detected board: ${det.token})`;
+      }
+    }
+  }
+
+  if (!titles.length && result?.html) {
+    titles = extractJobTitles(result.html);
+    if (titles.length) sourceNote = 'HTML scrape';
+  }
+
+  if (!titles.length && !result) {
+    const rss = website ? await fetchGoogleJobsRssFallback(name, website) : null;
+    if (rss?.length) {
+      return {
+        type:       'jobs',
+        competitor: name,
+        data:       [
+          `Could not access careers page for ${name}.`,
+          'Hiring / job-site signals (Google News RSS fallback — not verified ATS):',
+          ...rss,
+          '',
+          'Tip: set atsProvider + atsSlug in config when known (Greenhouse, Lever, or Ashby).',
+        ].join('\n'),
+      };
+    }
     return {
       type:       'jobs',
       competitor: name,
-      data:       `Could not access careers page for ${name}. They may use an external ATS (Greenhouse, Lever, Workday).`,
+      data:       `Could not access careers page for ${name}. Set optional atsSlug + atsProvider in the client config if jobs are on Greenhouse/Lever/Ashby.`,
     };
   }
 
-  const titles     = extractJobTitles(result.html);
+  if (!titles.length) {
+    const rss = website ? await fetchGoogleJobsRssFallback(name, website) : null;
+    if (rss?.length) {
+      return {
+        type:       'jobs',
+        competitor: name,
+        data:       [
+          `Careers page: ${result?.url || 'n/a'}`,
+          'No structured job titles from ATS or HTML; hiring-related headlines (RSS fallback):',
+          ...rss,
+          '',
+          'Add accurate "atsSlug" + "atsProvider" (greenhouse|lever|ashby) for this competitor if known.',
+        ].join('\n'),
+      };
+    }
+    return {
+      type:       'jobs',
+      competitor: name,
+      data:       `Careers page found at ${result?.url || 'n/a'} but no job titles could be extracted. Add "atsSlug" + "atsProvider" (greenhouse|lever|ashby) to this competitor in config.`,
+    };
+  }
+
   const categories = categoriseJobs(titles);
   const signals    = interpretSignals(categories, name);
 
-  if (!titles.length) {
-    return {
-      type:       'jobs',
-      competitor: name,
-      data:       `Careers page found at ${result.url} but no job titles could be extracted.`,
-    };
-  }
-
-  const lines = [`Careers page: ${result.url}`, `Total visible roles: ${titles.length}`, ''];
+  const lines = [];
+  if (result?.url) lines.push(`Careers page: ${result.url}`);
+  if (sourceNote) lines.push(`Source: ${sourceNote}`);
+  lines.push(`Total visible roles: ${titles.length}`, '');
 
   if (categories.ai_ml.length)      lines.push(`AI/ML roles (${categories.ai_ml.length}): ${categories.ai_ml.join(', ')}`);
   if (categories.enterprise.length) lines.push(`Enterprise roles (${categories.enterprise.length}): ${categories.enterprise.join(', ')}`);
   if (categories.sales.length)      lines.push(`Sales roles (${categories.sales.length}): ${categories.sales.join(', ')}`);
   if (categories.product.length)    lines.push(`Product roles (${categories.product.length}): ${categories.product.join(', ')}`);
-  if (categories.engineering.length)lines.push(`Engineering roles (${categories.engineering.length}): ${categories.engineering.slice(0,5).join(', ')}`);
+  if (categories.engineering.length)lines.push(`Engineering roles (${categories.engineering.length}): ${categories.engineering.slice(0, 5).join(', ')}`);
   if (categories.marketing.length)  lines.push(`Marketing roles (${categories.marketing.length}): ${categories.marketing.join(', ')}`);
-  if (categories.other.length)      lines.push(`Other roles (${categories.other.length}): ${categories.other.slice(0,5).join(', ')}`);
+  if (categories.other.length)      lines.push(`Other roles (${categories.other.length}): ${categories.other.slice(0, 5).join(', ')}`);
 
   if (signals.length) {
     lines.push('', 'Strategic signals:');
-    signals.forEach(s => lines.push(`- ${s}`));
+    signals.forEach((s) => lines.push(`- ${s}`));
   }
 
   return {

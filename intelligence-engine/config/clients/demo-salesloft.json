@@ -32,7 +32,9 @@
       "linkedinSlug": "outreach-inc",
       "githubOrg": null,
       "crunchbaseSlug": "outreach",
-      "newsKeywords": ["Outreach sales engagement", "Outreach pricing", "Outreach product launch"]
+      "newsKeywords": ["Outreach sales engagement", "Outreach pricing", "Outreach product launch"],
+      "atsProvider": "lever",
+      "atsSlug": "outreach"
     },
     {
       "name": "Apollo.io",
@@ -41,7 +43,10 @@
       "linkedinSlug": "apollo-io",
       "githubOrg": null,
       "crunchbaseSlug": "apollo-io",
-      "newsKeywords": ["Apollo.io sales platform", "Apollo pricing", "Apollo product update"]
+      "newsKeywords": ["Apollo.io sales platform", "Apollo pricing", "Apollo product update"],
+      "knownHeadcountRange": [400, 50000],
+      "atsProvider": "greenhouse",
+      "atsSlug": "apolloio"
     },
     {
       "name": "Gong",
@@ -50,7 +55,9 @@
       "linkedinSlug": "gong-io",
       "githubOrg": null,
       "crunchbaseSlug": "gong-io",
-      "newsKeywords": ["Gong revenue intelligence", "Gong launch", "Gong pricing"]
+      "newsKeywords": ["Gong revenue intelligence", "Gong launch", "Gong pricing"],
+      "atsProvider": "greenhouse",
+      "atsSlug": "gongio"
     },
     {
       "name": "Clari",
@@ -59,7 +66,9 @@
       "linkedinSlug": "clari",
       "githubOrg": null,
       "crunchbaseSlug": "clari",
-      "newsKeywords": ["Clari revenue platform", "Clari product update", "Clari pricing"]
+      "newsKeywords": ["Clari revenue platform", "Clari product update", "Clari pricing"],
+      "atsProvider": "lever",
+      "atsSlug": "clari"
     }
   ],
   "jobMonitoring": {

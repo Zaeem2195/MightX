@@ -1,20 +1,14 @@
 /**
  * Collector: LinkedIn Company Monitor
  * ─────────────────────────────────────
- * Monitors competitor LinkedIn company pages for signals:
- * - Employee count changes (growth/contraction)
- * - Recent company posts and announcements
- * - Leadership changes
- *
- * Uses Google News RSS as a proxy (searching for LinkedIn-specific announcements)
- * and the public LinkedIn company page (limited data without auth).
- *
- * For richer LinkedIn data, integrate with a provider like Proxycurl or PhantomBuster.
+ * Monitors competitor LinkedIn company pages for signals.
+ * Detects auth walls and avoids reporting bogus headcounts.
  */
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { detectLoginWall, isRelevantArticle } from './_utils.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..', '..');
@@ -66,12 +60,15 @@ function parseRSSItems(xml) {
     const title = (/<title><!\[CDATA\[(.*?)\]\]><\/title>/.exec(block) || /<title>(.*?)<\/title>/.exec(block))?.[1] || '';
     const pubDate = (/<pubDate>(.*?)<\/pubDate>/.exec(block))?.[1] || '';
     const source = (/<source[^>]*>(.*?)<\/source>/.exec(block))?.[1] || '';
-    items.push({ title: title.trim(), pubDate, source: source.trim() });
+    const desc = (/<description><!\[CDATA\[([\s\S]*?)\]\]><\/description>/.exec(block) || /<description>([\s\S]*?)<\/description>/.exec(block))?.[1] || '';
+    const cleanDesc = desc.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 400);
+    items.push({ title: title.trim(), pubDate, source: source.trim(), description: cleanDesc });
   }
   return items;
 }
 
-async function fetchLinkedInNews(competitorName, linkedinSlug) {
+async function fetchLinkedInNews(competitor) {
+  const competitorName = competitor.name;
   const queries = [
     `"${competitorName}" linkedin announcement`,
     `"${competitorName}" hiring OR layoffs OR "new hire"`,
@@ -90,7 +87,7 @@ async function fetchLinkedInNews(competitorName, linkedinSlug) {
 
     const items = parseRSSItems(res.text);
     for (const item of items) {
-      if (!seen.has(item.title)) {
+      if (!seen.has(item.title) && isRelevantArticle(item, competitor)) {
         seen.add(item.title);
         try {
           if (new Date(item.pubDate) >= cutoff) allItems.push(item);
@@ -99,10 +96,40 @@ async function fetchLinkedInNews(competitorName, linkedinSlug) {
         }
       }
     }
-    await new Promise(r => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 600));
   }
 
   return allItems.slice(0, 8);
+}
+
+/** Third-party hint when LinkedIn HTML is an auth wall — search snippets often quote headcount. */
+async function fetchHeadcountHintFromGoogle(name, linkedinSlug) {
+  const q = encodeURIComponent(
+    linkedinSlug
+      ? `"${name}" site:linkedin.com/company/${linkedinSlug} employees`
+      : `"${name}" linkedin company employees`
+  );
+  const url = `https://news.google.com/rss/search?q=${q}&hl=en-US&gl=US&ceid=US:en`;
+  const res = await fetchWithTimeout(url);
+  if (!res.ok) return null;
+
+  const items = parseRSSItems(res.text);
+  const blob = items.map((i) => `${i.title} ${i.description}`).join(' ');
+  const m = blob.match(/([\d,]+)\s*\+?\s*employees/i) || blob.match(/([\d,]+)\s*employees on linkedin/i);
+  if (!m) return null;
+  const n = parseInt(m[1].replace(/,/g, ''), 10);
+  return Number.isFinite(n) ? n : null;
+}
+
+function isPlausibleHeadcount(n, range) {
+  if (!Number.isFinite(n) || n < 1) return false;
+  if (range && Array.isArray(range) && range.length === 2) {
+    const [min, max] = range;
+    return n >= min && n <= max;
+  }
+  if (n < 15) return false;
+  if (n > 500000) return false;
+  return true;
 }
 
 async function fetchLinkedInPage(linkedinSlug) {
@@ -110,11 +137,18 @@ async function fetchLinkedInPage(linkedinSlug) {
   const res = await fetchWithTimeout(url);
   if (!res.ok || !res.text) return null;
 
+  const loginWall = detectLoginWall(res.text);
+  if (loginWall) {
+    return { raw: res.text, loginWall: true, employees: null, description: null, followers: null };
+  }
+
   const employeeMatch = res.text.match(/(\d[\d,]+)\s*(?:employees|associates|team members)/i);
   const descMatch = res.text.match(/<meta\s+name="description"\s+content="([^"]{20,500})"/i);
   const followersMatch = res.text.match(/([\d,]+)\s*followers/i);
 
   return {
+    raw: res.text,
+    loginWall: false,
     employees: employeeMatch?.[1]?.replace(/,/g, '') || null,
     description: descMatch?.[1] || null,
     followers: followersMatch?.[1]?.replace(/,/g, '') || null,
@@ -125,8 +159,8 @@ function analyseChanges(previous, current, competitorName) {
   const signals = [];
 
   if (previous?.employees && current?.employees) {
-    const prev = parseInt(previous.employees);
-    const curr = parseInt(current.employees);
+    const prev = parseInt(previous.employees, 10);
+    const curr = parseInt(current.employees, 10);
     const change = curr - prev;
     const pctChange = ((change / prev) * 100).toFixed(1);
 
@@ -137,8 +171,8 @@ function analyseChanges(previous, current, competitorName) {
   }
 
   if (previous?.followers && current?.followers) {
-    const prev = parseInt(previous.followers);
-    const curr = parseInt(current.followers);
+    const prev = parseInt(previous.followers, 10);
+    const curr = parseInt(current.followers, 10);
     const change = curr - prev;
     if (Math.abs(change) > 500) {
       const direction = change > 0 ? 'gained' : 'lost';
@@ -150,7 +184,7 @@ function analyseChanges(previous, current, competitorName) {
 }
 
 export async function collectLinkedIn(clientId, competitor) {
-  const { name, linkedinSlug } = competitor;
+  const { name, linkedinSlug, knownHeadcountRange } = competitor;
 
   if (!linkedinSlug) {
     return { type: 'linkedin', competitor: name, data: 'No LinkedIn slug configured.' };
@@ -161,21 +195,59 @@ export async function collectLinkedIn(clientId, competitor) {
 
   const [pageData, newsItems] = await Promise.all([
     fetchLinkedInPage(linkedinSlug),
-    fetchLinkedInNews(name, linkedinSlug),
+    fetchLinkedInNews(competitor),
   ]);
 
-  if (pageData) {
-    const changes = analyseChanges(previous, pageData, name);
+  let employeesForSnapshot = null;
+  let followersForSnapshot = null;
+  let descriptionForSnapshot = null;
+
+  if (!pageData) {
+    findings.push('Could not fetch LinkedIn company page (network or block).');
+  } else {
+    const changes = pageData.loginWall ? [] : analyseChanges(previous, pageData, name);
     findings.push(...changes);
 
+    let headcountLine = null;
+    const parsed = pageData.employees ? parseInt(pageData.employees, 10) : null;
+
+    if (pageData.loginWall) {
+      findings.push(
+        'LinkedIn returned an authentication wall — direct headcount from the company page was not reliable.'
+      );
+      const hint = await fetchHeadcountHintFromGoogle(name, linkedinSlug);
+      if (hint && isPlausibleHeadcount(hint, knownHeadcountRange)) {
+        headcountLine = `Third-party search snippet suggests ~${hint.toLocaleString()} employees (verify on LinkedIn).`;
+        employeesForSnapshot = String(hint);
+      }
+    } else if (parsed != null) {
+      if (isPlausibleHeadcount(parsed, knownHeadcountRange)) {
+        headcountLine = `Current estimated headcount: ${parsed.toLocaleString()}`;
+        employeesForSnapshot = pageData.employees;
+      } else {
+        findings.push(
+          `Parsed employee count (${parsed}) looks unreliable (login wall or HTML noise). Not using as a hard number.`
+        );
+        const hint = await fetchHeadcountHintFromGoogle(name, linkedinSlug);
+        if (hint && isPlausibleHeadcount(hint, knownHeadcountRange)) {
+          headcountLine = `Third-party search snippet suggests ~${hint.toLocaleString()} employees (verify on LinkedIn).`;
+          employeesForSnapshot = String(hint);
+        }
+      }
+    }
+
+    if (headcountLine) findings.push(headcountLine);
+
+    followersForSnapshot = pageData.followers || null;
+    descriptionForSnapshot = pageData.description || null;
+
     saveSnapshot(clientId, name, {
-      ...pageData,
+      employees: employeesForSnapshot,
+      followers: followersForSnapshot,
+      description: descriptionForSnapshot,
+      loginWall: pageData.loginWall,
       savedAt: new Date().toISOString(),
     });
-
-    if (pageData.employees) {
-      findings.push(`Current estimated headcount: ${parseInt(pageData.employees).toLocaleString()}`);
-    }
   }
 
   if (newsItems.length) {

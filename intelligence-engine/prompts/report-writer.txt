@@ -9,13 +9,16 @@ TONE: {{TONE}}
 CLIENT CONTEXT:
 {{CLIENT_CONTEXT}}
 
+PIPELINE / COVERAGE META (computed — use for honesty, not excuses):
+{{PIPELINE_META}}
+
 ANALYSED SIGNALS (all competitors, all signal types):
 {{ALL_ANALYSES}}
 
 YOUR TASK:
 Write a complete weekly briefing report. Structure it exactly as specified below.
 Prioritise findings by strategic importance — most important competitor/finding first.
-If a signal source returned nothing meaningful, omit that section entirely. Do not pad.
+If a signal source returned nothing meaningful, omit that competitor subsection for that source — but ALWAYS reflect limitations in dataGapsThisWeek and coverageSummary when sources failed, were blocked, or hit pipeline fallbacks (look for pipelineNote: analysis_parse_failed).
 
 Writing rules:
 - Optimise for live deal usefulness, not analyst impressiveness.
@@ -23,12 +26,18 @@ Writing rules:
 - If a finding matters, explain exactly why a rep, manager, or enablement lead should care this week.
 - When useful, translate findings into positioning contrast, objection handling, or account targeting guidance.
 - Assume the reader may forward this to managers or enablement immediately after reading it.
+- When analyses include evidenceBasis and sourceConfidence, respect them: do not state low-confidence RSS or search snippets as hard facts; phrase as "signals suggest" or "worth verifying".
+- If pipelineFallbackCount > 0, mention briefly in coverageSummary and add a data gap (which competitor/signal types need a human skim of raw data).
 
 OUTPUT: Return a single JSON object with the report content broken into sections.
 All section content should be plain text or simple HTML (no markdown). Ready to inject into an HTML email template.
 
 OUTPUT FORMAT (JSON only):
 {
+  "coverageSummary": "1-3 sentences: how complete this week's monitoring was (signals analysed, any blocked sources or pipeline fallbacks). Honest and concise.",
+  "dataGapsThisWeek": [
+    "One bullet per gap — e.g. LinkedIn blocked, G2 direct scrape unavailable, pipeline fallback on jobs for X, etc."
+  ],
   "weekSummary": "2-3 sentence executive summary of the most important things that happened this week across all competitors.",
   "topAlert": {
     "exists": true or false,
@@ -46,7 +55,8 @@ OUTPUT FORMAT (JSON only):
           "headline": "...",
           "detail": "...",
           "implication": "...",
-          "repTalkTrack": "One short sentence a rep could use immediately. If not useful, return null."
+          "repTalkTrack": "One short sentence a rep could use immediately. If not useful, return null.",
+          "sourceNote": "Optional one short line, e.g. 'News · high confidence' or 'G2 search snippet · verify' — omit if redundant."
         }
       ]
     }

@@ -131,6 +131,12 @@
       margin-bottom: 6px;
       line-height: 1.55;
     }
+    .finding-source-note {
+      font-size: 11px;
+      color: #64748b;
+      font-style: italic;
+      margin-bottom: 4px;
+    }
     .finding-implication {
       font-size: 12px;
       color: #2563eb;
@@ -241,6 +247,9 @@
       <div class="section-title">This Week's Summary</div>
       <div class="summary-box">{{WEEK_SUMMARY}}</div>
     </div>
+
+    {{COVERAGE_SECTION}}
+    {{DATA_GAPS_SECTION}}
 
     <!-- Top Alert (only rendered if exists) -->
     {{TOP_ALERT_SECTION}}

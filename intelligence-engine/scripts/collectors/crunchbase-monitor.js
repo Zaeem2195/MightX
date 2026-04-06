@@ -15,6 +15,8 @@
  * - Layoffs or restructuring
  */
 
+import { buildFundingSearchQueries, isRelevantArticle } from './_utils.js';
+
 const FETCH_TIMEOUT = 10000;
 const MAX_ARTICLES = 10;
 const LOOKBACK_DAYS = 14;
@@ -69,6 +71,7 @@ async function fetchGoogleNews(keyword) {
       signal: controller.signal,
       headers: { 'User-Agent': 'Mozilla/5.0 (compatible; IntelligenceBot/1.0)' },
     });
+    if (!res.ok) return [];
     return parseRSS(await res.text());
   } catch {
     return [];
@@ -84,12 +87,7 @@ export async function collectCrunchbase(competitor) {
     return { type: 'funding', competitor: name, data: 'No Crunchbase slug or company name configured.' };
   }
 
-  const searchQueries = [
-    `"${name}" funding OR raised OR series`,
-    `"${name}" acquisition OR acquired OR merger`,
-    `"${name}" partnership OR integration OR "partners with"`,
-    `"${name}" layoffs OR restructuring OR "job cuts"`,
-  ];
+  const searchQueries = buildFundingSearchQueries(competitor);
 
   const allArticles = [];
   const seen = new Set();
@@ -97,12 +95,12 @@ export async function collectCrunchbase(competitor) {
   for (const query of searchQueries) {
     const articles = await fetchGoogleNews(query);
     for (const a of articles) {
-      if (!seen.has(a.title) && isRecent(a.pubDate)) {
+      if (!seen.has(a.title) && isRecent(a.pubDate) && isRelevantArticle(a, competitor, { strictFunding: true })) {
         seen.add(a.title);
         allArticles.push({ ...a, category: categoriseArticle(a) });
       }
     }
-    await new Promise(r => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 500));
   }
 
   const relevant = allArticles.slice(0, MAX_ARTICLES);
@@ -111,7 +109,7 @@ export async function collectCrunchbase(competitor) {
     return {
       type: 'funding',
       competitor: name,
-      data: `No funding, acquisition, or corporate news found for ${name} in the past ${LOOKBACK_DAYS} days.`,
+      data: `No funding, acquisition, or corporate news found for ${name} in the past ${LOOKBACK_DAYS} days (after entity filtering).`,
     };
   }
 

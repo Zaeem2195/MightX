@@ -1,5 +1,5 @@
 {
-  "_instructions": "Duplicate this file for each client. Filename = client slug (e.g. acme-corp.json). Use 'node scripts/onboard-client.js' for interactive setup.",
+  "_instructions": "Duplicate this file for each client. Filename = client slug (e.g. acme-corp.json). Use 'node scripts/onboard-client.js' for interactive setup. Per competitor, optional: atsProvider (greenhouse|lever|ashby), atsSlug (board id), knownHeadcountRange [min,max] for LinkedIn validation.",
 
   "id": "example-client",
   "name": "Acme Corp",

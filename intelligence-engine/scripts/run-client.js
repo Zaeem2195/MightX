@@ -21,6 +21,7 @@ import { collectGitHub }     from './collectors/github-monitor.js';
 import { collectCrunchbase } from './collectors/crunchbase-monitor.js';
 import { runAnalysis }       from './analyse.js';
 import { generateReport }    from './generate-report.js';
+import { generateClientDashboard } from './generate-dashboard.js';
 import { deliverReport }     from './deliver.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -138,6 +139,15 @@ async function main() {
   // Step 3 — Generate report
   console.log('\n── Step 3/3: Generating & delivering report ────────────────────');
   const { html, reportContent, htmlPath } = await generateReport(clientId, analyses, clientConfig);
+
+  if (clientConfig.reportPreferences?.includeDashboard !== false) {
+    const dash = generateClientDashboard(clientId);
+    if (dash.ok && dash.path) {
+      console.log(`📊  Dashboard → ${path.relative(ROOT, dash.path)}`);
+    } else if (!dash.ok) {
+      console.log(`⚠️   Dashboard: ${dash.message || 'skipped'}`);
+    }
+  }
 
   if (!noEmail) {
     try {

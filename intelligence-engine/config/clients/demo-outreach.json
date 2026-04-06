@@ -32,7 +32,9 @@
       "linkedinSlug": "salesloft",
       "githubOrg": null,
       "crunchbaseSlug": "salesloft",
-      "newsKeywords": ["Salesloft launch", "Salesloft pricing", "Salesloft update"]
+      "newsKeywords": ["Salesloft launch", "Salesloft pricing", "Salesloft update"],
+      "atsProvider": "greenhouse",
+      "atsSlug": "salesloft"
     },
     {
       "name": "Apollo.io",
@@ -41,7 +43,9 @@
       "linkedinSlug": "apollo-io",
       "githubOrg": null,
       "crunchbaseSlug": "apollo-io",
-      "newsKeywords": ["Apollo.io launch", "Apollo pricing", "Apollo funding"]
+      "newsKeywords": ["Apollo.io launch", "Apollo pricing", "Apollo funding"],
+      "atsProvider": "greenhouse",
+      "atsSlug": "apolloio"
     },
     {
       "name": "Gong",
@@ -50,7 +54,9 @@
       "linkedinSlug": "gong-io",
       "githubOrg": null,
       "crunchbaseSlug": "gong-io",
-      "newsKeywords": ["Gong launch", "Gong revenue intelligence", "Gong sales platform"]
+      "newsKeywords": ["Gong launch", "Gong revenue intelligence", "Gong sales platform"],
+      "atsProvider": "greenhouse",
+      "atsSlug": "gongio"
     },
     {
       "name": "Clari",
@@ -59,7 +65,9 @@
       "linkedinSlug": "clari",
       "githubOrg": null,
       "crunchbaseSlug": "clari",
-      "newsKeywords": ["Clari launch", "Clari update", "Clari revenue platform"]
+      "newsKeywords": ["Clari launch", "Clari update", "Clari revenue platform"],
+      "atsProvider": "lever",
+      "atsSlug": "clari"
     }
   ],
   "jobMonitoring": {

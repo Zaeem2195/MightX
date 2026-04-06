@@ -2,8 +2,10 @@
  * Collector: News Monitor (Google News RSS)
  * ──────────────────────────────────────────
  * Uses Google News RSS feeds — free, no API key required.
- * Returns recent news articles per competitor for Claude to analyse.
+ * Entity-aware queries + post-fetch relevance filtering reduce false positives.
  */
+
+import { buildNewsSearchQueries, isRelevantArticle } from './_utils.js';
 
 const FETCH_TIMEOUT  = 10000;
 const MAX_ARTICLES   = 8;
@@ -57,6 +59,7 @@ async function fetchGoogleNews(keyword) {
       signal: controller.signal,
       headers: { 'User-Agent': 'Mozilla/5.0 (compatible; IntelligenceBot/1.0)' },
     });
+    if (!res.ok) return [];
     const xml = await res.text();
     return parseRSS(xml);
   } catch {
@@ -68,10 +71,9 @@ async function fetchGoogleNews(keyword) {
 
 // ── Main export ───────────────────────────────────────────────────────────────
 export async function collectNews(competitor) {
-  const { name, newsKeywords = [] } = competitor;
+  const { name } = competitor;
 
-  // Always include the company name as a keyword
-  const keywords = [name, ...newsKeywords].slice(0, 4);
+  const keywords = buildNewsSearchQueries(competitor);
 
   const allArticles = [];
   const seen = new Set();
@@ -79,12 +81,12 @@ export async function collectNews(competitor) {
   for (const keyword of keywords) {
     const articles = await fetchGoogleNews(keyword);
     for (const a of articles) {
-      if (!seen.has(a.title) && isRecent(a.pubDate)) {
+      if (!seen.has(a.title) && isRecent(a.pubDate) && isRelevantArticle(a, competitor)) {
         seen.add(a.title);
         allArticles.push(a);
       }
     }
-    await new Promise(r => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 600));
   }
 
   const recent = allArticles.slice(0, MAX_ARTICLES);
@@ -93,11 +95,11 @@ export async function collectNews(competitor) {
     return {
       type:       'news',
       competitor: name,
-      data:       `No news articles found for ${name} in the past ${LOOKBACK_DAYS} days.`,
+      data:       `No relevant news articles found for ${name} in the past ${LOOKBACK_DAYS} days (after entity filtering).`,
     };
   }
 
-  const formatted = recent.map(a =>
+  const formatted = recent.map((a) =>
     `HEADLINE: ${a.title}\nSOURCE: ${a.source || 'unknown'}\nDATE: ${a.pubDate}\nSUMMARY: ${a.description || 'No description'}`
   ).join('\n\n---\n\n');
 

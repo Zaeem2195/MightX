@@ -87,6 +87,20 @@ Treat this as a **go-to-market wedge**, not a permanent product restriction. Exp
 
 ---
 
+## Competitor config — optional collector fields
+
+Per competitor in `config/clients/*.json` you can set:
+
+- **`atsProvider`** + **`atsSlug`**: `greenhouse` | `lever` | `ashby` plus the public board id — uses ATS JSON APIs instead of scraping careers HTML when set.
+- **`atsSlug` only** (no provider): tries Greenhouse → Lever → Ashby in order until one returns jobs.
+- **`knownHeadcountRange`**: `[min, max]` expected employees — suppresses bogus headcounts from LinkedIn login-wall HTML and prefers search-snippet hints when needed.
+
+News and funding collectors use **domain-aware Google News queries**, **`newsKeywords` first**, and **post-fetch relevance filtering** to cut generic word collisions (e.g. civic “outreach” vs Outreach.io).
+
+Analysis and report generation use **higher output token limits**, **JSON repair**, and **retry prompts** so Claude responses are less likely to fail mid-string.
+
+---
+
 ## Updating projections later
 
 If you change tier prices or churn assumptions, prefer:

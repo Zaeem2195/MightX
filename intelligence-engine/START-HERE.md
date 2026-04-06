@@ -1,4 +1,5 @@
 # START HERE
+
 ## Your Complete Execution Playbook
 
 This is the only document you need open day-to-day. It tells you exactly what to do and in what order. When you want strategic context or deeper explanation, open `BUSINESS-OPERATIONS.md`. For **how the revenue tables are calculated, path conventions, and product/marketing caveats**, open `DOCUMENTATION-NOTES.md`. For the current highest-odds validation path, open `VALIDATION-PLAYBOOK-SALES-TECH.md`.
@@ -26,13 +27,15 @@ You sell clients access to the Intelligence Engine.
 
 You need these active with API access before running either system:
 
-| Account | What for | Get API key from |
-|---|---|---|
-| Anthropic | Claude — powers all AI writing and analysis | console.anthropic.com → API Keys |
-| Apollo.io | Lead sourcing for your outbound | Apollo → Settings → Integrations → API |
-| Instantly | Sending your cold emails | Instantly → Settings → Integrations → API |
-| Gmail (or any SMTP) | Delivering client reports | Google Account → Security → App Passwords |
-| n8n (self-hosted) | Orchestration and cron scheduling | Already have this |
+
+| Account             | What for                                    | Get API key from                          |
+| ------------------- | ------------------------------------------- | ----------------------------------------- |
+| Anthropic           | Claude — powers all AI writing and analysis | console.anthropic.com → API Keys          |
+| Apollo.io           | Lead sourcing for your outbound             | Apollo → Settings → Integrations → API    |
+| Instantly           | Sending your cold emails                    | Instantly → Settings → Integrations → API |
+| Gmail (or any SMTP) | Delivering client reports                   | Google Account → Security → App Passwords |
+| n8n (self-hosted)   | Orchestration and cron scheduling           | Already have this                         |
+
 
 Clay free account has no API — used manually for research only until upgraded.
 
@@ -50,6 +53,7 @@ cp .env.example .env
 Open `.env` and fill in: `APOLLO_API_KEY`, `ANTHROPIC_API_KEY`, `INSTANTLY_API_KEY`, `INSTANTLY_CAMPAIGN_ID`
 
 Edit `config/icp.json` — set your target buyers:
+
 ```json
 {
   "titles": ["VP of Sales", "CRO", "Head of Sales Enablement", "VP of Product Marketing"],
@@ -109,12 +113,13 @@ If those look strong, use them as the first outreach assets. Only broaden beyond
 ### Step 5: Import n8n workflows
 
 In your n8n instance:
+
 1. Import `C:\mightx\intelligence-engine\n8n\intelligence-cron.json`
-   - Update the Execute Command node path to your actual server path
-   - Activate the workflow (fires every Monday 6am)
+  - Update the Execute Command node path to your actual server path
+  - Activate the workflow (fires every Monday 6am)
 2. Import `C:\mightx\gtm-engine\n8n\gtm-reply-handler.json`
-   - Set `SLACK_WEBHOOK_URL` in n8n environment variables
-   - Activate
+  - Set `SLACK_WEBHOOK_URL` in n8n environment variables
+  - Activate
 
 ---
 
@@ -142,6 +147,7 @@ npm run push-instantly
 ```
 
 Or run all steps at once (pauses for your review before sending):
+
 ```bash
 npm run pipeline
 ```
@@ -169,6 +175,7 @@ When they reply with any interest — send them one of your 3 demo reports. Do n
 ### Discovery call (15–30 min)
 
 Goal: confirm pain, not pitch the service. Ask these four questions:
+
 1. "When a competitor announces something, how does your team find out?"
 2. "Have reps been caught off-guard by a competitor on a call recently?"
 3. "Does anyone own competitive tracking consistently, or is it ad hoc?"
@@ -179,6 +186,7 @@ Yes to #2 and no to #3 = buyer. Send proposal within 4 hours.
 ### Proposal email
 
 Send a one-page email with:
+
 - The demo report you sent them (or a new one generated for their exact competitors)
 - Tier options — **three price anchors** on the page keeps decisions simple: **Starter $800 | Growth $2,500 | Strategic $4,000** (mention **Standard $1,500** in one line if they are between Starter and Growth — full matrix is in `BUSINESS-OPERATIONS.md` Section 3)
 - Annual option (15% off, e.g. "Growth annual = $2,125/mo")
@@ -203,9 +211,11 @@ npm run onboard
 ```
 
 After onboarding, manually review the first report before it sends:
+
 ```bash
 node scripts/run-client.js [client-id] --no-email
 # Open data/[client-id]/report-*.html in browser
+# Growth tier: same run also refreshes data/[client-id]/dashboard.html when includeDashboard is true
 # Check: are findings relevant? are competitor names right? does tone fit?
 # If yes:
 node scripts/run-client.js [client-id]
@@ -219,14 +229,16 @@ The client is now live. The n8n cron handles every Monday from here.
 
 ### Your weekly schedule
 
-| When | What | Time |
-|---|---|---|
-| **Monday morning** | Check Slack — confirm n8n reports sent, no errors | 10 min |
-| **Monday (if trigger)** | Send personal 3-line email to client flagging the trigger event | 5 min |
-| **Tuesday** | Post one LinkedIn competitive intelligence insight (anonymised from reports) | 20 min |
-| **Wednesday** | Run GTM Engine batch — 50 new leads | 20 min |
-| **Thursday** | Discovery calls, proposal follow-ups | Variable |
-| **Friday** | Onboard new clients, review pipeline | 0–2 hrs |
+
+| When                    | What                                                                         | Time     |
+| ----------------------- | ---------------------------------------------------------------------------- | -------- |
+| **Monday morning**      | Check Slack — confirm n8n reports sent, no errors                            | 10 min   |
+| **Monday (if trigger)** | Send personal 3-line email to client flagging the trigger event              | 5 min    |
+| **Tuesday**             | Post one LinkedIn competitive intelligence insight (anonymised from reports) | 20 min   |
+| **Wednesday**           | Run GTM Engine batch — 50 new leads                                          | 20 min   |
+| **Thursday**            | Discovery calls, proposal follow-ups                                         | Variable |
+| **Friday**              | Onboard new clients, review pipeline                                         | 0–2 hrs  |
+
 
 **Total at 4 clients: ~4–5 hours/week.**
 
@@ -234,12 +246,14 @@ The client is now live. The n8n cron handles every Monday from here.
 
 Check Slack. Common fixes:
 
-| Error | Fix |
-|---|---|
-| G2 scraper returned empty | G2 changed HTML — update selectors in `scripts/collectors/g2-monitor.js` |
-| SMTP auth failed | Regenerate Gmail App Password → update `.env` |
-| Claude API rate limit | Increase `DELAY` in `scripts/analyse.js` (line ~12) |
-| Competitor website blocked scrape | Set that competitor's website to `null` temporarily in client config |
+
+| Error                             | Fix                                                                      |
+| --------------------------------- | ------------------------------------------------------------------------ |
+| G2 scraper returned empty         | G2 changed HTML — update selectors in `scripts/collectors/g2-monitor.js` |
+| SMTP auth failed                  | Regenerate Gmail App Password → update `.env`                            |
+| Claude API rate limit             | Increase `DELAY` in `scripts/analyse.js` (line ~12)                      |
+| Competitor website blocked scrape | Set that competitor's website to `null` temporarily in client config     |
+
 
 ---
 
@@ -248,6 +262,7 @@ Check Slack. Common fixes:
 ### Monthly (for Growth/Strategic clients)
 
 Generate and attach the dashboard to each Monday email:
+
 ```bash
 node scripts/generate-dashboard.js [client-id]
 # Output: data/[client-id]/dashboard.html
@@ -265,11 +280,13 @@ node scripts/generate-quarterly-summary.js [client-id] --quarter Q1-2026
 ```
 
 Send the quarterly summary with a short personal note:
+
 > "Here's everything we caught for you in Q1. If any of these influenced a deal outcome, I'd love to know — it helps me sharpen the system."
 
 ### Log win stories
 
 When a client tells you the report helped close or protect a deal, open their config and add it:
+
 ```json
 "retention": {
   "winStories": [
@@ -292,14 +309,16 @@ Every referred client closes 3x faster and churns half as often.
 
 These targets assume the **moderate** execution path in `BUSINESS-OPERATIONS.md` Section 7 (active outbound, referrals, annual contracts). The **conservative** scenario is slower — both are valid; see `DOCUMENTATION-NOTES.md` if you want to compare.
 
-| Milestone | Target month | How |
-|---|---|---|
-| First paying client | Month 2–3 | Outbound + free demo report close |
-| ~$5,000 forward MRR | Month 5–6 | e.g. 2× Growth + 1× Standard, or 3× blended tier |
-| First annual contract | Month 4–6 | Offer 15% discount at proposal |
-| ~$10,000 forward MRR | Month 7–9 | ~4–5 clients at mixed tiers (not all Growth) |
-| First referral client | Month 4–5 | Ask every happy client at month 3 |
-| ~$20,000 forward MRR | Month 12–14 | 8–10 clients, referral flywheel running |
+
+| Milestone             | Target month | How                                              |
+| --------------------- | ------------ | ------------------------------------------------ |
+| First paying client   | Month 2–3    | Outbound + free demo report close                |
+| ~$5,000 forward MRR   | Month 5–6    | e.g. 2× Growth + 1× Standard, or 3× blended tier |
+| First annual contract | Month 4–6    | Offer 15% discount at proposal                   |
+| ~$10,000 forward MRR  | Month 7–9    | ~4–5 clients at mixed tiers (not all Growth)     |
+| First referral client | Month 4–5    | Ask every happy client at month 3                |
+| ~$20,000 forward MRR  | Month 12–14  | 8–10 clients, referral flywheel running          |
+
 
 ---
 
@@ -356,12 +375,15 @@ C:\mightx\
 
 ## When You're Stuck
 
-| Problem | Where to look |
-|---|---|
-| Business strategy, pricing, sales scripts | `BUSINESS-OPERATIONS.md` sections 3–4 |
-| Revenue projections and milestones | `BUSINESS-OPERATIONS.md` section 7 + `DOCUMENTATION-NOTES.md` |
-| Retention tactics and churn prevention | `BUSINESS-OPERATIONS.md` sections 8–9 |
-| Technical setup and commands | This file (above) |
-| A specific script is broken | Read the file — every script has usage comments at the top |
-| A client's report looks wrong | Adjust their config in `config/clients/[id].json`, re-run with `--no-email` |
-| n8n workflow not firing | Check n8n → Executions log. Most common: path in Execute Command node is wrong |
+
+| Problem                                   | Where to look                                                                  |
+| ----------------------------------------- | ------------------------------------------------------------------------------ |
+| Business strategy, pricing, sales scripts | `BUSINESS-OPERATIONS.md` sections 3–4                                          |
+| Revenue projections and milestones        | `BUSINESS-OPERATIONS.md` section 7 + `DOCUMENTATION-NOTES.md`                  |
+| Retention tactics and churn prevention    | `BUSINESS-OPERATIONS.md` sections 8–9                                          |
+| Technical setup and commands              | This file (above)                                                              |
+| A specific script is broken               | Read the file — every script has usage comments at the top                     |
+| A client's report looks wrong             | Adjust their config in `config/clients/[id].json`, re-run with `--no-email`    |
+| n8n workflow not firing                   | Check n8n → Executions log. Most common: path in Execute Command node is wrong |
+
+

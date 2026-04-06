@@ -15,19 +15,13 @@
 
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 
 const clientIdArg = process.argv[2];
 const allClients = process.argv.includes('--all');
-
-if (!clientIdArg && !allClients) {
-  console.error('Usage: node scripts/generate-dashboard.js <client-id>');
-  console.error('       node scripts/generate-dashboard.js --all');
-  process.exit(1);
-}
 
 function loadClientConfig(clientId) {
   const configPath = path.join(ROOT, 'config', 'clients', `${clientId}.json`);
@@ -216,16 +210,18 @@ function buildDashboardHTML(clientConfig, reports, events, competitorStats) {
 </html>`;
 }
 
-function generateDashboard(clientId) {
+/**
+ * Generate dashboard.html for one client (used by CLI and run-client pipeline).
+ * @returns {{ ok: boolean, path?: string, message?: string }}
+ */
+export function generateClientDashboard(clientId) {
   const clientConfig = loadClientConfig(clientId);
   if (!clientConfig) {
-    console.error(`❌  Client config not found: ${clientId}`);
-    return false;
+    return { ok: false, message: `Client config not found: ${clientId}` };
   }
 
   if (clientConfig.reportPreferences?.includeDashboard === false) {
-    console.log(`⏭️   Dashboard disabled for ${clientConfig.name}. Skipping.`);
-    return true;
+    return { ok: true, message: `Dashboard disabled for ${clientConfig.name}` };
   }
 
   const reports = loadAllReports(clientId);
@@ -239,11 +235,20 @@ function generateDashboard(clientId) {
   const dashboardPath = path.join(dataDir, 'dashboard.html');
   fs.writeFileSync(dashboardPath, html);
 
-  console.log(`✅  ${clientConfig.name}: data/${clientId}/dashboard.html (${reports.length} reports, ${events.length} events)`);
-  return true;
+  return {
+    ok: true,
+    path: dashboardPath,
+    message: `${clientConfig.name}: data/${clientId}/dashboard.html (${reports.length} reports, ${events.length} events)`,
+  };
 }
 
 function main() {
+  if (!clientIdArg && !allClients) {
+    console.error('Usage: node scripts/generate-dashboard.js <client-id>');
+    console.error('       node scripts/generate-dashboard.js --all');
+    process.exit(1);
+  }
+
   console.log('\n╔══════════════════════════════════════════════╗');
   console.log('║         CLIENT DASHBOARD GENERATOR            ║');
   console.log('╚══════════════════════════════════════════════╝\n');
@@ -257,13 +262,24 @@ function main() {
     let success = 0;
     for (const f of files) {
       const id = f.replace('.json', '');
-      if (generateDashboard(id)) success++;
+      const r = generateClientDashboard(id);
+      if (r.ok) {
+        success++;
+        console.log(`✅  ${r.message}`);
+      } else {
+        console.error(`❌  ${r.message}`);
+      }
     }
     console.log(`\n✅  Done. ${success}/${files.length} dashboards generated.\n`);
   } else {
-    generateDashboard(clientIdArg);
+    const r = generateClientDashboard(clientIdArg);
+    if (r.ok) console.log(`✅  ${r.message}`);
+    else console.error(`❌  ${r.message}`);
     console.log();
   }
 }
 
-main();
+const isMain = process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
+if (isMain) {
+  main();
+}

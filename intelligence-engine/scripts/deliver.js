@@ -47,12 +47,18 @@ export async function deliverReport(clientConfig, html, reportContent) {
   const fromName  = process.env.SMTP_FROM_NAME  || 'Intelligence Briefing';
   const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
 
+  const cid = clientConfig.id || 'client';
+  const dashLine =
+    clientConfig.reportPreferences?.includeDashboard !== false
+      ? ` Dashboard (archive + timeline): your operator hosts data/${cid}/dashboard.html or sends a link — regenerated each weekly run.`
+      : '';
+
   const info = await transporter.sendMail({
     from:    `"${fromName}" <${fromEmail}>`,
     to:      toList.join(', '),
     subject,
     html,
-    text:    `Weekly intelligence briefing for ${clientConfig.name}. Open this email in a browser to view the full report.`,
+    text:    `Weekly intelligence briefing for ${clientConfig.name}. Open this email in a browser to view the full report.${dashLine}`,
   });
 
   const hasTrigger = reportContent?.topAlert?.exists || reportContent?.triggerEmails?.exists;

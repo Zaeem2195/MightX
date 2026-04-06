@@ -26,6 +26,16 @@ Prioritise findings that help answer questions like:
 
 If the data contains nothing strategically meaningful, say so clearly. Do not pad the analysis.
 
+PROVENANCE (for trust):
+- evidenceBasis: where the claim is grounded
+  - first_party — competitor's own site, careers page, official post
+  - third_party_press — news, press, analyst, reputable blog
+  - search_snippet — search-engine or RSS snippet (not full article)
+  - aggregator — G2, Crunchbase-style summaries, job boards listing many employers
+  - inferred — reasonable inference from hiring mix, wording, or patterns (say so in detail)
+  - unknown — unclear from raw text
+- sourceConfidence: high | medium | low — how strong the evidence is for that finding
+
 OUTPUT FORMAT (JSON only, no markdown):
 {
   "competitorName": "...",
@@ -38,7 +48,9 @@ OUTPUT FORMAT (JSON only, no markdown):
       "implication": "What this means for the client's sales motion, positioning, or objection handling",
       "talkTrack": "One sentence a rep could actually use on a call or in an email. If none, return null.",
       "urgency": "immediate | this_week | monitor",
-      "isTriggerEvent": true or false
+      "isTriggerEvent": true or false,
+      "evidenceBasis": "first_party | third_party_press | search_snippet | aggregator | inferred | unknown",
+      "sourceConfidence": "high | medium | low"
     }
   ],
   "triggerEventSummary": "If isTriggerEvent is true on any finding, one sentence describing the opportunity. Otherwise null."
