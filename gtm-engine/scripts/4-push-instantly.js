@@ -6,6 +6,9 @@
  * personalised subject/body as custom variables →
  * saves push log to data/push-log-[timestamp].json
  *
+ * Uses Instantly API v2 (Authorization: Bearer). v1 was deprecated Jan 2026.
+ * New key: https://developer.instantly.ai/getting-started/getting-started
+ *
  * Instantly handles: sending schedule, warmup, reply detection,
  * unsubscribe, open tracking, and bounce management.
  *
@@ -24,13 +27,14 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 
-const INSTANTLY_BASE        = 'https://api.instantly.ai/api/v1';
+const INSTANTLY_API_BASE    = 'https://api.instantly.ai/api/v2';
 const INSTANTLY_API_KEY     = process.env.INSTANTLY_API_KEY;
 const INSTANTLY_CAMPAIGN_ID = process.env.INSTANTLY_CAMPAIGN_ID;
 const BATCH_DELAY           = 500;   // ms between Instantly API calls
 
 if (!INSTANTLY_API_KEY || !INSTANTLY_CAMPAIGN_ID) {
   console.error('❌  INSTANTLY_API_KEY and INSTANTLY_CAMPAIGN_ID must be set in .env');
+  console.error('    Use an API v2 key (Settings → API → create key with leads scope).');
   process.exit(1);
 }
 
@@ -142,38 +146,38 @@ function loadCopyData() {
   };
 }
 
-// ── Add a single lead to Instantly ───────────────────────────────────────────
+// ── Add a single lead via Instantly API v2 ───────────────────────────────────
 async function pushLead(entry) {
-  const payload = {
-    api_key:                INSTANTLY_API_KEY,
-    campaign_id:            INSTANTLY_CAMPAIGN_ID,
-    skip_if_in_workspace:   true,    // idempotent — won't duplicate leads
-    leads: [
-      {
-        email:        entry.email,
-        first_name:   entry.firstName,
-        last_name:    entry.lastName,
-        company_name: entry.companyName,
-        // Custom variables map to {{subject}} and {{body}} in your Instantly template
-        // Set your Instantly sequence step to use these variables.
-        custom_variables: {
-          ai_subject: entry.subject,
-          ai_body:    entry.body,
-          title:      entry.title,
-        },
-      },
-    ],
+  const body = {
+    campaign: INSTANTLY_CAMPAIGN_ID,
+    email: entry.email,
+    first_name: entry.firstName,
+    last_name: entry.lastName,
+    company_name: entry.companyName,
+    skip_if_in_workspace: true,
+    custom_variables: {
+      ai_subject: entry.subject,
+      ai_body: entry.body,
+      title: entry.title,
+    },
   };
 
-  const res = await fetch(`${INSTANTLY_BASE}/lead/add`, {
+  const res = await fetch(`${INSTANTLY_API_BASE}/leads`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${INSTANTLY_API_KEY}`,
+    },
+    body: JSON.stringify(body),
   });
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Instantly API ${res.status}: ${err}`);
+    let hint = '';
+    if (res.status === 401) {
+      hint = ' (create a new API v2 key in Instantly → Settings → API; v1 keys no longer work with this script)';
+    }
+    throw new Error(`Instantly API ${res.status}: ${err}${hint}`);
   }
 
   return res.json();

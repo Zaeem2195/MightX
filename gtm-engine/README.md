@@ -63,7 +63,7 @@ Open `.env` and fill in:
 |---|---|
 | `APOLLO_API_KEY` | Apollo → Settings → Integrations → API |
 | `ANTHROPIC_API_KEY` | console.anthropic.com → API Keys |
-| `INSTANTLY_API_KEY` | Instantly → Settings → Integrations → API |
+| `INSTANTLY_API_KEY` | Instantly **API v2** key (Bearer) — [Getting started](https://developer.instantly.ai/getting-started/getting-started) |
 | `INSTANTLY_CAMPAIGN_ID` | Create a campaign in Instantly, copy the ID from the URL |
 | `N8N_WEBHOOK_URL` | Generated after importing the n8n workflow (Step 5 below) |
 | `SLACK_WEBHOOK_URL` | Slack → Apps → Incoming Webhooks (optional) |

@@ -50,7 +50,7 @@ cd C:\mightx\gtm-engine
 cp .env.example .env
 ```
 
-Open `.env` and fill in: `APOLLO_API_KEY`, `ANTHROPIC_API_KEY`, `INSTANTLY_API_KEY`, `INSTANTLY_CAMPAIGN_ID`
+Open `.env` and fill in: `APOLLO_API_KEY`, `ANTHROPIC_API_KEY`, `INSTANTLY_API_KEY` (Instantly **API v2**), `INSTANTLY_CAMPAIGN_ID`
 
 Edit `config/icp.json` — set your target buyers:
 
