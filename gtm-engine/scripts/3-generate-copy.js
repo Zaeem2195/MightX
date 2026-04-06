@@ -9,7 +9,11 @@
  * review BEFORE anything is sent. Run push-instantly.js only
  * after you've spot-checked the output.
  *
- * Usage: npm run generate-copy
+ * Usage:
+ *   npm run generate-copy
+ *   npm run generate-copy -- --first 10          # smoke test
+ *   npm run generate-copy -- --first 500          # first batch of 500
+ *   npm run generate-copy -- --offset 500 --limit 500   # next 500 (501–1000)
  */
 
 import 'dotenv/config';
@@ -30,6 +34,65 @@ const MAX_RETRIES   = 2;
 if (!process.env.ANTHROPIC_API_KEY) {
   console.error('❌  ANTHROPIC_API_KEY missing from .env');
   process.exit(1);
+}
+
+/** Optional: --first N → slice(0, N). Takes precedence over --offset/--limit. */
+function parseFirstArg() {
+  const idx = process.argv.indexOf('--first');
+  if (idx === -1 || !process.argv[idx + 1]) return null;
+  const n = parseInt(process.argv[idx + 1], 10);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+function parseNonNegInt(flag) {
+  const idx = process.argv.indexOf(flag);
+  if (idx === -1 || !process.argv[idx + 1]) return null;
+  const n = parseInt(process.argv[idx + 1], 10);
+  return Number.isFinite(n) && n >= 0 ? n : null;
+}
+
+/** --first N, or --offset / --limit for batches (500 at a time, etc.). */
+function resolveLeadsSlice(allLeads) {
+  const total = allLeads.length;
+  const first = parseFirstArg();
+
+  if (first != null) {
+    return {
+      leads:     allLeads.slice(0, Math.min(first, total)),
+      batchMeta: { mode: 'first', first, totalInFile: total },
+    };
+  }
+
+  const hasOffset = process.argv.includes('--offset');
+  const hasLimit = process.argv.includes('--limit');
+  const offParsed = parseNonNegInt('--offset');
+  const limParsed = parseNonNegInt('--limit');
+  const offset = hasOffset && offParsed != null ? offParsed : 0;
+
+  if (!hasOffset && !hasLimit) {
+    return { leads: allLeads, batchMeta: { mode: 'all', totalInFile: total } };
+  }
+
+  if (hasLimit && limParsed != null && limParsed > 0) {
+    const end = Math.min(offset + limParsed, total);
+    return {
+      leads:     allLeads.slice(offset, end),
+      batchMeta: {
+        mode: 'range', offset, limit: limParsed, endExclusive: end, totalInFile: total,
+      },
+    };
+  }
+
+  if (hasOffset) {
+    return {
+      leads:     allLeads.slice(offset),
+      batchMeta: {
+        mode: 'range', offset, limit: null, toEnd: true, totalInFile: total,
+      },
+    };
+  }
+
+  return { leads: allLeads, batchMeta: { mode: 'all', totalInFile: total } };
 }
 
 // ── Load latest enriched file ─────────────────────────────────────────────────
@@ -110,11 +173,15 @@ async function generateCopy(lead, promptTemplate, attempt = 0) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 async function main() {
-  const data     = loadLatestEnriched();
-  const leads    = data.leads || [];
-  const prompt   = loadPrompt();
+  const data = loadLatestEnriched();
+  const allLeads = data.leads || [];
+  const { leads, batchMeta } = resolveLeadsSlice(allLeads);
+  const prompt = loadPrompt();
 
   console.log(`\n✍️   Generating copy for ${leads.length} leads via Claude (${MODEL})...\n`);
+  if (batchMeta.mode !== 'all') {
+    console.log(`    (batch: ${JSON.stringify(batchMeta)})\n`);
+  }
   console.log('    ⚠️  You will review the output BEFORE anything is sent to Instantly.\n');
 
   const results  = [];
@@ -167,6 +234,7 @@ async function main() {
       totalGenerated: results.length,
       totalFailed:    failures.length,
       estimatedCost:  `~$${estimatedCost}`,
+      batch:          batchMeta,
       reviewNote:     'REVIEW THIS FILE before running push-instantly. Spot-check at least 10% of entries.',
     },
     copy: results,

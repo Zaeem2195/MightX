@@ -146,6 +146,8 @@ npm run generate-copy
 npm run push-instantly
 ```
 
+Optional **batching** (same flags as `gtm-engine/README.md`): e.g. `npm run generate-copy -- --first 500`, `npm run push-instantly -- --file data/copy-….json --first 10`. Use `--offset` / `--limit` for the next slice; `--max-leads` on `pull-leads` for large Apollo pulls.
+
 Or run all steps at once (pauses for your review before sending):
 
 ```bash
@@ -333,6 +335,17 @@ npm run enrich            # Step 2: Enrich leads only
 npm run generate-copy     # Step 3: Claude copy generation only
 npm run push-instantly    # Step 4: Push to Instantly only
 npm run classify-reply    # Classify a reply (pipe text in)
+```
+
+Optional flags (pass after `--`; full table: **`gtm-engine/README.md`** → *CLI flags*):
+
+```bash
+npm run pull-leads -- --max-leads 500
+npm run generate-copy -- --first 10
+npm run generate-copy -- --offset 500 --limit 500
+npm run push-instantly -- --file copy-2026-04-06T05-23-28.json
+npm run push-instantly -- --first 10
+npm run push-instantly -- --offset 10 --limit 500
 ```
 
 ### Intelligence Engine (`C:\mightx\intelligence-engine`)
