@@ -1,6 +1,6 @@
 # GTM Engine
 
-Autonomous B2B outbound infrastructure. Pulls ICP-matched leads from Apollo, generates personalised cold email copy via Claude, pushes campaigns to Instantly, and classifies replies automatically via n8n.
+Autonomous B2B outbound infrastructure. Pulls ICP-matched leads from Apollo, generates personalised cold email copy via Claude, then either **pushes to Instantly via API** or **exports a CSV** for manual upload (e.g. Starter plan without API access). Reply classification runs via n8n.
 
 Built to replace or augment SDR headcount for B2B SaaS sales teams.
 
@@ -19,7 +19,9 @@ Apollo API
     ↓
   REVIEW          — You spot-check the output before anything sends
     ↓
-4-push-instantly  — Leads + AI copy pushed to Instantly campaign
+4a-push-instantly — API: leads + copy sent to Instantly (paid plans with API)
+    OR
+4b-export-copy-csv — CSV file for manual upload in Instantly (no API, e.g. Starter)
     ↓
 Instantly         — Handles sending schedule, warmup, bounce, unsubscribe
     ↓
@@ -36,7 +38,8 @@ REFERRAL    → Slack alert (find the referred contact)
 ## Prerequisites
 
 - Node.js 18+
-- Accounts with API access: Apollo.io, Anthropic, Instantly
+- Accounts with API access: **Apollo.io**, **Anthropic**
+- **Instantly:** an account and a campaign with `{{ai_subject}}` / `{{ai_body}}` in the sequence. **API access** is only required if you use **`npm run push-instantly`**; **`npm run export-copy-csv`** needs no Instantly API key.
 - n8n (self-hosted or cloud) for reply routing
 - Slack incoming webhook (optional, for hot-lead alerts)
 
@@ -122,6 +125,8 @@ npm run pipeline
 
 Runs all four steps in sequence. Pauses before the Instantly push so you can review the generated copy. Type `yes` to confirm and send.
 
+> **`npm run pipeline` always runs step 4 as `push-instantly` (API).** If you only use CSV import, run steps 1–3 manually (`pull-leads` → `enrich` → `generate-copy`), then **`npm run export-copy-csv`** instead of step 4.
+
 To skip the review prompt (for scheduled/automated runs after you trust the output quality):
 
 ```bash
@@ -172,6 +177,38 @@ npm run export-copy-csv -- --out data/batch-1.csv
 ```
 
 Push logs in `data/push-log-*.json` record `copyFile` and `batch` when you use these options.
+
+### Instantly without API — CSV import (e.g. Starter plan)
+
+If your Instantly plan does **not** include API access, skip **`push-instantly`** and use **`export-copy-csv`** after **`generate-copy`**.
+
+1. Generate the CSV (same batching flags as API push):
+
+   ```bash
+   npm run export-copy-csv
+   npm run export-copy-csv -- --file copy-2026-04-06T05-23-28.json
+   npm run export-copy-csv -- --first 500 --out data/batch-1.csv
+   ```
+
+2. Output: **`data/copy-export-[timestamp].csv`** (or **`--out`** path). Encoding: **UTF-8 with BOM** for Excel.
+
+3. **Columns** (header row):
+
+   | Column | Maps to in Instantly |
+   |--------|----------------------|
+   | `email` | Email |
+   | `first_name` | First name |
+   | `last_name` | Last name |
+   | `company_name` | Company |
+   | `ai_subject` | Sequence subject line variable `{{ai_subject}}` |
+   | `ai_body` | Email body variable `{{ai_body}}` |
+   | `title` | Optional extra variable `{{title}}` if you use it |
+
+4. In Instantly: open your campaign → **Leads** → **Upload CSV** (or Import). Map each column to the matching lead field or **custom variable** so they align with your sequence — same `{{ai_subject}}` / `{{ai_body}}` placeholders as in **Step 4. Set up your Instantly campaign** above.
+
+5. You do **not** need `INSTANTLY_API_KEY` or `INSTANTLY_CAMPAIGN_ID` in `.env` for this path (still set them when you upgrade and use **`push-instantly`**).
+
+Implementation: `scripts/6-export-copy-csv.js`.
 
 ### Classify a reply manually (for testing)
 

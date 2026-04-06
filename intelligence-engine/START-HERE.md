@@ -2,7 +2,7 @@
 
 ## Your Complete Execution Playbook
 
-This is the only document you need open day-to-day. It tells you exactly what to do and in what order. When you want strategic context or deeper explanation, open `BUSINESS-OPERATIONS.md`. For **how the revenue tables are calculated, path conventions, and product/marketing caveats**, open `DOCUMENTATION-NOTES.md`. For the current highest-odds validation path, open `VALIDATION-PLAYBOOK-SALES-TECH.md`.
+This is the only document you need open day-to-day. It tells you exactly what to do and in what order. When you want strategic context or deeper explanation, open `BUSINESS-OPERATIONS.md`. For **how the revenue tables are calculated, path conventions, and product/marketing caveats**, open `DOCUMENTATION-NOTES.md`. For **GTM details** (CLI flags, Instantly CSV vs API), open `gtm-engine/README.md`. For the current highest-odds validation path, open `VALIDATION-PLAYBOOK-SALES-TECH.md`.
 
 ---
 
@@ -142,11 +142,15 @@ npm run enrich
 npm run generate-copy
 
 # Open data/copy-*.json — spot check 5–10 emails for quality
-# Then push to Instantly
+# Then either push via API OR export CSV for manual Instantly upload:
 npm run push-instantly
+# — or, if you do not have Instantly API access (e.g. Starter plan):
+npm run export-copy-csv
 ```
 
-Optional **batching** (same flags as `gtm-engine/README.md`): e.g. `npm run generate-copy -- --first 500`, `npm run push-instantly -- --file data/copy-….json --first 10`. Use `--offset` / `--limit` for the next slice; `--max-leads` on `pull-leads` for large Apollo pulls.
+**Instantly Starter / no API:** use **`npm run export-copy-csv`** instead of **`push-instantly`**. It writes a UTF-8 CSV (`data/copy-export-*.csv`) with `email`, names, company, `ai_subject`, `ai_body`, `title` — upload that file under your campaign → Leads. Full steps and column mapping: **`gtm-engine/README.md`** → section *Instantly without API — CSV import*.
+
+Optional **batching** (same flags as `gtm-engine/README.md`): e.g. `npm run generate-copy -- --first 500`, `npm run push-instantly` / `export-copy-csv` with `--file`, `--first`, `--offset` / `--limit`. Use `--max-leads` on `pull-leads` for large Apollo pulls.
 
 Or run all steps at once (pauses for your review before sending):
 
@@ -347,6 +351,8 @@ npm run generate-copy -- --offset 500 --limit 500
 npm run push-instantly -- --file copy-2026-04-06T05-23-28.json
 npm run push-instantly -- --first 10
 npm run push-instantly -- --offset 10 --limit 500
+npm run export-copy-csv -- --file copy-2026-04-06T05-23-28.json
+npm run export-copy-csv -- --first 500 --out data/batch-1.csv
 ```
 
 ### Intelligence Engine (`C:\mightx\intelligence-engine`)
@@ -370,8 +376,9 @@ node scripts/generate-quarterly-summary.js [id] --quarter Q2-2026   # Specific q
 ```
 C:\mightx\
 ├── gtm-engine\                  ← Your outbound system (finds clients for you)
+│   ├── README.md                ← GTM commands, CLI flags, Instantly CSV vs API push
 │   ├── config\icp.json          ← Edit this to define who you're targeting
-│   ├── scripts\                 ← Pipeline steps
+│   ├── scripts\                 ← Pipeline steps (incl. 6-export-copy-csv.js)
 │   └── .env                     ← Your API keys (create from .env.example)
 │
 └── intelligence-engine\         ← The product you sell
@@ -395,9 +402,10 @@ C:\mightx\
 | Business strategy, pricing, sales scripts | `BUSINESS-OPERATIONS.md` sections 3–4                                          |
 | Revenue projections and milestones        | `BUSINESS-OPERATIONS.md` section 7 + `DOCUMENTATION-NOTES.md`                  |
 | Retention tactics and churn prevention    | `BUSINESS-OPERATIONS.md` sections 8–9                                          |
-| Technical setup and commands              | This file (above)                                                              |
+| Technical setup and commands              | This file (above); **`gtm-engine/README.md`** for GTM flags, CSV vs API        |
 | A specific script is broken               | Read the file — every script has usage comments at the top                     |
 | A client's report looks wrong             | Adjust their config in `config/clients/[id].json`, re-run with `--no-email`    |
 | n8n workflow not firing                   | Check n8n → Executions log. Most common: path in Execute Command node is wrong |
+| No Instantly API (Starter plan)           | Use **`npm run export-copy-csv`** in `gtm-engine` → upload CSV; see **`gtm-engine/README.md`** |
 
 

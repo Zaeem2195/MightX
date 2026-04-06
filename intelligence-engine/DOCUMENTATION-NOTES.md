@@ -10,6 +10,7 @@ This file is for **you** (the operator), not clients. It explains how the busine
 |---|---|
 | `START-HERE.md` | Day-to-day execution: commands, phases, weekly rhythm. |
 | `BUSINESS-OPERATIONS.md` | Strategy, pricing, projections, positioning, risks. |
+| `../gtm-engine/README.md` | GTM pipeline: npm scripts, CLI flags, **Instantly API push vs CSV export** (Starter / no API). |
 | This file | Conventions, caveats, and how the projections were reconciled. |
 
 ---
@@ -17,6 +18,18 @@ This file is for **you** (the operator), not clients. It explains how the busine
 ## Paths in `START-HERE.md`
 
 Commands use **`C:\mightx\...`** (lowercase). Your machine may use **`C:\MightX`** — Windows paths are case-insensitive for the default volume, but if you clone to Linux or share the repo, replace with your actual paths or use relative paths from the repo root.
+
+---
+
+## GTM Engine — Instantly CSV when you have no API
+
+Some Instantly plans (e.g. **Starter**) do not include **API** access, so **`npm run push-instantly`** will not work. The repo supports an alternate path:
+
+1. Run the same pipeline through **`generate-copy`** (Apollo → enrich → Claude copy).
+2. Run **`npm run export-copy-csv`** in `gtm-engine` — produces **`data/copy-export-*.csv`** with columns **`email`**, **`first_name`**, **`last_name`**, **`company_name`**, **`ai_subject`**, **`ai_body`**, **`title`** (UTF-8 with BOM).
+3. Import that CSV in Instantly (campaign → Leads → upload) and map columns to your sequence variables (`{{ai_subject}}`, `{{ai_body}}`, etc.).
+
+**Authoritative detail** (batching flags, `--out`, troubleshooting): **`gtm-engine/README.md`** → *Instantly without API — CSV import*. Script: **`gtm-engine/scripts/6-export-copy-csv.js`**.
 
 ---
 
