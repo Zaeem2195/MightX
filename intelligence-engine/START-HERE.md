@@ -333,7 +333,8 @@ npm run pipeline          # Full outbound pipeline (pull → enrich → copy →
 npm run pull-leads        # Step 1: Apollo lead pull only
 npm run enrich            # Step 2: Enrich leads only
 npm run generate-copy     # Step 3: Claude copy generation only
-npm run push-instantly    # Step 4: Push to Instantly only
+npm run push-instantly    # Step 4: Push to Instantly only (API; paid plans)
+npm run export-copy-csv   # CSV for manual Instantly upload if you have no API (e.g. Starter)
 npm run classify-reply    # Classify a reply (pipe text in)
 ```
 

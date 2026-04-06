@@ -9,6 +9,7 @@
     "enrich":           "node scripts/2-enrich-leads.js",
     "generate-copy":    "node scripts/3-generate-copy.js",
     "push-instantly":   "node scripts/4-push-instantly.js",
+    "export-copy-csv":  "node scripts/6-export-copy-csv.js",
     "classify-reply":   "node scripts/5-classify-replies.js"
   },
   "dependencies": {

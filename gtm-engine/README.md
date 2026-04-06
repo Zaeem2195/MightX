@@ -134,7 +134,9 @@ npm run pipeline -- --auto-approve
 npm run pull-leads      # Step 1: Pull leads from Apollo
 npm run enrich          # Step 2: Enrich with personalization variables
 npm run generate-copy   # Step 3: Generate email copy via Claude
-npm run push-instantly  # Step 4: Push to Instantly campaign
+npm run push-instantly  # Step 4: Push to Instantly campaign (requires API — paid plans)
+# OR, without API (e.g. Starter): export CSV and upload leads manually in Instantly
+npm run export-copy-csv
 ```
 
 Each step reads the latest output file from the previous step automatically (by filename sort), except **`push-instantly`** when you pass **`--file`** (see below).
@@ -151,6 +153,8 @@ Pass flags after `npm run <script> --` so they reach the Node script.
 | **`push-instantly`** | `--file <path>` | Load a **specific** copy file instead of the latest `copy-*.json`. Bare filename → `data/<filename>`. You can also pass `data/copy-….json` or an absolute path. |
 | | `--first N` | Push only the **first N** entries from that copy file. |
 | | `--offset O` `--limit L` | Push a **slice** of the copy file (same rules as `generate-copy`). |
+| **`export-copy-csv`** | `--file`, `--first`, `--offset`, `--limit` | Same as above — writes **`data/copy-export-[timestamp].csv`** (UTF-8 with BOM) for **manual** Instantly CSV import when you do not have API access. |
+| | `--out <path>` | Write CSV to a specific path (relative to `gtm-engine` or absolute). |
 
 Examples:
 
@@ -162,6 +166,9 @@ npm run generate-copy -- --offset 10 --limit 500
 npm run push-instantly -- --file copy-2026-04-06T05-23-28.json
 npm run push-instantly -- --file copy-2026-04-06T05-23-28.json --first 10
 npm run push-instantly -- --offset 500 --limit 500
+npm run export-copy-csv -- --file copy-2026-04-06T05-23-28.json
+npm run export-copy-csv -- --first 500
+npm run export-copy-csv -- --out data/batch-1.csv
 ```
 
 Push logs in `data/push-log-*.json` record `copyFile` and `batch` when you use these options.
@@ -191,6 +198,7 @@ All output is saved to `data/` (gitignored):
 | `leads-[timestamp].json` | Raw Apollo leads |
 | `enriched-[timestamp].json` | Leads with personalization variables |
 | `copy-[timestamp].json` | AI-generated subject lines and email bodies |
+| `copy-export-[timestamp].csv` | CSV from **`export-copy-csv`** for manual Instantly upload (`ai_subject`, `ai_body`, `title` columns) |
 | `push-log-[timestamp].json` | Instantly push results (success/failure per lead); includes `copyFile` / `batch` when flags were used |
 
 Each script reads the most recently dated file from the previous step, so you can re-run individual steps without re-processing the whole pipeline. **`push-instantly --file`** is the exception: it uses the path you pass instead of the latest `copy-*.json`.
