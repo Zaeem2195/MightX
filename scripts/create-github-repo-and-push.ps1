@@ -63,7 +63,14 @@ if ($gh) {
       Write-Host "Done: https://github.com/$Owner/$RepoName" -ForegroundColor Green
       exit 0
     }
-    Write-Host "gh repo create exited with an error - if the repo already exists, try: git push -u origin main" -ForegroundColor Yellow
+    # Common case: remote "origin" already points at GitHub; gh cannot add it again but repo may exist.
+    Write-Host "gh repo create did not complete cleanly (e.g. remote 'origin' already exists). Trying: git push -u origin main" -ForegroundColor Yellow
+    git push -u origin main
+    if ($LASTEXITCODE -eq 0) {
+      Write-Host "Done: https://github.com/$Owner/$RepoName" -ForegroundColor Green
+      exit 0
+    }
+    Write-Host "git push failed. Check: git remote -v, branch main, and that the repo exists on GitHub." -ForegroundColor Red
     exit $LASTEXITCODE
   }
 }
