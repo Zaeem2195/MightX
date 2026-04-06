@@ -297,10 +297,23 @@ If you are closing your first 2–3 clients and running your own outbound, the A
 
 ### `push-instantly` returns `401` / `Invalid API key`
 
-1. Use an **API v2** key from [Integrations → API Keys](https://app.instantly.ai/app/settings/integrations) (v1 keys do not work with `api/v2`).
-2. Paste **only** the key into `INSTANTLY_API_KEY` — no `Bearer ` prefix, no quotes unless your tooling requires them.
-3. Confirm the key in the [API docs “Try it”](https://developer.instantly.ai) panel; if it fails there too, create a **new** key and revoke the old one.
-4. Run commands from `gtm-engine` so `dotenv` loads `gtm-engine/.env`.
+Instantly’s support checklist (and what this repo does):
+
+| Check | Details |
+|--------|---------|
+| **Header** | Send the key as **`Authorization: Bearer YOUR_API_KEY`** — header name exactly `Authorization`, single space after `Bearer`, no extra spaces inside the key. |
+| **HTTPS** | All requests use `https://api.instantly.ai` (the script uses `fetch` over HTTPS). |
+| **Key state** | Key must be **active**, not revoked; even with `all:all`, recreate the key if unsure. |
+| **Endpoint** | This project calls the documented v2 route: **`POST https://api.instantly.ai/api/v2/leads`** with JSON body including **`campaign`** (your campaign UUID). Some support examples show URLs like `.../v1/leads` without the **`/api/`** segment — follow **[developer.instantly.ai](https://developer.instantly.ai)** OpenAPI for the exact path your key expects. |
+
+Additional steps:
+
+1. Create an **API v2** key under [Integrations → API Keys](https://app.instantly.ai/app/settings/integrations) with scopes that include lead creation (e.g. `leads:create` or `all:all`).
+2. Put **only** the raw key in `INSTANTLY_API_KEY` in **`gtm-engine/.env`** (no `Bearer ` prefix in the file; the script adds it).
+3. Test the same key in the [API docs “Try it”](https://developer.instantly.ai) panel for **`POST /api/v2/leads`**. If it fails there, the key or workspace is wrong — not this repo.
+4. Run `npm run push-instantly` from **`gtm-engine`** so `.env` loads.
+
+**Manual test:** In [developer.instantly.ai](https://developer.instantly.ai) open **`POST /api/v2/leads`**, paste your key in the auth panel, send a minimal body with `campaign`, `email`, `first_name`, `last_name`, `company_name`. If that succeeds, the same key + campaign ID in `gtm-engine/.env` will work for `push-instantly`.
 
 ---
 

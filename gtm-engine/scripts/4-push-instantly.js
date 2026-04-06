@@ -6,8 +6,9 @@
  * personalised subject/body as custom variables →
  * saves push log to data/push-log-[timestamp].json
  *
- * Uses Instantly API v2 (Authorization: Bearer). v1 was deprecated Jan 2026.
- * New key: https://developer.instantly.ai/getting-started/getting-started
+ * Uses Instantly API v2: POST https://api.instantly.ai/api/v2/leads
+ *   Authorization: Bearer <API_KEY>  (no Bearer in .env — script adds it)
+ * Docs: https://developer.instantly.ai — v1 /api/v1 deprecated Jan 2026
  *
  * Instantly handles: sending schedule, warmup, reply detection,
  * unsubscribe, open tracking, and bounce management.
