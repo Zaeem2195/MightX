@@ -145,9 +145,9 @@ Do not pitch "competitive intelligence service." Lead with a pain scenario:
 >
 > We run a weekly competitive monitoring system for sales leaders that flags when competitors change pricing, launch features, or get a wave of negative G2 reviews — before your reps walk into a call.
 >
-> Worth seeing a sample report for your space? Takes 10 minutes.
+> [CTA: custom baseline on two named competitors + Monday send — see `gtm-engine/prompts/personalization.txt`; do **not** promise a generic sample for their “category”.]
 
-Offer a free sample report for their specific category. Generate it using the intelligence engine with their top 3 competitors. Send it unsolicited after they reply. This is your demo. It closes itself.
+After they reply, run a **custom** capture for **their** competitors (same names you used in email, or confirm on reply). Send that HTML unsolicited. Reference portfolio demos (`demo-salesloft` / `demo-outreach`) only when someone asks for format proof — not as the default fulfillment.
 
 **Step 3: The discovery call**
 
@@ -164,7 +164,7 @@ If they answer yes to question 2 and no to question 3, they are a buyer. Move to
 **Step 4: The proposal**
 
 Send a one-page email proposal within 4 hours of the discovery call. Include:
-- The sample report you already generated for them
+- The custom report you already sent them (or a fresh run for their exact competitors)
 - Three tier options with pricing
 - A 30-day satisfaction guarantee (if the first 4 reports are not valuable, full refund — you will never trigger this)
 - A link to book the kickoff call
@@ -300,7 +300,7 @@ These projections incorporate honest assumptions based on B2B SaaS benchmarks fo
 
 | Assumption | Original | Revised | Rationale |
 |---|---|---|---|
-| Close rate | 25% | 15% | Industry benchmark for cold-outbound-sourced B2B deals at $10k+ ACV. The free sample report helps but does not fully offset brand/trust gap for a new service. |
+| Close rate | 25% | 15% | Industry benchmark for cold-outbound-sourced B2B deals at $10k+ ACV. A strong custom baseline proof helps but does not fully offset brand/trust gap for a new service. |
 | Sales cycle | Same-month close | 30–45 days average | $2,500/month requires VP-level budget sign-off at most 50–200 person companies. |
 | Churn rate | 0% modeled | 15% annual | Realistic for first 12 months of an unproven solo service. Drops to 8–10% once you have 6+ months of proven delivery. |
 | Average deal size | $2,500/mo (Growth) | $1,800/mo blended | Mix of Starter ($800), Standard ($1,500), and Growth ($2,500) clients weighted toward the middle. |
@@ -492,7 +492,7 @@ Formalise referrals. For every client who refers a new paying customer:
 - [ ] Set up 2 sending domains for your own outbound (e.g. `trymightx.com`, `mightxhq.io`)
 - [ ] Warm up 2 inboxes in Instantly for 3–4 weeks before sending
 - [ ] Configure the GTM Engine ICP for your own target buyers (VP Sales, CRO, Head of Sales Enablement, Head of Product Marketing at 50–300 person B2B SaaS)
-- [ ] Create 3 sample intelligence reports for companies in 3 different SaaS categories (sales tech, HR tech, martech) — these become your demo assets
+- [ ] Generate **reference** demo HTML for sales tech (`demo-salesloft`, `demo-outreach`) as portfolio proof — not the default asset you promise in cold email (see `START-HERE.md` Step 4 + `gtm-engine/prompts/personalization.txt`)
 - [ ] Import both n8n workflows (GTM Engine reply handler + Intelligence Engine cron)
 - [ ] Build a simple one-page website describing the service
 - [ ] **NEW:** Identify 2–3 companies for free 4-week pilot programs — reach into your network or use warm LinkedIn connections
@@ -502,7 +502,7 @@ Formalise referrals. For every client who refers a new paying customer:
 ### Days 30–60: First Revenue + Proof Points
 
 - [ ] Launch GTM Engine outbound — 50 leads/week minimum
-- [ ] Send sample reports unsolicited to any reply that shows curiosity
+- [ ] Fulfill the **custom** baseline you offered: run intelligence for their named competitors and send the HTML to any reply that shows curiosity
 - [ ] Target: 1–2 discovery calls per week (realistic with Scotiabank schedule)
 - [ ] Convert pilot clients to paid — offer Starter at $800/month or Standard at $1,500/month for first clients as reference rate
 - [ ] Onboard first paid client using `node scripts/onboard-client.js`, run first report, confirm delivery
@@ -535,7 +535,7 @@ Formalise referrals. For every client who refers a new paying customer:
 | Report quality degrades for a specific client | Low | High | Monthly prompt review; n8n logs flag clients that received reports. Re-run manually with adjusted prompts. The quarterly impact summary forces regular quality check-ins. |
 | Close rate is lower than projected | High | Medium | The Starter tier at $800/month reduces buying friction. Pilot programs (4 free weeks) convert to paid at higher rates than cold-to-close. |
 | Champion (buyer) leaves the client company | Medium | High | When you detect a champion change (no email opens, new contact in CRM), immediately reach out to the replacement with a curated summary of value delivered. |
-| Sales cycle takes longer than expected | High | Medium | Offer 30-day money-back guarantee to accelerate decision. Lead with a free sample report to demonstrate value before the prospect has to commit. |
+| Sales cycle takes longer than expected | High | Medium | Offer 30-day money-back guarantee to accelerate decision. Lead with a **custom** baseline report on their competitors to demonstrate value before the prospect has to commit. |
 | Data source produces low-quality signals for niche competitors | Medium | Medium | Add more collectors (LinkedIn, GitHub changelogs, Crunchbase). For niche competitors with thin public footprint, manually supplement with industry-specific sources during onboarding. |
 
 ---

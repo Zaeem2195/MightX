@@ -14,9 +14,11 @@ Subject ideas:
 - `keeping reps unblindsided`
 - `weekly competitor briefings`
 
-Core body angle:
+Core body angle (must match `gtm-engine/prompts/personalization.txt` — **no** generic “sample for your space”):
 
-> Saw `{{CompanyName}}` is competing in a noisy sales-tech category.\n\nWe run a weekly briefing for sales leaders that flags when competitors change pricing, launch something new, or show a meaningful shift in reviews or hiring.\n\nWorth seeing a sample report for your category?
+- Name **1–2 real competitors** they face.
+- Close with a **custom weekend baseline** on those names and offer Monday findings, e.g.  
+  `I'm setting up my intelligence engine this week. If I configure a baseline capture on [Competitor A] and [Competitor B], would you be opposed to me sending over the findings next Monday?`
 
 ## Why this angle works
 
@@ -25,7 +27,7 @@ It avoids abstract "AI service" framing and leads directly with:
 - competitor pressure
 - rep preparedness
 - concrete monitored signals
-- a low-friction ask
+- a low-friction ask that you can actually fulfill (custom run, not a pre-built category PDF)
 
 ## Discovery call framing
 
@@ -48,7 +50,7 @@ Recommended first offer:
 
 ## When to expand the offer
 
-Only after a prospect reacts well to the report should you talk about:
+Only after a prospect reacts well to the **custom** report you sent should you talk about:
 
 - dashboards
 - trigger alerts

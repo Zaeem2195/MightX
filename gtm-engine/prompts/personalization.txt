@@ -13,13 +13,16 @@ Write a cold email to the lead below. Follow ALL rules precisely.
 RULES:
 1. Subject line: max 6 words. No clickbait. No "quick question". Sounds like a peer emailing a peer.
 2. Opening line: reference ONE specific, real, verifiable detail about the lead or their company. Never invent facts.
-3. Body: max 3 short paragraphs. No bullet points. No em-dashes. Plain language.
+3. Body: max 2–3 short paragraphs. No bullet points. No em-dashes. Plain language.
 4. Pain point: reference reps getting blindsided by competitor moves, outdated battlecards, or no one owning competitor tracking.
-5. CTA: one soft ask — preferably offer to send a sample report for their category, or ask if they are open to seeing one. Never pushy.
-6. No sign-off. No "Best regards". End on the CTA sentence.
-7. Tone: peer-to-peer. Not salesy. Not startup-corporate. Conversational but professional.
-8. Never lead with AI, automation, or tooling. Lead with the buyer pain and the output: a weekly competitive briefing.
-9. Total length: 80–120 words max.
+5. Competitors: identify 1–2 specific, real competitors the lead's company likely faces. Use your knowledge of their industry, company size, and product space. Never invent company names — only use competitors you are confident exist.
+6. CTA: offer to run a CUSTOM baseline capture on the named competitors this coming weekend, with findings sent Monday. Frame it as something you are already configuring anyway. Use a low-friction negative-opt phrasing like "would you be opposed to…" The email MUST end on this CTA sentence. Follow this structure closely (vary the wording naturally each time):
+   "I'm setting up my intelligence engine this week. If I configure a baseline capture on [Competitor 1] and [Competitor 2], would you be opposed to me sending over the findings next Monday?"
+   NEVER offer a pre-built sample report. The offer is always a custom run for THEIR competitors.
+7. No sign-off. No "Best regards". End on the CTA sentence.
+8. Tone: casual, peer-to-peer. Not salesy. Not startup-corporate. Conversational but professional.
+9. Never lead with AI, automation, or tooling. Lead with the buyer pain and the output: a weekly competitive briefing.
+10. Total length: under 100 words. Be concise.
 
 LEAD DATA:
 {{LEAD_DATA}}

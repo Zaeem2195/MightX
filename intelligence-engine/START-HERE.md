@@ -81,11 +81,11 @@ Open `.env` and fill in: `ANTHROPIC_API_KEY`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_US
 - Set up SPF, DKIM, DMARC on each domain (Instantly provides the DNS records)
 - **Do not send cold email from these inboxes for 3–4 weeks**
 
-### Step 4: Build your demo assets (3 sample reports)
+### Step 4: Build reference demo reports (portfolio — not the default reply asset)
 
-Generate intelligence reports that become your sales demo — you send them to prospects before asking for a penny.
+Generate **two fixed “demo client” reports** in `config/clients/` so you have credible HTML to show on calls, in Looms, and in DMs when someone asks “what does this look like?” They are **proof of quality**, not something you promise every prospect by industry.
 
-Highest-odds first move: stay inside **sales tech** and generate the two ready-made demos in `config/clients/` before creating anything else.
+Highest-odds first move: stay inside **sales tech** before you broaden.
 
 Start with:
 
@@ -108,7 +108,9 @@ node scripts/run-client.js demo-outreach --no-email
 # data/demo-outreach/report-*.html
 ```
 
-If those look strong, use them as the first outreach assets. Only broaden beyond sales tech after you get real buyer feedback. More detail: `VALIDATION-PLAYBOOK-SALES-TECH.md`.
+**Positive replies:** Your cold email (via `gtm-engine` / Claude) should promise a **custom** baseline run on **their** named competitors and Monday findings — not a pre-built “sample for your space.” When someone bites, **run that custom capture** (add a one-off client config or a throwaway `config/clients/` entry with their competitors) and send **that** HTML. Use these two demos only when you need a fast credibility anchor (e.g. first week, or “show me an example format”) — not as a substitute for the custom run you offered.
+
+More detail: `VALIDATION-PLAYBOOK-SALES-TECH.md`. GTM copy rules: `gtm-engine/prompts/personalization.txt`.
 
 ### Step 5: Import n8n workflows
 
@@ -148,7 +150,7 @@ npm run push-instantly
 npm run export-copy-csv
 ```
 
-**Instantly Starter / no API:** use **`npm run export-copy-csv`** instead of **`push-instantly`**. It writes a UTF-8 CSV (`data/copy-export-*.csv`) with `email`, names, company, `ai_subject`, `ai_body`, `title` — upload that file under your campaign → Leads. Full steps and column mapping: **`gtm-engine/README.md`** → section *Instantly without API — CSV import*.
+**Instantly Starter / no API:** use `**npm run export-copy-csv`** instead of `**push-instantly**`. It writes a UTF-8 CSV (`data/copy-export-*.csv`) with `email`, names, company, `ai_subject`, `ai_body`, `title` — upload that file under your campaign → Leads. Full steps and column mapping: `**gtm-engine/README.md**` → section *Instantly without API — CSV import*.
 
 Optional **batching** (same flags as `gtm-engine/README.md`): e.g. `npm run generate-copy -- --first 500`, `npm run push-instantly` / `export-copy-csv` with `--file`, `--first`, `--offset` / `--limit`. Use `--max-leads` on `pull-leads` for large Apollo pulls.
 
@@ -162,17 +164,11 @@ Repeat every Wednesday. Target: 50 new leads per week, ~150 in the Instantly seq
 
 ### Cold email angle that works
 
-Do not pitch "competitive intelligence." Lead with a specific pain:
+Do not pitch "competitive intelligence." Lead with a specific pain. **Do not** promise a generic “sample report for your category” (you cannot pre-build credible reports for every industry). The live pipeline uses Claude with rules in `gtm-engine/prompts/personalization.txt`: name **1–2 real competitors**, then close with a **custom weekend baseline** and Monday send, e.g.:
 
-> Subject: [CompanyName] vs [TopCompetitor]
->
-> Saw [CompanyName] is in the [category] space — you're up against a lot of funded competitors right now.
->
-> We run a weekly monitoring system for sales leaders that flags when competitors change pricing, launch features, or get hit with a wave of bad G2 reviews — before your reps walk into a call.
->
-> Worth seeing a sample report for your space?
+> I'm setting up my intelligence engine this week. If I configure a baseline capture on [Competitor A] and [Competitor B], would you be opposed to me sending over the findings next Monday?
 
-When they reply with any interest — send them one of your 3 demo reports. Do not ask for a call first. The report IS the pitch.
+When they reply with interest, **deliver that custom run** (same competitors you named, or confirm on email if you were wrong). Do not ask for a call first. The **custom** report is the pitch. Keep the two demo HTML files from Step 4 as **backup proof of format**, not the default fulfillment.
 
 ---
 
@@ -193,7 +189,7 @@ Yes to #2 and no to #3 = buyer. Send proposal within 4 hours.
 
 Send a one-page email with:
 
-- The demo report you sent them (or a new one generated for their exact competitors)
+- The custom report you sent them after their reply (or attach a fresh run for their exact competitors if the first was a quick portfolio demo)
 - Tier options — **three price anchors** on the page keeps decisions simple: **Starter $800 | Growth $2,500 | Strategic $4,000** (mention **Standard $1,500** in one line if they are between Starter and Growth — full matrix is in `BUSINESS-OPERATIONS.md` Section 3)
 - Annual option (15% off, e.g. "Growth annual = $2,125/mo")
 - 30-day satisfaction guarantee
@@ -305,7 +301,7 @@ Reference these at renewal time. One win story eliminates every renewal objectio
 
 ### Ask for referrals (month 4+)
 
-> "Is there anyone in your network running a sales team in a competitive space who'd benefit from this? I'll set up their first two reports for free if they come through you."
+> "Is there anyone in your network running a sales team in a competitive space who'd benefit from this? I'll run their first two weekly captures for free if they come through you."
 
 Every referred client closes 3x faster and churns half as often.
 
@@ -318,7 +314,7 @@ These targets assume the **moderate** execution path in `BUSINESS-OPERATIONS.md`
 
 | Milestone             | Target month | How                                              |
 | --------------------- | ------------ | ------------------------------------------------ |
-| First paying client   | Month 2–3    | Outbound + free demo report close                |
+| First paying client   | Month 2–3    | Outbound + custom baseline proof close           |
 | ~$5,000 forward MRR   | Month 5–6    | e.g. 2× Growth + 1× Standard, or 3× blended tier |
 | First annual contract | Month 4–6    | Offer 15% discount at proposal                   |
 | ~$10,000 forward MRR  | Month 7–9    | ~4–5 clients at mixed tiers (not all Growth)     |
@@ -342,7 +338,7 @@ npm run export-copy-csv   # CSV for manual Instantly upload if you have no API (
 npm run classify-reply    # Classify a reply (pipe text in)
 ```
 
-Optional flags (pass after `--`; full table: **`gtm-engine/README.md`** → *CLI flags*):
+Optional flags (pass after `--`; full table: `**gtm-engine/README.md**` → *CLI flags*):
 
 ```bash
 npm run pull-leads -- --max-leads 500
@@ -397,15 +393,15 @@ C:\mightx\
 ## When You're Stuck
 
 
-| Problem                                   | Where to look                                                                  |
-| ----------------------------------------- | ------------------------------------------------------------------------------ |
-| Business strategy, pricing, sales scripts | `BUSINESS-OPERATIONS.md` sections 3–4                                          |
-| Revenue projections and milestones        | `BUSINESS-OPERATIONS.md` section 7 + `DOCUMENTATION-NOTES.md`                  |
-| Retention tactics and churn prevention    | `BUSINESS-OPERATIONS.md` sections 8–9                                          |
-| Technical setup and commands              | This file (above); **`gtm-engine/README.md`** for GTM flags, CSV vs API        |
-| A specific script is broken               | Read the file — every script has usage comments at the top                     |
-| A client's report looks wrong             | Adjust their config in `config/clients/[id].json`, re-run with `--no-email`    |
-| n8n workflow not firing                   | Check n8n → Executions log. Most common: path in Execute Command node is wrong |
-| No Instantly API (Starter plan)           | Use **`npm run export-copy-csv`** in `gtm-engine` → upload CSV; see **`gtm-engine/README.md`** |
+| Problem                                   | Where to look                                                                                  |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Business strategy, pricing, sales scripts | `BUSINESS-OPERATIONS.md` sections 3–4                                                          |
+| Revenue projections and milestones        | `BUSINESS-OPERATIONS.md` section 7 + `DOCUMENTATION-NOTES.md`                                  |
+| Retention tactics and churn prevention    | `BUSINESS-OPERATIONS.md` sections 8–9                                                          |
+| Technical setup and commands              | This file (above); `**gtm-engine/README.md**` for GTM flags, CSV vs API                        |
+| A specific script is broken               | Read the file — every script has usage comments at the top                                     |
+| A client's report looks wrong             | Adjust their config in `config/clients/[id].json`, re-run with `--no-email`                    |
+| n8n workflow not firing                   | Check n8n → Executions log. Most common: path in Execute Command node is wrong                 |
+| No Instantly API (Starter plan)           | Use `**npm run export-copy-csv**` in `gtm-engine` → upload CSV; see `**gtm-engine/README.md**` |
 
 

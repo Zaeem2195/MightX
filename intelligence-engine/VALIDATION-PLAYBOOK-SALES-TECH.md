@@ -24,15 +24,15 @@ In the first cycle, you are not trying to scale.
 
 You are trying to get:
 
-1. 2 real buyers to ask for a sample report
+1. 2 real buyers to accept a **custom** baseline (named competitors → Monday findings)
 2. 1 discovery call
 3. 1 paid or discounted pilot
 
 If you get those, keep going.
 
-## Demo assets to generate first
+## Reference demos to generate first (portfolio — not the default reply)
 
-Use these two ready-made demo configs:
+Use these two ready-made demo configs so you have credible HTML for “what does output look like?”:
 
 - `config/clients/demo-salesloft.json`
 - `config/clients/demo-outreach.json`
@@ -48,6 +48,8 @@ Then review the HTML output under:
 
 - `data/demo-salesloft/`
 - `data/demo-outreach/`
+
+**Positive replies** should get a **custom** run for *their* competitors (see `gtm-engine/prompts/personalization.txt`), not a random demo file.
 
 ## What to check before sending a demo
 
@@ -77,11 +79,11 @@ Company profile:
 
 Do not pitch the whole service in email one.
 
-Ask if they want to see a sample report for their category.
+Use the GTM prompt rules: name **1–2 real competitors**, CTA = **custom weekend baseline + Monday findings** (`gtm-engine/prompts/personalization.txt`). Do **not** promise a generic “sample for your category.”
 
 If they reply with interest:
 
-1. Send one demo report
+1. Run and send the **custom** report (their competitors — same as email or confirmed on reply). Optionally attach a demo HTML only if they asked “show me an example format.”
 2. Ask one short question: "Would something like this be useful for your team each Monday?"
 3. Only then move to a call or pilot
 
@@ -99,7 +101,7 @@ Best initial pilot:
 
 Continue if:
 
-- buyers reply positively to the sample report
+- buyers reply positively to the **custom** report you delivered
 - they ask for their own competitor set
 - they say the output would help reps or managers prepare better
 
@@ -117,4 +119,4 @@ Your next move is:
 
 - tighten positioning around sales-tech revenue teams
 - collect 1 testimonial or win story
-- create a repeatable sample-report-to-pilot motion
+- create a repeatable custom-baseline-to-pilot motion

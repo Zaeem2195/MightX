@@ -42,12 +42,18 @@ function buildPipelineMeta(analyses) {
   const byType = {};
   let fallbackCount = 0;
   const fallbackList = [];
+  let factCheckFailed = 0;
+  const factCheckFailedList = [];
   for (const a of analyses || []) {
     const t = a.signalType || 'unknown';
     byType[t] = (byType[t] || 0) + 1;
     if (a.pipelineNote === 'analysis_parse_failed') {
       fallbackCount++;
       fallbackList.push(`${a.competitorName || '?'}/${t}`);
+    }
+    if (a.verification?.status === 'fact_check_failed') {
+      factCheckFailed++;
+      factCheckFailedList.push(`${a.competitorName || '?'}/${t}`);
     }
   }
   const typeLine = Object.keys(byType)
@@ -59,13 +65,20 @@ function buildPipelineMeta(analyses) {
     pipelineFallbackCount: fallbackCount,
     signalTypesTallies: typeLine || 'none',
     pipelineFallbackExamples: fallbackList.slice(0, 12),
+    factCheckFailed,
+    factCheckFailedExamples: factCheckFailedList.slice(0, 12),
   };
 }
 
 function formatPipelineMetaForPrompt(meta) {
+  const factLine =
+    meta.factCheckFailed > 0
+      ? `Fact-check phase failed (no verified findings kept): ${meta.factCheckFailed} — ${meta.factCheckFailedExamples.join(', ')}`
+      : 'Fact-check phase: all signals completed (or analyst empty / N/A).';
   return [
     `Total analysed signal rows: ${meta.totalSignals}`,
     `Automated analysis fallbacks (JSON parse): ${meta.pipelineFallbackCount}`,
+    factLine,
     `Signals by type: ${meta.signalTypesTallies}`,
     meta.pipelineFallbackExamples.length
       ? `Fallback rows (competitor/type): ${meta.pipelineFallbackExamples.join(', ')}`
@@ -131,6 +144,12 @@ async function writeReportContent(clientConfig, analyses) {
           if (pipelineMeta.pipelineFallbackCount > 0) {
             const fb = `Pipeline: automated JSON parse failed for ${pipelineMeta.pipelineFallbackCount} signal(s) — raw data available in exports; human skim recommended.`;
             if (!v.dataGapsThisWeek.some((g) => String(g).includes('Pipeline'))) {
+              v.dataGapsThisWeek.push(fb);
+            }
+          }
+          if (pipelineMeta.factCheckFailed > 0) {
+            const fb = `Verification: fact-check step could not produce verified findings for ${pipelineMeta.factCheckFailed} signal batch(es) — re-run analysis or human-review raw signals for those competitors.`;
+            if (!v.dataGapsThisWeek.some((g) => String(g).includes('Verification: fact-check'))) {
               v.dataGapsThisWeek.push(fb);
             }
           }
