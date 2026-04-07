@@ -81,34 +81,35 @@ Open `.env` and fill in: `ANTHROPIC_API_KEY`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_US
 - Set up SPF, DKIM, DMARC on each domain (Instantly provides the DNS records)
 - **Do not send cold email from these inboxes for 3–4 weeks**
 
-### Step 4: Build reference demo reports (portfolio — not the default reply asset)
+### Step 4: Build the "Gold Standard" demo report + concierge fulfillment plan
 
-Generate **two fixed “demo client” reports** in `config/clients/` so you have credible HTML to show on calls, in Looms, and in DMs when someone asks “what does this look like?” They are **proof of quality**, not something you promise every prospect by industry.
-
-Highest-odds first move: stay inside **sales tech** before you broaden.
-
-Start with:
-
-- `demo-salesloft`
-- `demo-outreach`
-
-Commands:
+Generate **one flawless demo report** for a well-known SaaS rivalry (`demo-salesloft` — Outreach vs Salesloft vs Gong vs Clari). This single HTML is your **core portfolio collateral**: use it on calls, in Looms, on LinkedIn, and in DMs. Invest time making it perfect — this artifact earns trust before anyone pays you.
 
 ```bash
 cd C:\mightx\intelligence-engine
 
-# 1. Generate the first sales-tech demo
+# Generate the Gold Standard
 node scripts/run-client.js demo-salesloft --no-email
 
-# 2. Generate the second sales-tech demo
-node scripts/run-client.js demo-outreach --no-email
-
-# 3. Open the output in your browser
+# Open and review — every finding must be defensible
 # data/demo-salesloft/report-*.html
-# data/demo-outreach/report-*.html
 ```
 
-**Positive replies:** Your cold email (via `gtm-engine` / Claude) should promise a **custom** baseline run on **their** named competitors and Monday findings — not a pre-built “sample for your space.” When someone bites, **run that custom capture** (add a one-off client config or a throwaway `config/clients/` entry with their competitors) and send **that** HTML. Use these two demos only when you need a fast credibility anchor (e.g. first week, or “show me an example format”) — not as a substitute for the custom run you offered.
+**Quality bar:** Review every finding. If anything reads like a generic AI summary or cites something you cannot verify, re-run or manually edit the HTML. This report represents the $2,500/month quality your service delivers.
+
+**Zero premium API spend until first paying client.** The current free collectors (Google News RSS, careers pages, G2 search snippets, Crunchbase public data) already produce the quality shown in this report. Do **not** buy Proxycurl, BrightData, Exa, or any premium scraping API until revenue covers it.
+
+**Concierge fulfillment — how to deliver the custom baseline you promised in cold email:**
+
+1. Prospect replies with interest (their competitors were named in your CTA, or they confirm on reply).
+2. Create a throwaway config: `config/clients/prospect-[name].json` with their 2-4 competitors (name, website, G2 slug if known).
+3. Run: `node scripts/run-client.js prospect-[name] --no-email`
+4. Review the HTML — manual QA is expected at this stage. Fix anything thin.
+5. Send the HTML by Monday as promised. Time cost: ~30 min per prospect on your weekend.
+
+This is concierge MVP: you do the work manually to deliver real value before you automate or buy premium tools. **Do not redirect prospects to a canned PDF or Gold Standard sample instead of the custom run you offered.** The Gold Standard demo is backup portfolio proof, not the default fulfillment.
+
+**After first paying client:** Their retainer funds premium API access (Proxycurl for LinkedIn enrichment, BrightData for deeper scraping). This improves ongoing weekly quality but is not required to close the first deal.
 
 More detail: `VALIDATION-PLAYBOOK-SALES-TECH.md`. GTM copy rules: `gtm-engine/prompts/personalization.txt`.
 

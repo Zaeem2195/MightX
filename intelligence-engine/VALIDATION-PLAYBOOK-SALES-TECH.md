@@ -30,26 +30,18 @@ You are trying to get:
 
 If you get those, keep going.
 
-## Reference demos to generate first (portfolio — not the default reply)
+## The "Gold Standard" demo report (portfolio proof)
 
-Use these two ready-made demo configs so you have credible HTML for “what does output look like?”:
-
-- `config/clients/demo-salesloft.json`
-- `config/clients/demo-outreach.json`
-
-Generate both with:
+Generate **one flawless report** for a famous SaaS rivalry. This is your core sales collateral — LinkedIn, Looms, DMs, calls.
 
 ```bash
 node scripts/run-client.js demo-salesloft --no-email
-node scripts/run-client.js demo-outreach --no-email
+# Review: data/demo-salesloft/report-*.html
 ```
 
-Then review the HTML output under:
+Every finding must be defensible. If anything reads like generic AI, re-run or manually edit. This represents $2,500/month quality.
 
-- `data/demo-salesloft/`
-- `data/demo-outreach/`
-
-**Positive replies** should get a **custom** run for *their* competitors (see `gtm-engine/prompts/personalization.txt`), not a random demo file.
+**Positive replies** should get a **custom concierge run** for *their* competitors (see below), not this demo file.
 
 ## What to check before sending a demo
 
@@ -81,11 +73,14 @@ Do not pitch the whole service in email one.
 
 Use the GTM prompt rules: name **1–2 real competitors**, CTA = **custom weekend baseline + Monday findings** (`gtm-engine/prompts/personalization.txt`). Do **not** promise a generic “sample for your category.”
 
-If they reply with interest:
+If they reply with interest — **concierge fulfillment** (no premium APIs needed):
 
-1. Run and send the **custom** report (their competitors — same as email or confirmed on reply). Optionally attach a demo HTML only if they asked “show me an example format.”
-2. Ask one short question: "Would something like this be useful for your team each Monday?"
-3. Only then move to a call or pilot
+1. Create a throwaway config: `config/clients/prospect-[name].json` with their 2-4 competitors.
+2. Run: `node scripts/run-client.js prospect-[name] --no-email`
+3. Review the HTML — manual QA expected. Fix anything thin. (~30 min total)
+4. Send the HTML by Monday as promised. Attach the Gold Standard only if they asked "show me an example format."
+5. Ask one short question: "Would something like this be useful for your team each Monday?"
+6. Only then move to a call or pilot
 
 ## Pilot structure
 
@@ -111,6 +106,10 @@ Reposition if:
 - replies are polite but nobody wants a pilot
 - buyers care more about battlecards or live objection handling than monitoring itself
 
+## API spend gating rule
+
+Do **not** purchase premium scraping APIs (Proxycurl, BrightData, Exa) until the first paying client signs. The free collectors already produce the Gold Standard quality. First retainer funds premium APIs for deeper ongoing weekly reports.
+
 ## If validation works
 
 Your next move is not "more features."
@@ -120,3 +119,4 @@ Your next move is:
 - tighten positioning around sales-tech revenue teams
 - collect 1 testimonial or win story
 - create a repeatable custom-baseline-to-pilot motion
+- use first retainer to add Proxycurl / BrightData for richer weekly reports

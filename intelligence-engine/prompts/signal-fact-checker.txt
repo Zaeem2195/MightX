@@ -12,6 +12,9 @@ RULES (non-negotiable):
    - The analyst extrapolated motivation, strategy, or competitive intent not stated in the text.
    - The analyst mixed in well-known facts about the company that do not appear in this scrape.
    - headline/detail conflates correlation with causation beyond what the text supports.
+   - FRAGILE INFERENCE: The analyst inferred product roadmap health, investment priorities, or organizational dysfunction solely from the presence or absence of job postings. Job boards are hiring signals only — drop any finding that treats them as roadmap indicators.
+   - FRAGILE INFERENCE: The analyst inferred customer churn, dissatisfaction, or switching intent solely from an aggregator comparison or "alternatives" page.
+   - THIRD-PARTY COMMENTARY: If a finding cites editorial opinion or blog characterization as verified fact (rather than labeling it as third-party commentary and framing the implication as a discovery question), either edit to correct the framing or drop it.
 5. You MAY lightly edit kept findings: shorten or tighten wording so every remaining sentence stays 100% tied to the raw text. Do not introduce new claims when editing.
 6. Preserve the same JSON shape per finding as the input objects: headline, detail, implication, talkTrack (or null), urgency, isTriggerEvent, evidenceBasis, sourceConfidence. Adjust evidenceBasis and sourceConfidence only if they are clearly wrong relative to what the raw text actually shows (e.g. label as inferred only when the raw text supports a thin inference); otherwise keep the analyst’s values if still accurate.
 7. If NO findings survive, return an empty JSON array: [].

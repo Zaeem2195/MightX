@@ -147,7 +147,7 @@ Do not pitch "competitive intelligence service." Lead with a pain scenario:
 >
 > [CTA: custom baseline on two named competitors + Monday send — see `gtm-engine/prompts/personalization.txt`; do **not** promise a generic sample for their “category”.]
 
-After they reply, run a **custom** capture for **their** competitors (same names you used in email, or confirm on reply). Send that HTML unsolicited. Reference portfolio demos (`demo-salesloft` / `demo-outreach`) only when someone asks for format proof — not as the default fulfillment.
+After they reply, run a **custom** capture for **their** competitors using the free collectors (concierge MVP — no premium APIs needed). Create a throwaway `config/clients/prospect-[name].json`, run the intelligence engine, review the HTML, and send by Monday. ~30 min of your weekend per prospect. Reference the Gold Standard demo (`demo-salesloft`) only when someone asks for format proof — not as the default fulfillment.
 
 **Step 3: The discovery call**
 
@@ -273,17 +273,33 @@ This is designed to run alongside your full-time role at Scotiabank.
 
 ## 6. Cost Structure
 
-### Monthly operating costs
+### Pre-revenue phase (Concierge MVP — zero premium API spend)
+
+Until the **first paying client** signs, do **not** purchase premium scraping APIs (Proxycurl, BrightData, Exa). The free collectors (Google News RSS, careers pages, G2 search snippets, Crunchbase public) already produce report quality sufficient to close deals — proven by the Gold Standard demo. Prospect fulfillment is manual concierge work (~30 min/prospect on your weekend using free sources).
+
+| Item | Pre-revenue cost | Notes |
+|---|---|---|
+| Premium scraping APIs | **$0** | Buy only after first retainer is collected |
+| Anthropic API | ~$5–10 | Gold Standard + a few prospect runs |
+| Apollo.io | ~$99 | For your own outbound |
+| Instantly | ~$97 | For your own outbound |
+| Domain + hosting | ~$20 | For outbound sending domains |
+| **Total pre-revenue** | **~$221/month** | Covers outbound + concierge runs |
+
+### Post-revenue phase (monthly operating costs)
+
+Once client retainers arrive, add premium APIs to improve weekly report depth:
 
 | Item | Cost | Notes |
 |---|---|---|
 | Anthropic API | ~$15–40 | Scales with client count. ~$5–8/client/month at current usage |
+| Proxycurl / BrightData | ~$50–100 | Funded by first client retainer. LinkedIn + deeper scraping |
 | nodemailer / SMTP | $0 | Use Gmail with App Password |
 | n8n (self-hosted) | $0 | You already have this |
 | Apollo.io | ~$99 | For your own outbound only |
 | Instantly | ~$97 | For your own outbound only |
 | Domain + hosting | ~$20 | For your own outbound sending domains |
-| **Total fixed** | **~$231/month** | Does not scale with client count |
+| **Total fixed** | **~$281–331/month** | Does not scale with client count |
 | **Total variable** | **~$5–8/client/month** | Claude API usage |
 
 **Blended tier example (4 clients):** Starter $800 + Standard $1,500 × 2 + Growth $2,500 = **$6,300/month** retainer. Costs: $231 fixed + ~$32 variable (4 × $8) ≈ **$263/month** → **~$6,037/mo gross profit** (~96% gross margin on the blended book).
@@ -492,7 +508,7 @@ Formalise referrals. For every client who refers a new paying customer:
 - [ ] Set up 2 sending domains for your own outbound (e.g. `trymightx.com`, `mightxhq.io`)
 - [ ] Warm up 2 inboxes in Instantly for 3–4 weeks before sending
 - [ ] Configure the GTM Engine ICP for your own target buyers (VP Sales, CRO, Head of Sales Enablement, Head of Product Marketing at 50–300 person B2B SaaS)
-- [ ] Generate **reference** demo HTML for sales tech (`demo-salesloft`, `demo-outreach`) as portfolio proof — not the default asset you promise in cold email (see `START-HERE.md` Step 4 + `gtm-engine/prompts/personalization.txt`)
+- [ ] Generate the **Gold Standard** demo report (`demo-salesloft`) — one flawless HTML as core portfolio collateral (see `START-HERE.md` Step 4). Do **not** buy premium scraping APIs yet — free collectors are sufficient to close the first deal
 - [ ] Import both n8n workflows (GTM Engine reply handler + Intelligence Engine cron)
 - [ ] Build a simple one-page website describing the service
 - [ ] **NEW:** Identify 2–3 companies for free 4-week pilot programs — reach into your network or use warm LinkedIn connections
@@ -502,7 +518,7 @@ Formalise referrals. For every client who refers a new paying customer:
 ### Days 30–60: First Revenue + Proof Points
 
 - [ ] Launch GTM Engine outbound — 50 leads/week minimum
-- [ ] Fulfill the **custom** baseline you offered: run intelligence for their named competitors and send the HTML to any reply that shows curiosity
+- [ ] Fulfill the **custom** baseline you offered: concierge-run intelligence for their named competitors (~30 min per prospect, free collectors, no premium API spend) and send the HTML to any reply that shows curiosity
 - [ ] Target: 1–2 discovery calls per week (realistic with Scotiabank schedule)
 - [ ] Convert pilot clients to paid — offer Starter at $800/month or Standard at $1,500/month for first clients as reference rate
 - [ ] Onboard first paid client using `node scripts/onboard-client.js`, run first report, confirm delivery

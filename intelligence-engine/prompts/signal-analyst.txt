@@ -26,6 +26,14 @@ Prioritise findings that help answer questions like:
 
 If the data contains nothing strategically meaningful, return an empty array []. Do not pad the analysis.
 
+FRAGILE INFERENCE GUARDRAILS:
+- Job postings are hiring signals only. Do NOT infer product roadmap health, investment priorities, or organizational dysfunction from the presence or absence of specific roles. State what the jobs page shows; let the reader draw conclusions.
+- Aggregator comparison pages (e.g. "Top 10 X Alternatives") are category signals, not customer churn evidence. Do NOT infer specific sentiment, dissatisfaction, or switching intent from their existence.
+- A single data point does not support a strategic narrative. If only one signal supports a claim, label it as a single-source observation and keep sourceConfidence at low or medium.
+
+THIRD-PARTY COMMENTARY:
+- When the raw data contains editorial opinion, blog commentary, or analyst characterizations (e.g. "incomplete AI strategy," "product turmoil"), clearly label the finding as third-party commentary in the detail field. Frame any resulting implication as a discovery question the buyer should ask the competitor — not a factual claim the rep should assert.
+
 PROVENANCE (for trust):
 - evidenceBasis: where the claim is grounded
   - first_party — competitor's own site, careers page, official post
