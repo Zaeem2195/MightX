@@ -1,5 +1,5 @@
 {
-  "_instructions": "Duplicate this file for each client. Filename = client slug (e.g. acme-corp.json). Use 'node scripts/onboard-client.js' for interactive setup. Per competitor, optional: atsProvider (greenhouse|lever|ashby), atsSlug (board id), knownHeadcountRange [min,max] for LinkedIn validation.",
+  "_instructions": "Duplicate this file for each client. Filename = client slug (e.g. acme-corp.json). Use 'node scripts/onboard-client.js' for interactive setup. Per competitor, optional: atsProvider (greenhouse|lever|ashby), atsSlug (board id), knownHeadcountRange [min,max] for LinkedIn validation, glassdoorSlug (full Glassdoor reviews URL for Apify). Set additionalCollectors.glassdoor true only with APIFY_API_TOKEN.",
 
   "id": "example-client",
   "name": "Acme Corp",
@@ -68,7 +68,8 @@
   "additionalCollectors": {
     "linkedin": true,
     "github": false,
-    "crunchbase": true
+    "crunchbase": true,
+    "glassdoor": false
   },
 
   "reportPreferences": {

@@ -17,6 +17,7 @@ import { collectNews }       from './collectors/news-monitor.js';
 import { collectG2 }         from './collectors/g2-monitor.js';
 import { collectJobs }       from './collectors/jobs-monitor.js';
 import { collectLinkedIn }   from './collectors/linkedin-monitor.js';
+import { collectGlassdoor }  from './collectors/glassdoor-monitor.js';
 import { collectGitHub }     from './collectors/github-monitor.js';
 import { collectCrunchbase } from './collectors/crunchbase-monitor.js';
 import { runAnalysis }       from './analyse.js';
@@ -81,6 +82,12 @@ async function collectAllSignals(clientId, competitors, additionalCollectors = {
       await new Promise(r => setTimeout(r, 500));
       const linkedin = await collectLinkedIn(clientId, competitor);
       signals.push(linkedin);
+    }
+
+    if (additionalCollectors.glassdoor && competitor.glassdoorSlug) {
+      await new Promise(r => setTimeout(r, 500));
+      const glassdoor = await collectGlassdoor(competitor);
+      signals.push(glassdoor);
     }
 
     if (additionalCollectors.github && competitor.githubOrg) {

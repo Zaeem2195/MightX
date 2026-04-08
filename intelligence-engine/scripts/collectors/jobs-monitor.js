@@ -4,9 +4,11 @@
  * Tries hosted ATS JSON APIs (Greenhouse, Lever, Ashby) when detectable,
  * then falls back to HTML heuristics on the careers page,
  * then Google News RSS for hiring / job-site signals.
+ * Premium (APIFY_API_TOKEN): tugelbay/article-extractor on ATS job posting URLs.
  */
 
 import { extractDomain } from './_utils.js';
+import { APIFY_ACTORS, getApifyClient, isApifyEnabled, runActorDataset, clipText } from './_apify.js';
 
 const FETCH_TIMEOUT = 10000;
 const MAX_JOBS = 15;
@@ -31,26 +33,56 @@ async function fetchJson(url) {
   }
 }
 
-/** Greenhouse public board API */
+/** @returns {{ titles: string[], entries: { title: string, url: string | null }[] } | null} */
 async function fetchGreenhouseJobs(token) {
   const data = await fetchJson(`https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(token)}/jobs`);
   if (!data?.jobs?.length) return null;
-  return data.jobs.map((j) => j.title).filter(Boolean).slice(0, MAX_JOBS);
+  const slice = data.jobs.slice(0, MAX_JOBS);
+  const entries = slice
+    .map((j) => ({
+      title: j.title,
+      url: j.absolute_url || j.absoluteUrl || null,
+    }))
+    .filter((e) => e.title);
+  const titles = entries.map((e) => e.title);
+  return titles.length ? { titles, entries } : null;
 }
 
-/** Lever public postings API */
+/** @returns {{ titles: string[], entries: { title: string, url: string | null }[] } | null} */
 async function fetchLeverJobs(site) {
   const data = await fetchJson(`https://api.lever.co/v0/postings/${encodeURIComponent(site)}?mode=json`);
   if (!Array.isArray(data) || !data.length) return null;
-  return data.map((p) => p.text || p.title).filter(Boolean).slice(0, MAX_JOBS);
+  const slice = data.slice(0, MAX_JOBS);
+  const entries = slice
+    .map((p) => ({
+      title: p.text || p.title,
+      url: p.hostedUrl || p.urls?.show || null,
+    }))
+    .filter((e) => e.title);
+  const titles = entries.map((e) => e.title);
+  return titles.length ? { titles, entries } : null;
 }
 
-/** Ashby public job board API */
+/** @returns {{ titles: string[], entries: { title: string, url: string | null }[] } | null} */
 async function fetchAshbyJobs(org) {
   const data = await fetchJson(`https://api.ashbyhq.com/posting-api/job-board/${encodeURIComponent(org)}`);
   const jobs = data?.jobs || data?.data?.jobs || [];
   if (!Array.isArray(jobs) || !jobs.length) return null;
-  return jobs.map((j) => j.title || j.name).filter(Boolean).slice(0, MAX_JOBS);
+  const slice = jobs.slice(0, MAX_JOBS);
+  const entries = slice
+    .map((j) => ({
+      title: j.title || j.name,
+      url:
+        j.jobPostingUrl ||
+        j.applyUrl ||
+        j.publicPostingUrl ||
+        j.canonicalUrl ||
+        j.link ||
+        null,
+    }))
+    .filter((e) => e.title);
+  const titles = entries.map((e) => e.title);
+  return titles.length ? { titles, entries } : null;
 }
 
 async function fetchAtsJobs(provider, token) {
@@ -71,11 +103,11 @@ const ATS_RETRY_DELAY_MS = 2000;
 
 /** One retry after delay when ATS JSON is flaky (timeouts, empty responses). */
 async function fetchAtsJobsWithRetry(provider, token) {
-  let titles = await fetchAtsJobs(provider, token);
-  if (titles?.length) return titles;
+  let pack = await fetchAtsJobs(provider, token);
+  if (pack?.titles?.length) return pack;
   await new Promise((r) => setTimeout(r, ATS_RETRY_DELAY_MS));
-  titles = await fetchAtsJobs(provider, token);
-  return titles?.length ? titles : null;
+  pack = await fetchAtsJobs(provider, token);
+  return pack?.titles?.length ? pack : null;
 }
 
 /**
@@ -111,8 +143,8 @@ async function tryAtsSlugAcrossProviders(slug, skipProvider = null) {
   ];
   for (const [provider, token] of order) {
     if (skipProvider && provider === skipProvider) continue;
-    const titles = await fetchAtsJobsWithRetry(provider, token);
-    if (titles?.length) return { titles, provider, token };
+    const pack = await fetchAtsJobsWithRetry(provider, token);
+    if (pack?.titles?.length) return { ...pack, provider, token };
   }
   return null;
 }
@@ -288,6 +320,59 @@ function interpretSignals(categories, competitorName) {
   return signals;
 }
 
+/** Pull JD text for up to N ATS posting URLs via Apify. */
+async function enrichJobDescriptionsWithApify(entries) {
+  if (!isApifyEnabled() || !entries?.length) return '';
+  const client = getApifyClient();
+  if (!client) return '';
+
+  const withUrl = entries.filter((e) => e.url).slice(0, 8);
+  if (!withUrl.length) return '';
+
+  try {
+    const { items } = await runActorDataset(
+      client,
+      APIFY_ACTORS.ARTICLE_EXTRACTOR,
+      {
+        urls: withUrl.map((e) => ({ url: e.url })),
+        maxItems: withUrl.length,
+        outputFormat: 'text',
+        extractImages: false,
+        extractLinks: false,
+        timeout: 45,
+        maxConcurrency: 4,
+      },
+      { waitSecs: 600, itemLimit: 20, injectDefaultProxy: true }
+    );
+
+    if (!items?.length) return '';
+
+    const lines = [];
+    withUrl.forEach((e, i) => {
+      const row = items[i] || {};
+      const blob =
+        row.text ||
+        row.articleText ||
+        row.markdown ||
+        row.content ||
+        row.body ||
+        '';
+      if (blob) {
+        lines.push(`• ${e.title}\n  ${clipText(String(blob), 800)}`);
+      }
+    });
+
+    if (!lines.length) return '';
+    return [
+      '',
+      `Job description excerpts (Apify ${APIFY_ACTORS.ARTICLE_EXTRACTOR}, first-party posting pages):`,
+      ...lines,
+    ].join('\n');
+  } catch {
+    return '';
+  }
+}
+
 // ── Main export ───────────────────────────────────────────────────────────────
 export async function collectJobs(competitor) {
   const { name, website, atsSlug, atsProvider } = competitor;
@@ -297,12 +382,14 @@ export async function collectJobs(competitor) {
   }
 
   let titles = [];
+  let jobEntries = [];
   let sourceNote = '';
 
   if (atsProvider && atsSlug) {
-    const t = await fetchAtsJobsWithRetry(atsProvider, atsSlug);
-    if (t?.length) {
-      titles = t;
+    const pack = await fetchAtsJobsWithRetry(atsProvider, atsSlug);
+    if (pack?.titles?.length) {
+      titles = pack.titles;
+      jobEntries = pack.entries || [];
       sourceNote = `ATS: ${atsProvider} (board: ${atsSlug})`;
     }
   }
@@ -312,6 +399,7 @@ export async function collectJobs(competitor) {
     const tried = await tryAtsSlugAcrossProviders(atsSlug, atsProvider || null);
     if (tried) {
       titles = tried.titles;
+      jobEntries = tried.entries || [];
       sourceNote = atsProvider
         ? `ATS: ${tried.provider} (board: ${tried.token}; cross-provider fallback — ${atsProvider} had no listings)`
         : `ATS: ${tried.provider} (board: ${tried.token})`;
@@ -323,9 +411,10 @@ export async function collectJobs(competitor) {
   if (!titles.length && result?.html) {
     const det = detectAtsFromHtml(result.html);
     if (det) {
-      const t = await fetchAtsJobsWithRetry(det.provider, det.token);
-      if (t?.length) {
-        titles = t;
+      const pack = await fetchAtsJobsWithRetry(det.provider, det.token);
+      if (pack?.titles?.length) {
+        titles = pack.titles;
+        jobEntries = pack.entries || [];
         sourceNote = `ATS: ${det.provider} (auto-detected board: ${det.token})`;
       }
     }
@@ -333,7 +422,10 @@ export async function collectJobs(competitor) {
 
   if (!titles.length && result?.html) {
     titles = extractJobTitles(result.html);
-    if (titles.length) sourceNote = 'HTML scrape';
+    if (titles.length) {
+      sourceNote = 'HTML scrape';
+      jobEntries = [];
+    }
   }
 
   if (!titles.length && !result) {
@@ -400,6 +492,9 @@ export async function collectJobs(competitor) {
     lines.push('', 'Strategic signals:');
     signals.forEach((s) => lines.push(`- ${s}`));
   }
+
+  const enriched = await enrichJobDescriptionsWithApify(jobEntries);
+  if (enriched) lines.push(enriched);
 
   return {
     type:       'jobs',

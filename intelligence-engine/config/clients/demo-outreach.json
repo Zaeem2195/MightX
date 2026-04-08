@@ -29,6 +29,7 @@
       "name": "Salesloft",
       "website": "https://salesloft.com",
       "g2Slug": "salesloft",
+      "glassdoorSlug": "https://www.glassdoor.com/Reviews/Salesloft-Reviews-E759703.htm",
       "linkedinSlug": "salesloft",
       "githubOrg": null,
       "crunchbaseSlug": "salesloft",
@@ -40,6 +41,7 @@
       "name": "Apollo.io",
       "website": "https://www.apollo.io",
       "g2Slug": "apollo-io",
+      "glassdoorSlug": "https://www.glassdoor.com/Reviews/Apollo-io-Reviews-E1468521.htm",
       "linkedinSlug": "apollo-io",
       "githubOrg": null,
       "crunchbaseSlug": "apollo-io",
@@ -51,6 +53,7 @@
       "name": "Gong",
       "website": "https://www.gong.io",
       "g2Slug": "gong",
+      "glassdoorSlug": "https://www.glassdoor.com/Reviews/Gong-Reviews-E1722176.htm",
       "linkedinSlug": "gong-io",
       "githubOrg": null,
       "crunchbaseSlug": "gong-io",
@@ -62,6 +65,7 @@
       "name": "Clari",
       "website": "https://www.clari.com",
       "g2Slug": "clari",
+      "glassdoorSlug": "https://www.glassdoor.com/Reviews/Clari-Reviews-E1099786.htm",
       "linkedinSlug": "clari",
       "githubOrg": null,
       "crunchbaseSlug": "clari",
@@ -78,7 +82,8 @@
   "additionalCollectors": {
     "linkedin": true,
     "github": false,
-    "crunchbase": true
+    "crunchbase": true,
+    "glassdoor": false
   },
   "reportPreferences": {
     "tone": "strategic and direct — written for a senior sales leader operating in a crowded sales-tech category",

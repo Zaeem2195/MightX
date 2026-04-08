@@ -4,17 +4,18 @@
   "description": "Autonomous weekly competitive intelligence briefings for B2B SaaS clients",
   "type": "module",
   "scripts": {
-    "client":      "node scripts/run-client.js",
+    "client": "node scripts/run-client.js",
     "all-clients": "node scripts/run-all-clients.js",
-    "analyse":     "node scripts/analyse.js",
-    "report":      "node scripts/generate-report.js",
-    "deliver":     "node scripts/deliver.js",
-    "onboard":     "node scripts/onboard-client.js",
-    "dashboard":   "node scripts/generate-dashboard.js",
-    "quarterly":   "node scripts/generate-quarterly-summary.js"
+    "analyse": "node scripts/analyse.js",
+    "report": "node scripts/generate-report.js",
+    "deliver": "node scripts/deliver.js",
+    "onboard": "node scripts/onboard-client.js",
+    "dashboard": "node scripts/generate-dashboard.js",
+    "quarterly": "node scripts/generate-quarterly-summary.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
+    "apify-client": "^2.22.3",
     "dotenv": "^16.4.5",
     "nodemailer": "^6.9.14"
   }

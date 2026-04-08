@@ -1,14 +1,15 @@
 /**
  * Collector: LinkedIn Company Monitor
  * ─────────────────────────────────────
- * Monitors competitor LinkedIn company pages for signals.
- * Detects auth walls and avoids reporting bogus headcounts.
+ * Free: raw company page fetch + Google News (often auth-walled).
+ * Premium (APIFY_API_TOKEN): artificially/linkedin-company-scraper; optional posts actor.
  */
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { detectLoginWall, isRelevantArticle } from './_utils.js';
+import { APIFY_ACTORS, getApifyClient, isApifyEnabled, runActorDataset, clipText } from './_apify.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..', '..');
@@ -155,6 +156,105 @@ async function fetchLinkedInPage(linkedinSlug) {
   };
 }
 
+function normEmployeeDigits(s) {
+  if (s == null || s === '') return null;
+  const n = parseInt(String(s).replace(/,/g, ''), 10);
+  return Number.isFinite(n) ? String(n) : null;
+}
+
+async function collectLinkedInApify(clientId, competitor) {
+  const { name, linkedinSlug, knownHeadcountRange } = competitor;
+  const client = getApifyClient();
+  if (!client) return null;
+
+  const companyUrl = `https://www.linkedin.com/company/${linkedinSlug}/`;
+  const previous = loadSnapshot(clientId, name);
+  const findings = [`Source: Apify (${APIFY_ACTORS.LINKEDIN_COMPANY})`, ''];
+
+  let items;
+  try {
+    ({ items } = await runActorDataset(
+      client,
+      APIFY_ACTORS.LINKEDIN_COMPANY,
+      {
+        companyUrls: [companyUrl],
+        includeSpecialties: true,
+        includeLocations: false,
+      },
+      { waitSecs: 600, itemLimit: 25, injectDefaultProxy: true }
+    ));
+  } catch {
+    return null;
+  }
+
+  const row = Array.isArray(items) && items[0] ? items[0] : null;
+  if (!row) return null;
+
+  const empRaw = row.employeeCountOnLinkedIn || row.employeeCount || row.companySize || '';
+  const emp = normEmployeeDigits(empRaw);
+  const fol = normEmployeeDigits(row.followerCount || row.followersCount || '');
+
+  if (row.name || row.companyName) findings.push(`Company (scraped): ${row.name || row.companyName}`);
+  if (row.tagline) findings.push(`Tagline: ${clipText(row.tagline, 240)}`);
+  if (row.description) findings.push(`About: ${clipText(String(row.description), 600)}`);
+  if (row.industry) findings.push(`Industry: ${row.industry}`);
+  if (row.headquarters) findings.push(`Headquarters: ${row.headquarters}`);
+  if (Array.isArray(row.specialties) && row.specialties.length) {
+    findings.push(`Specialties: ${row.specialties.slice(0, 12).join(', ')}`);
+  }
+  if (emp && isPlausibleHeadcount(parseInt(emp, 10), knownHeadcountRange)) {
+    findings.push(`Employee count (LinkedIn / Apify): ${parseInt(emp, 10).toLocaleString()}`);
+  }
+  if (fol) findings.push(`Followers (approx.): ${parseInt(fol, 10).toLocaleString()}`);
+
+  const changes = analyseChanges(previous, { employees: emp || undefined, followers: fol || undefined }, name);
+  findings.push(...changes);
+
+  saveSnapshot(clientId, name, {
+    employees: emp,
+    followers: fol,
+    description: row.description ? String(row.description).slice(0, 500) : null,
+    loginWall: false,
+    source: 'apify',
+    savedAt: new Date().toISOString(),
+  });
+
+  if (process.env.APIFY_FETCH_LINKEDIN_POSTS === '1') {
+    try {
+      const { items: posts } = await runActorDataset(
+        client,
+        APIFY_ACTORS.LINKEDIN_POSTS,
+        { urls: [companyUrl], maxPosts: 10 },
+        { waitSecs: 600, itemLimit: 30, injectDefaultProxy: true }
+      );
+      if (posts?.length) {
+        findings.push('', 'Recent LinkedIn company posts (Apify):');
+        posts.slice(0, 8).forEach((p, i) => {
+          const txt = clipText(String(p.text || p.message || p.postText || ''), 450);
+          const when = p.CompanyPostedAtISO || p.postedAt || p.createdAt || '';
+          if (txt) findings.push(`${i + 1}. ${when ? `[${when}] ` : ''}${txt}`);
+        });
+      }
+    } catch {
+      findings.push('(LinkedIn posts actor skipped or failed.)');
+    }
+  }
+
+  const newsItems = await fetchLinkedInNews(competitor);
+  if (newsItems.length) {
+    findings.push('', 'Recent LinkedIn/leadership news (Google News RSS):');
+    for (const item of newsItems) {
+      findings.push(`- ${item.title} (${item.source || 'unknown'}, ${item.pubDate || 'recent'})`);
+    }
+  }
+
+  return {
+    type: 'linkedin',
+    competitor: name,
+    data: findings.join('\n').trim(),
+  };
+}
+
 function analyseChanges(previous, current, competitorName) {
   const signals = [];
 
@@ -188,6 +288,11 @@ export async function collectLinkedIn(clientId, competitor) {
 
   if (!linkedinSlug) {
     return { type: 'linkedin', competitor: name, data: 'No LinkedIn slug configured.' };
+  }
+
+  if (isApifyEnabled()) {
+    const premium = await collectLinkedInApify(clientId, competitor);
+    if (premium) return premium;
   }
 
   const previous = loadSnapshot(clientId, name);

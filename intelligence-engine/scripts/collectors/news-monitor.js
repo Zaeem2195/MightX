@@ -1,15 +1,17 @@
 /**
- * Collector: News Monitor (Google News RSS)
- * ──────────────────────────────────────────
- * Uses Google News RSS feeds — free, no API key required.
- * Entity-aware queries + post-fetch relevance filtering reduce false positives.
+ * Collector: News Monitor
+ * ───────────────────────
+ * Free: Google News RSS (headline + short description).
+ * Premium (APIFY_API_TOKEN): fabri-lab/apify-google-news-scraper — full article text.
  */
 
 import { buildNewsSearchQueries, isRelevantArticle } from './_utils.js';
+import { APIFY_ACTORS, getApifyClient, isApifyEnabled, runActorDataset, clipText } from './_apify.js';
 
-const FETCH_TIMEOUT  = 10000;
-const MAX_ARTICLES   = 8;
-const LOOKBACK_DAYS  = 8;   // slightly more than a week to avoid gaps
+const FETCH_TIMEOUT = 10000;
+const MAX_ARTICLES = 8;
+const LOOKBACK_DAYS = 8;
+const FULL_TEXT_CAP = 2000;
 
 // ── Parse Google News RSS XML ─────────────────────────────────────────────────
 function parseRSS(xml) {
@@ -25,7 +27,6 @@ function parseRSS(xml) {
     const link    = (/<link>(.*?)<\/link>/.exec(block))?.[1] || '';
     const desc    = (/<description><!\[CDATA\[([\s\S]*?)\]\]><\/description>/.exec(block) || /<description>([\s\S]*?)<\/description>/.exec(block))?.[1] || '';
 
-    // Strip HTML tags from description
     const cleanDesc = desc.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300);
 
     items.push({ title: title.trim(), pubDate, source: source.trim(), link, description: cleanDesc });
@@ -34,7 +35,6 @@ function parseRSS(xml) {
   return items;
 }
 
-// ── Filter to articles within lookback window ─────────────────────────────────
 function isRecent(pubDateStr) {
   if (!pubDateStr) return true;
   try {
@@ -46,7 +46,6 @@ function isRecent(pubDateStr) {
   }
 }
 
-// ── Fetch Google News RSS for a keyword ───────────────────────────────────────
 async function fetchGoogleNews(keyword) {
   const encoded = encodeURIComponent(keyword);
   const url = `https://news.google.com/rss/search?q=${encoded}&hl=en-US&gl=US&ceid=US:en`;
@@ -69,12 +68,10 @@ async function fetchGoogleNews(keyword) {
   }
 }
 
-// ── Main export ───────────────────────────────────────────────────────────────
-export async function collectNews(competitor) {
+/** RSS-only collection (free tier). */
+async function collectNewsFree(competitor) {
   const { name } = competitor;
-
   const keywords = buildNewsSearchQueries(competitor);
-
   const allArticles = [];
   const seen = new Set();
 
@@ -90,7 +87,6 @@ export async function collectNews(competitor) {
   }
 
   const recent = allArticles.slice(0, MAX_ARTICLES);
-
   if (!recent.length) {
     return {
       type:       'news',
@@ -103,9 +99,90 @@ export async function collectNews(competitor) {
     `HEADLINE: ${a.title}\nSOURCE: ${a.source || 'unknown'}\nDATE: ${a.pubDate}\nSUMMARY: ${a.description || 'No description'}`
   ).join('\n\n---\n\n');
 
+  return { type: 'news', competitor: name, data: formatted };
+}
+
+/** One Google News actor run per query keyword; merge + dedupe. */
+async function collectNewsApify(competitor) {
+  const { name } = competitor;
+  const client = getApifyClient();
+  if (!client) return null;
+
+  const keywords = buildNewsSearchQueries(competitor);
+  const merged = [];
+  const seen = new Set();
+
+  for (const keyword of keywords) {
+    try {
+      const { items } = await runActorDataset(
+        client,
+        APIFY_ACTORS.GOOGLE_NEWS,
+        {
+          searchQuery: keyword,
+          maxResults: 5,
+          country: 'US',
+          language: 'en',
+          timeRange: '7d',
+          extractFullText: true,
+        },
+        { waitSecs: 420, itemLimit: 50, injectDefaultProxy: true }
+      );
+
+      for (const row of items || []) {
+        const title = String(row.title || row.headline || '').trim();
+        if (!title || seen.has(title)) continue;
+
+        const art = {
+          title,
+          pubDate: row.date || row.pubDate || row.publishedAt || '',
+          source: row.source || row.sourceName || 'unknown',
+          link: row.link || row.url || '',
+          description: String(row.snippet || row.description || '').slice(0, 400),
+          fullText: row.fullText || row.text || row.articleText || '',
+        };
+
+        const descBlob = `${art.description} ${clipText(art.fullText, 500)}`;
+        if (!isRelevantArticle({ title: art.title, description: descBlob }, competitor)) continue;
+        if (art.pubDate && !isRecent(art.pubDate)) continue;
+
+        seen.add(title);
+        merged.push(art);
+        if (merged.length >= MAX_ARTICLES * 2) break;
+      }
+    } catch {
+      /* continue other keywords */
+    }
+
+    await new Promise((r) => setTimeout(r, 400));
+    if (merged.length >= MAX_ARTICLES * 2) break;
+  }
+
+  const recent = merged.slice(0, MAX_ARTICLES);
+  if (!recent.length) return null;
+
+  const formatted = recent.map((a) => {
+    const body = clipText(a.fullText || a.description || '', FULL_TEXT_CAP);
+    return [
+      `HEADLINE: ${a.title}`,
+      `SOURCE: ${a.source || 'unknown'}`,
+      `DATE: ${a.pubDate || 'unknown'}`,
+      `LINK: ${a.link || 'n/a'}`,
+      `SUMMARY: ${a.description || 'No snippet'}`,
+      `FULL_TEXT (Apify, capped): ${body || '—'}`,
+    ].join('\n');
+  }).join('\n\n---\n\n');
+
   return {
     type:       'news',
     competitor: name,
-    data:       formatted,
+    data:       `Source: Apify (${APIFY_ACTORS.GOOGLE_NEWS}) — full article extraction where available.\n\n${formatted}`,
   };
+}
+
+export async function collectNews(competitor) {
+  if (isApifyEnabled()) {
+    const premium = await collectNewsApify(competitor);
+    if (premium) return premium;
+  }
+  return collectNewsFree(competitor);
 }

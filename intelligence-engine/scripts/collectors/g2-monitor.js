@@ -1,10 +1,11 @@
 /**
  * Collector: G2 Review Monitor
  * ─────────────────────────────
- * Primary path: search-engine results (DuckDuckGo Lite / Bing / Google) that
- * quote G2 snippets (ratings, review counts) — avoids G2.com bot walls.
- * Secondary: direct G2 HTML + JSON-LD + JSON endpoints when reachable.
+ * Free: SERP snippets + best-effort G2 HTML/JSON.
+ * Premium (APIFY_API_TOKEN): zen-studio/g2-reviews-scraper — full review text.
  */
+
+import { APIFY_ACTORS, getApifyClient, isApifyEnabled, runActorDataset, clipText } from './_apify.js';
 
 const FETCH_TIMEOUT = 12000;
 const MAX_REVIEWS = 10;
@@ -322,6 +323,76 @@ function aggregateFromLd(ld) {
   return null;
 }
 
+async function collectG2Apify(competitor) {
+  const { name, g2Slug } = competitor;
+  const client = getApifyClient();
+  if (!client) return null;
+
+  const url = `https://www.g2.com/products/${g2Slug}/reviews`;
+
+  let items;
+  try {
+    ({ items } = await runActorDataset(
+      client,
+      APIFY_ACTORS.G2_REVIEWS,
+      {
+        url,
+        limit: 15,
+        sortOrder: 'most_recent',
+        includeProsConsSummary: false,
+      },
+      { waitSecs: 900, itemLimit: 50, injectDefaultProxy: true }
+    ));
+  } catch {
+    return null;
+  }
+
+  if (!items?.length) return null;
+
+  const lines = [
+    `Source: Apify (${APIFY_ACTORS.G2_REVIEWS})`,
+    `Product URL: ${url}`,
+    '',
+  ];
+
+  const meta = items.find((x) => x.productAverageRating != null) || items[0];
+  if (meta?.productAverageRating != null && meta?.productReviewCount != null) {
+    lines.push(`Overall (from scrape metadata): ${meta.productAverageRating}/5 (${meta.productReviewCount} reviews)`, '');
+  }
+
+  let n = 0;
+  for (const r of items) {
+    const text =
+      r.reviewText ||
+      r.reviewBody ||
+      r.text ||
+      r.markdownContent ||
+      r.summary ||
+      '';
+    const title = r.title || r.reviewTitle || r.headline || '';
+    const rating = r.rating || r.starRating || r.reviewRating || '';
+    const role = r.reviewerJobTitle || r.reviewerTitle || r.jobTitle || '';
+    const pros = r.prosText || r.pros || r.liked || '';
+    const cons = r.consText || r.cons || r.disliked || '';
+    const when = r.reviewDate || r.publishedDate || r.date || '';
+
+    if (!text && !title && !pros && !cons) continue;
+    n += 1;
+    lines.push(`Review ${n}${rating ? ` (${rating}/5)` : ''}${when ? ` — ${when}` : ''}`);
+    if (role) lines.push(`  Role: ${role}`);
+    if (title) lines.push(`  Title: ${title}`);
+    if (pros) lines.push(`  Pros: ${clipText(String(pros), 500)}`);
+    if (cons) lines.push(`  Cons: ${clipText(String(cons), 500)}`);
+    if (text) lines.push(`  Text: ${clipText(String(text), 1200)}`);
+    lines.push('');
+    if (n >= 15) break;
+  }
+
+  if (n === 0) return null;
+
+  return { type: 'g2_reviews', competitor: name, data: lines.join('\n').trim() };
+}
+
 export async function collectG2(competitor) {
   const { name, g2Slug } = competitor;
 
@@ -331,6 +402,11 @@ export async function collectG2(competitor) {
       competitor: name,
       data:       'No G2 slug configured for this competitor.',
     };
+  }
+
+  if (isApifyEnabled()) {
+    const premium = await collectG2Apify(competitor);
+    if (premium) return premium;
   }
 
   const serp = await fetchSerpG2Signals(name, g2Slug);

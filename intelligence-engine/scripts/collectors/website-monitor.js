@@ -1,24 +1,22 @@
 /**
  * Collector: Competitor Website Monitor
  * ───────────────────────────────────────
- * Fetches the competitor's homepage and key pages,
- * compares against the stored snapshot from last week,
- * and returns a diff summary for Claude to analyse.
+ * Free: fetch + word-diff vs local snapshot.
+ * Premium (APIFY_API_TOKEN): automation-lab/website-change-monitor (diff + severity).
  */
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { APIFY_ACTORS, getApifyClient, isApifyEnabled, runActorDataset, clipText } from './_apify.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..', '..');
 
-// Pages to monitor per competitor (relative paths appended to their website URL)
 const PAGES_TO_MONITOR = ['', '/pricing', '/product', '/features', '/blog'];
 
 const FETCH_TIMEOUT = 12000;
 
-// ── Strip HTML to meaningful text ─────────────────────────────────────────────
 function extractText(html) {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, '')
@@ -30,10 +28,9 @@ function extractText(html) {
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s{2,}/g, ' ')
     .trim()
-    .slice(0, 4000);   // cap to avoid token overload
+    .slice(0, 4000);
 }
 
-// ── Fetch a single page with timeout ─────────────────────────────────────────
 async function fetchPage(url) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
@@ -51,7 +48,6 @@ async function fetchPage(url) {
   }
 }
 
-// ── Load / save snapshot ──────────────────────────────────────────────────────
 function snapshotPath(clientId, competitorName) {
   const dir = path.join(ROOT, 'data', clientId, 'snapshots');
   fs.mkdirSync(dir, { recursive: true });
@@ -69,7 +65,6 @@ function saveSnapshot(clientId, competitorName, data) {
   fs.writeFileSync(snapshotPath(clientId, competitorName), JSON.stringify(data, null, 2));
 }
 
-// ── Compute simple diff between old and new text ─────────────────────────────
 function summariseDiff(oldText, newText, url) {
   if (!oldText) return `First-time snapshot of ${url} — no previous version to compare.`;
 
@@ -89,8 +84,76 @@ function summariseDiff(oldText, newText, url) {
   return `${url} changed (${changeDir} content). New/changed terms detected: ${unique.join(', ')}.`;
 }
 
-// ── Main export ───────────────────────────────────────────────────────────────
-export async function collectWebsite(clientId, competitor) {
+async function collectWebsiteApify(clientId, competitor) {
+  const { name, website } = competitor;
+  if (!website) return null;
+
+  const client = getApifyClient();
+  if (!client) return null;
+
+  const base = website.replace(/\/$/, '');
+  const urls = PAGES_TO_MONITOR.map((p) => base + p);
+
+  let items;
+  try {
+    ({ items } = await runActorDataset(
+      client,
+      APIFY_ACTORS.WEBSITE_CHANGE,
+      {
+        urls,
+        cssSelector: '',
+        mode: 'text',
+        ignorePatterns: ['\\d+\\s*(minutes?|hours?|days?)\\s+ago', 'session[_-]?id=[a-f0-9]+'],
+        notifyOnFirstRun: false,
+      },
+      { waitSecs: 600, itemLimit: 50, injectDefaultProxy: true }
+    ));
+  } catch {
+    return null;
+  }
+
+  if (!items?.length) return null;
+
+  const lines = [
+    `Source: Apify (${APIFY_ACTORS.WEBSITE_CHANGE})`,
+    'Baseline snapshots are stored by the actor on Apify (compared run-to-run).',
+    '',
+  ];
+
+  for (const row of items) {
+    const u = row.url || row.pageUrl || '';
+    const status = row.status || row.changeStatus || 'unknown';
+    const pct = row.changePercent != null ? `${row.changePercent}%` : 'n/a';
+    const sev = row.severity || row.importance || '';
+    lines.push(`— ${u || 'URL unknown'}`);
+    lines.push(`  Status: ${status}${sev ? ` | Severity: ${sev}` : ''} | Change: ${pct}`);
+    if (row.diffSummary) lines.push(`  Diff summary: ${clipText(String(row.diffSummary), 900)}`);
+    if (row.newContent) lines.push(`  New/changed excerpt: ${clipText(String(row.newContent), 600)}`);
+    lines.push('');
+  }
+
+  saveSnapshot(clientId, name, {
+    apifyWebsiteMonitor: true,
+    lastUrls: urls,
+    lastRunAt: new Date().toISOString(),
+    rawItemCount: items.length,
+  });
+
+  const meaningful = items.some((row) => {
+    const st = String(row.status || '').toLowerCase();
+    return st === 'changed' || st === 'new' || (row.changePercent && row.changePercent > 0);
+  });
+
+  return {
+    type: 'website',
+    competitor: name,
+    data: meaningful
+      ? lines.join('\n').trim()
+      : `${lines.join('\n').trim()}\n\nNo material website text changes flagged by Apify for the monitored URLs this run.`,
+  };
+}
+
+async function collectWebsiteFree(clientId, competitor) {
   const { name, website } = competitor;
   if (!website) return { type: 'website', competitor: name, data: 'No website URL configured.' };
 
@@ -122,4 +185,12 @@ export async function collectWebsite(clientId, competitor) {
       ? meaningful.join('\n\n')
       : 'No significant website changes detected this week.',
   };
+}
+
+export async function collectWebsite(clientId, competitor) {
+  if (isApifyEnabled()) {
+    const premium = await collectWebsiteApify(clientId, competitor);
+    if (premium) return premium;
+  }
+  return collectWebsiteFree(clientId, competitor);
 }
