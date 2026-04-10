@@ -13,7 +13,19 @@ import { APIFY_ACTORS, getApifyClient, isApifyEnabled, runActorDataset, clipText
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..', '..');
 
-const PAGES_TO_MONITOR = ['', '/pricing', '/product', '/features', '/blog'];
+const PAGES_TO_MONITOR = [
+  '',
+  '/pricing',
+  '/product',
+  '/features',
+  '/blog',
+  '/about',
+  '/customers',
+  '/enterprise',
+  '/integrations',
+  '/partners',
+  '/platform',
+];
 
 const FETCH_TIMEOUT = 12000;
 

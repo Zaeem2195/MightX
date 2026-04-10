@@ -30,7 +30,7 @@
       "website": "https://www.outreach.io",
       "g2Slug": "outreach",
       "glassdoorSlug": "https://www.glassdoor.com/Reviews/Outreach-Reviews-E1276320.htm",
-      "linkedinSlug": "outreach-inc",
+      "linkedinSlug": "outreach-saas",
       "githubOrg": null,
       "crunchbaseSlug": "outreach",
       "newsKeywords": ["Outreach sales engagement", "Outreach pricing", "Outreach product launch"],
@@ -43,6 +43,7 @@
       "g2Slug": "apollo-io",
       "glassdoorSlug": "https://www.glassdoor.com/Reviews/Apollo-io-Reviews-E1468521.htm",
       "linkedinSlug": "apollo-io",
+      "linkedinSlugAlternates": ["zenprospect"],
       "githubOrg": null,
       "crunchbaseSlug": "apollo-io",
       "newsKeywords": ["Apollo.io sales platform", "Apollo pricing", "Apollo product update"],
@@ -84,7 +85,7 @@
     "linkedin": true,
     "github": false,
     "crunchbase": true,
-    "glassdoor": false
+    "glassdoor": true
   },
   "reportPreferences": {
     "tone": "strategic and direct — written for a senior sales leader evaluating competitor pressure in sales tech",

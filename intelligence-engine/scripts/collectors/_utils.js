@@ -115,7 +115,7 @@ export function isRelevantArticle(article, competitor, options = {}) {
     return false;
   }
 
-  if (nameLower === 'clari' && /\bclariteens\b/i.test(blob)) {
+  if (nameLower === 'clari' && /\b(clariteens|clariane|claritin|clarivate)\b/i.test(blob)) {
     return false;
   }
 

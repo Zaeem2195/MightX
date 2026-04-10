@@ -1,5 +1,5 @@
 {
-  "_instructions": "Duplicate this file for each client. Filename = client slug (e.g. acme-corp.json). Use 'node scripts/onboard-client.js' for interactive setup. Per competitor, optional: atsProvider (greenhouse|lever|ashby), atsSlug (board id), knownHeadcountRange [min,max] for LinkedIn validation, glassdoorSlug (full Glassdoor reviews URL for Apify). Set additionalCollectors.glassdoor true only with APIFY_API_TOKEN.",
+  "_instructions": "Duplicate this file for each client. Filename = client slug (e.g. acme-corp.json). Use 'node scripts/onboard-client.js' for interactive setup. Per competitor, optional: atsProvider (greenhouse|lever|ashby), atsSlug (board id), knownHeadcountRange [min,max] for LinkedIn validation, glassdoorSlug (full Glassdoor reviews URL for Apify), linkedinSlugAlternates (backup vanity slugs for Apify if primary 404s or rate-limits), linkedinCompanyUrls (full LinkedIn company URLs). Set additionalCollectors.glassdoor true only with APIFY_API_TOKEN.",
 
   "id": "example-client",
   "name": "Acme Corp",
@@ -34,7 +34,7 @@
       "name": "Outreach",
       "website": "https://www.outreach.io",
       "g2Slug": "outreach",
-      "linkedinSlug": "outreach-inc",
+      "linkedinSlug": "outreach-saas",
       "githubOrg": null,
       "crunchbaseSlug": "outreach",
       "newsKeywords": ["Outreach sales engagement", "Outreach.io funding", "Outreach layoffs"]

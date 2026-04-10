@@ -9,7 +9,7 @@ import { buildNewsSearchQueries, isRelevantArticle } from './_utils.js';
 import { APIFY_ACTORS, getApifyClient, isApifyEnabled, runActorDataset, clipText } from './_apify.js';
 
 const FETCH_TIMEOUT = 10000;
-const MAX_ARTICLES = 8;
+const MAX_ARTICLES = 12;
 const LOOKBACK_DAYS = 8;
 const FULL_TEXT_CAP = 2000;
 
@@ -119,7 +119,7 @@ async function collectNewsApify(competitor) {
         APIFY_ACTORS.GOOGLE_NEWS,
         {
           searchQuery: keyword,
-          maxResults: 5,
+          maxResults: 8,
           country: 'US',
           language: 'en',
           timeRange: '7d',

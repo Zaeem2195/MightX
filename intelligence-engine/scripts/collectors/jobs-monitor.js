@@ -320,13 +320,16 @@ function interpretSignals(categories, competitorName) {
   return signals;
 }
 
+/** Max posting URLs to send to Apify article-extractor per competitor. */
+const MAX_JD_ENRICH_URLS = 12;
+
 /** Pull JD text for up to N ATS posting URLs via Apify. */
 async function enrichJobDescriptionsWithApify(entries) {
   if (!isApifyEnabled() || !entries?.length) return '';
   const client = getApifyClient();
   if (!client) return '';
 
-  const withUrl = entries.filter((e) => e.url).slice(0, 8);
+  const withUrl = entries.filter((e) => e.url).slice(0, MAX_JD_ENRICH_URLS);
   if (!withUrl.length) return '';
 
   try {

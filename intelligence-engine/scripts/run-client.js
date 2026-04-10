@@ -78,8 +78,13 @@ async function collectAllSignals(clientId, competitors, additionalCollectors = {
       signals.push(jobs);
     }
 
-    if (additionalCollectors.linkedin && competitor.linkedinSlug) {
-      await new Promise(r => setTimeout(r, 500));
+    if (
+      additionalCollectors.linkedin &&
+      (competitor.linkedinSlug ||
+        (Array.isArray(competitor.linkedinSlugAlternates) && competitor.linkedinSlugAlternates.length) ||
+        (Array.isArray(competitor.linkedinCompanyUrls) && competitor.linkedinCompanyUrls.length))
+    ) {
+      await new Promise((r) => setTimeout(r, 4000));
       const linkedin = await collectLinkedIn(clientId, competitor);
       signals.push(linkedin);
     }

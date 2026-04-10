@@ -162,33 +162,107 @@ function normEmployeeDigits(s) {
   return Number.isFinite(n) ? String(n) : null;
 }
 
+/** Ms to wait between Apify LinkedIn attempts (reduces LinkedIn rate limits). Override: APIFY_LINKEDIN_RETRY_DELAY_MS */
+const LINKEDIN_APIFY_ATTEMPT_GAP_MS = Math.max(
+  0,
+  Number.parseInt(process.env.APIFY_LINKEDIN_RETRY_DELAY_MS || '4500', 10) || 4500
+);
+
+/**
+ * Build ordered URLs for the company scraper: optional full URLs first, then each slug + /about/.
+ * Optional competitor.linkedinSlugAlternates: string[]
+ * Optional competitor.linkedinCompanyUrls: string[] (full https://www.linkedin.com/company/... URLs)
+ */
+function buildLinkedInCompanyUrlsToTry(competitor) {
+  const { linkedinSlug, linkedinSlugAlternates = [], linkedinCompanyUrls = [] } = competitor;
+  const seen = new Set();
+  const out = [];
+
+  const push = (u) => {
+    if (!u || typeof u !== 'string') return;
+    let norm = u.trim();
+    if (!norm) return;
+    if (!/^https?:\/\//i.test(norm)) {
+      const s = norm.replace(/^\/+|\/+$/g, '');
+      if (!s) return;
+      norm = `https://www.linkedin.com/company/${s}/`;
+    }
+    norm = norm.replace(/\/?$/, '/');
+    if (seen.has(norm)) return;
+    seen.add(norm);
+    out.push(norm);
+    if (!/\/about\/?$/i.test(norm)) {
+      const about = norm.replace(/\/?$/, '') + '/about/';
+      if (!seen.has(about)) {
+        seen.add(about);
+        out.push(about);
+      }
+    }
+  };
+
+  for (const raw of linkedinCompanyUrls) {
+    push(String(raw));
+  }
+
+  const extra = Array.isArray(linkedinSlugAlternates) ? linkedinSlugAlternates : [];
+  for (const slug of [linkedinSlug, ...extra].filter(Boolean)) {
+    push(String(slug));
+  }
+
+  return out;
+}
+
 async function collectLinkedInApify(clientId, competitor) {
   const { name, linkedinSlug, knownHeadcountRange } = competitor;
   const client = getApifyClient();
   if (!client) return null;
 
-  const companyUrl = `https://www.linkedin.com/company/${linkedinSlug}/`;
+  const companyUrlsToTry = buildLinkedInCompanyUrlsToTry(competitor);
+  if (!companyUrlsToTry.length) return null;
+
   const previous = loadSnapshot(clientId, name);
   const findings = [`Source: Apify (${APIFY_ACTORS.LINKEDIN_COMPANY})`, ''];
 
   let items;
-  try {
-    ({ items } = await runActorDataset(
-      client,
-      APIFY_ACTORS.LINKEDIN_COMPANY,
-      {
-        companyUrls: [companyUrl],
-        includeSpecialties: true,
-        includeLocations: false,
-      },
-      { waitSecs: 600, itemLimit: 25, injectDefaultProxy: true }
-    ));
-  } catch {
-    return null;
+  let lastError = '';
+  let winningCompanyUrl = null;
+  let attempt = 0;
+
+  for (const companyUrl of companyUrlsToTry) {
+    if (attempt++ > 0 && LINKEDIN_APIFY_ATTEMPT_GAP_MS > 0) {
+      await new Promise((r) => setTimeout(r, LINKEDIN_APIFY_ATTEMPT_GAP_MS));
+    }
+    try {
+      ({ items } = await runActorDataset(
+        client,
+        APIFY_ACTORS.LINKEDIN_COMPANY,
+        {
+          companyUrls: [companyUrl],
+          includeSpecialties: true,
+          includeLocations: false,
+        },
+        { waitSecs: 600, itemLimit: 25, injectDefaultProxy: true }
+      ));
+      if (Array.isArray(items) && items[0]) {
+        winningCompanyUrl = companyUrl.replace(/\/about\/?$/i, '/');
+        break;
+      }
+    } catch (e) {
+      lastError = e?.message || String(e);
+    }
   }
 
   const row = Array.isArray(items) && items[0] ? items[0] : null;
-  if (!row) return null;
+  if (!row) {
+    const msg = [
+      `Apify LinkedIn company scraper (${APIFY_ACTORS.LINKEDIN_COMPANY}) returned no usable company row after trying ${companyUrlsToTry.length} URL(s) (slug + alternates + /about/).`,
+      lastError ? `Last Apify error: ${lastError}` : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
+    console.warn(`[linkedin-monitor] ${name}: ${msg}`);
+    return { _apifyFailed: true, diagnostic: msg };
+  }
 
   const empRaw = row.employeeCountOnLinkedIn || row.employeeCount || row.companySize || '';
   const emp = normEmployeeDigits(empRaw);
@@ -220,23 +294,26 @@ async function collectLinkedInApify(clientId, competitor) {
   });
 
   if (process.env.APIFY_FETCH_LINKEDIN_POSTS === '1') {
-    try {
-      const { items: posts } = await runActorDataset(
-        client,
-        APIFY_ACTORS.LINKEDIN_POSTS,
-        { urls: [companyUrl], maxPosts: 10 },
-        { waitSecs: 600, itemLimit: 30, injectDefaultProxy: true }
-      );
-      if (posts?.length) {
-        findings.push('', 'Recent LinkedIn company posts (Apify):');
-        posts.slice(0, 8).forEach((p, i) => {
-          const txt = clipText(String(p.text || p.message || p.postText || ''), 450);
-          const when = p.CompanyPostedAtISO || p.postedAt || p.createdAt || '';
-          if (txt) findings.push(`${i + 1}. ${when ? `[${when}] ` : ''}${txt}`);
-        });
+    const postsBaseUrl = winningCompanyUrl || companyUrlsToTry[0]?.replace(/\/about\/?$/i, '/') || '';
+    if (postsBaseUrl) {
+      try {
+        const { items: posts } = await runActorDataset(
+          client,
+          APIFY_ACTORS.LINKEDIN_POSTS,
+          { urls: [postsBaseUrl], maxPosts: 10 },
+          { waitSecs: 600, itemLimit: 30, injectDefaultProxy: true }
+        );
+        if (posts?.length) {
+          findings.push('', 'Recent LinkedIn company posts (Apify):');
+          posts.slice(0, 8).forEach((p, i) => {
+            const txt = clipText(String(p.text || p.message || p.postText || ''), 450);
+            const when = p.CompanyPostedAtISO || p.postedAt || p.createdAt || '';
+            if (txt) findings.push(`${i + 1}. ${when ? `[${when}] ` : ''}${txt}`);
+          });
+        }
+      } catch {
+        findings.push('(LinkedIn posts actor skipped or failed.)');
       }
-    } catch {
-      findings.push('(LinkedIn posts actor skipped or failed.)');
     }
   }
 
@@ -284,22 +361,41 @@ function analyseChanges(previous, current, competitorName) {
 }
 
 export async function collectLinkedIn(clientId, competitor) {
-  const { name, linkedinSlug, knownHeadcountRange } = competitor;
+  const { name, linkedinSlug, knownHeadcountRange, linkedinSlugAlternates } = competitor;
 
-  if (!linkedinSlug) {
+  const primarySlug =
+    (linkedinSlug && String(linkedinSlug).trim()) ||
+    (Array.isArray(linkedinSlugAlternates) && linkedinSlugAlternates.map((s) => String(s).trim()).find(Boolean)) ||
+    (() => {
+      const u = competitor.linkedinCompanyUrls?.[0];
+      if (!u) return '';
+      const m = String(u).match(/linkedin\.com\/company\/([^/?#]+)/i);
+      return m ? m[1] : '';
+    })();
+
+  if (!primarySlug && !buildLinkedInCompanyUrlsToTry(competitor).length) {
     return { type: 'linkedin', competitor: name, data: 'No LinkedIn slug configured.' };
   }
 
+  let apifyDiagnostic = '';
   if (isApifyEnabled()) {
     const premium = await collectLinkedInApify(clientId, competitor);
-    if (premium) return premium;
+    if (premium?._apifyFailed) {
+      apifyDiagnostic = premium.diagnostic || '';
+    } else if (premium) {
+      return premium;
+    }
   }
 
   const previous = loadSnapshot(clientId, name);
   const findings = [];
+  if (apifyDiagnostic) {
+    findings.push(apifyDiagnostic, '');
+  }
 
+  const pageSlug = primarySlug || (linkedinSlug && String(linkedinSlug).trim()) || null;
   const [pageData, newsItems] = await Promise.all([
-    fetchLinkedInPage(linkedinSlug),
+    pageSlug ? fetchLinkedInPage(pageSlug) : Promise.resolve(null),
     fetchLinkedInNews(competitor),
   ]);
 
@@ -320,7 +416,7 @@ export async function collectLinkedIn(clientId, competitor) {
       findings.push(
         'LinkedIn returned an authentication wall — direct headcount from the company page was not reliable.'
       );
-      const hint = await fetchHeadcountHintFromGoogle(name, linkedinSlug);
+      const hint = await fetchHeadcountHintFromGoogle(name, pageSlug);
       if (hint && isPlausibleHeadcount(hint, knownHeadcountRange)) {
         headcountLine = `Third-party search snippet suggests ~${hint.toLocaleString()} employees (verify on LinkedIn).`;
         employeesForSnapshot = String(hint);
@@ -333,7 +429,7 @@ export async function collectLinkedIn(clientId, competitor) {
         findings.push(
           `Parsed employee count (${parsed}) looks unreliable (login wall or HTML noise). Not using as a hard number.`
         );
-        const hint = await fetchHeadcountHintFromGoogle(name, linkedinSlug);
+        const hint = await fetchHeadcountHintFromGoogle(name, pageSlug);
         if (hint && isPlausibleHeadcount(hint, knownHeadcountRange)) {
           headcountLine = `Third-party search snippet suggests ~${hint.toLocaleString()} employees (verify on LinkedIn).`;
           employeesForSnapshot = String(hint);

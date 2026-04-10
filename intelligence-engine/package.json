@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "client": "node scripts/run-client.js",
+    "resume": "node scripts/resume-from-raw.js",
+    "retry-apify": "node scripts/retry-blocked-apify.js",
     "all-clients": "node scripts/run-all-clients.js",
     "analyse": "node scripts/analyse.js",
     "report": "node scripts/generate-report.js",
