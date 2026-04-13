@@ -23,10 +23,10 @@ RULES:
 
    Paragraph 2 (then URL on the next line):
    I dropped the sample HTML link below so you can see if the output is something your AEs could actually use on live calls this week:
-   https://yourdomain.com/brief?id={{companyName}}
+   https://yourdomain.com/elearning-brief.html?id={{companyName}}
 
    In the JSON "body" string, separate paragraphs with a blank line (use \n\n between paragraph 1 and paragraph 2). Put the URL alone on the line after the colon.
-8. URL variable requirement: output the literal token {{companyName}} exactly at the end of the URL. Do NOT replace, resolve, transform, or escape it.
+8. URL variable requirement: output the literal token {{companyName}} exactly as the query value after id= (merge field for your sequencer). Do NOT substitute a real company slug or alter the token.
 9. No sign-off. No "Best regards". The email ends immediately after the URL line. Nothing after the URL.
 10. Tone: casual, peer-to-peer. Not salesy. Not startup-corporate. Conversational but professional.
 11. Never lead with generic AI or automation buzzwords. The Abstracted Authority line above is allowed.
