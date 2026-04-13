@@ -202,6 +202,8 @@ The script runs `npx vercel@latest deploy --prod --yes` with your env so it is n
 
 **If you see `invalid-token-value` / “Must not contain `-`, `.`”:** you probably put **`VERCEL_OIDC_TOKEN`** (a JWT for GitHub Actions) into **`VERCEL_TOKEN`**. For local deploy, create a **Personal Access Token** at [vercel.com/account/tokens](https://vercel.com/account/tokens) and set **`VERCEL_TOKEN=vcp_...`** separately. Keep OIDC for Actions only.
 
+**If you see `brief-app\\brief-app` / “path does not exist”:** the Vercel project’s **Root Directory** is set to `brief-app` (correct for GitHub on a monorepo). The CLI was resolving that on top of your current folder. The deploy script detects the Git repo root, writes a minimal **`<repo>/.vercel/project.json`**, and runs `vercel deploy` from the repo root. **`/.vercel/`** at the repo root is gitignored.
+
 ### After deploy — verify tracking
 
 1. Open: `https://<your-deployment>/api/health/tracking` — JSON should show `sentToSlack: true` and a message should appear in Slack.

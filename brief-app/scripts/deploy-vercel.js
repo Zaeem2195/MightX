@@ -15,9 +15,58 @@
 
 const path = require("path");
 const fs = require("fs");
-const { spawnSync } = require("child_process");
+const { spawnSync, execSync } = require("child_process");
 
 const appRoot = path.join(__dirname, "..");
+
+function getGitRoot(dir) {
+  try {
+    const out = execSync("git rev-parse --show-toplevel", {
+      cwd: dir,
+      encoding: "utf8",
+    }).trim();
+    return out ? path.normalize(out) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Vercel project "Root Directory" is relative to the Git repo root. If you run
+ * the CLI from `repo/brief-app` while Root Directory is `brief-app`, the CLI
+ * resolves `brief-app/brief-app` and fails. Deploy from the Git root and keep
+ * a minimal `.vercel/project.json` there (ids only — no `settings.rootDirectory`).
+ */
+function prepareMonorepoVercelContext(appRoot) {
+  const gitRoot = getGitRoot(appRoot);
+  const normApp = path.normalize(appRoot);
+  if (!gitRoot || path.normalize(gitRoot) === normApp) {
+    return { vercelCwd: appRoot };
+  }
+  const rel = path.relative(gitRoot, normApp);
+  if (!rel || rel.startsWith("..") || path.isAbsolute(rel)) {
+    return { vercelCwd: appRoot };
+  }
+  const srcPath = path.join(appRoot, ".vercel", "project.json");
+  const raw = fs.readFileSync(srcPath, "utf8");
+  const linked = JSON.parse(raw);
+  const minimal = {
+    projectId: linked.projectId,
+    orgId: linked.orgId,
+    projectName: linked.projectName,
+  };
+  if (!minimal.projectId || !minimal.orgId) {
+    return { vercelCwd: appRoot };
+  }
+  const rootVercelDir = path.join(gitRoot, ".vercel");
+  fs.mkdirSync(rootVercelDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(rootVercelDir, "project.json"),
+    `${JSON.stringify(minimal, null, 2)}\n`,
+    "utf8",
+  );
+  return { vercelCwd: gitRoot };
+}
 
 // Load `.env` first, then `.env.local` with override so local secrets win.
 // (If `.env` defines VERCEL_TOKEN=` empty, loading it second used to wipe a good `.env.local` value.)
@@ -57,9 +106,9 @@ if (classicToken) {
 const isPreview = process.argv.includes("--preview");
 const vercelProject = path.join(appRoot, ".vercel", "project.json");
 
-function run(cmd, args) {
+function run(cmd, args, cwd) {
   const result = spawnSync(cmd, args, {
-    cwd: appRoot,
+    cwd: cwd ?? appRoot,
     stdio: "inherit",
     env: { ...process.env },
     shell: true,
@@ -124,5 +173,12 @@ if (isPreview) {
   args.push("--prod");
 }
 
+const { vercelCwd } = prepareMonorepoVercelContext(appRoot);
+if (vercelCwd !== appRoot) {
+  console.log(
+    `Using Git repo root for Vercel (monorepo Root Directory): ${vercelCwd}\n`,
+  );
+}
+
 console.log(isPreview ? "\nDeploying preview…\n" : "\nDeploying production…\n");
-run("npx", args);
+run("npx", args, vercelCwd);

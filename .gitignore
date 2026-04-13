@@ -1,3 +1,6 @@
+# Vercel link (generated at repo root by brief-app/scripts/deploy-vercel.js)
+.vercel/
+
 # Dependencies & secrets
 node_modules/
 .env
