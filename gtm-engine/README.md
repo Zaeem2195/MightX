@@ -265,11 +265,11 @@ The current framework is now:
 - **Abstracted Authority sentence** in sentence 2 or 3:
   - "My background is in engineering secure, enterprise-grade architectures for tier-1 financial institutions, but my team recently built an automated competitive intelligence engine specifically for the SaaS market."
 - **Exactly 2 real competitors** identified dynamically for each lead
-- **Direct-link CTA** ending with:
+- **Delivery-assuming CTA** (no permission-asking): baseline capture + Rep Talk Tracks framing, then link on its own line:
   - `https://yourdomain.com/brief?id={{companyName}}`
 - **Literal Instantly token required**:
   - `{{companyName}}` must remain literal in output so Instantly injects the value at send time
-- **Word budget**: under 125 words
+- **Word budget**: under 140 words
 
 ### Why `{{companyName}}` matters
 
