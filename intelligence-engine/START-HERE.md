@@ -396,7 +396,7 @@ npm run lint                                             # ESLint
 npm run generate-html-brief                              # Claude → public/<industry>-brief.html (edit inputs in scripts/generate-html-brief.js first)
 ```
 
-**Production (Vercel):** set `SLACK_WEBHOOK_URL` in project env vars. **Local:** `brief-app/.env.local` (gitignored) with `ANTHROPIC_API_KEY` for the HTML generator and `SLACK_WEBHOOK_URL` for open alerts.
+**Production (Vercel):** step-by-step import, **Root Directory = `brief-app`**, env vars, post-deploy checks, and the report-data caveat are in **`brief-app/README.md`** → section *Deployment (Vercel)*. Set `SLACK_WEBHOOK_URL` in Vercel project settings. **Local:** `brief-app/.env.local` (gitignored) with `ANTHROPIC_API_KEY` for the HTML generator and `SLACK_WEBHOOK_URL` for open alerts.
 
 **Observability:** `GET /api/health/tracking` — posts a test message to Slack and returns JSON status (see `brief-app/README.md`).
 

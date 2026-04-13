@@ -148,12 +148,36 @@ Example:
 
 ---
 
-## Deployment
+## Deployment (Vercel)
 
-Deploy on Vercel as a standard Next.js app.
+Yes — deploy **`brief-app`** as a normal Next.js app on Vercel so leads hit your production URL (e.g. `https://yourdomain.com/brief?id={{companyName}}` or `https://yourdomain.com/elearning-brief.html?id=…`). **Open tracking** runs in **`proxy.ts`** on the Edge: logs + Slack (when `?id=` is present and the request is not filtered as bot/prefetch).
 
-Important:
+### One-time setup
 
-- Ensure `SLACK_WEBHOOK_URL` is configured in Vercel
-- Confirm proxy executes on `/brief`
-- Validate logs and Slack alerts after deployment
+1. Push this repo to GitHub (already done if you use the same remote).
+2. In [Vercel](https://vercel.com) → **Add New Project** → import the **MightX** repo.
+3. Set **Root Directory** to **`brief-app`** (monorepo — do not leave blank or it will not find `package.json`).
+4. Framework: **Next.js** (auto-detected). Build: default `next build`, Output: default.
+5. **Environment variables** (Project → Settings → Environment Variables), at least for **Production**:
+   - `SLACK_WEBHOOK_URL` — required for Slack alerts on opens.
+   - `ANTHROPIC_API_KEY` — only if you ever run `generate-html-brief` from CI on Vercel (optional; most people run that script locally and commit `public/*-brief.html`).
+6. **Deploy**. Note the production URL (e.g. `https://might-x.vercel.app`) or attach a **custom domain** (Project → Settings → Domains).
+
+### After deploy — verify tracking
+
+1. Open: `https://<your-deployment>/api/health/tracking` — JSON should show `sentToSlack: true` and a message should appear in Slack.
+2. Open: `https://<your-deployment>/brief?id=test_deploy_lead` — check **Vercel** → project → **Logs** (filter runtime) for `[ASSET OPENED]` and confirm Slack.
+3. If you use static vertical briefs: `https://<your-deployment>/elearning-brief.html?id=test_static` — same expectation (proxy matcher includes `*-brief.html`).
+
+### Cold email links
+
+Replace placeholder `https://yourdomain.com` in `gtm-engine/prompts/personalization.txt` with your **real** production origin (or the domain you attach in Vercel). Instantly still injects `{{companyName}}` into `?id=`.
+
+### Production caveat: report-backed `/brief` content
+
+`lib/brief-loader.ts` reads from **`../intelligence-engine/data`** relative to the app root. That path exists on your **local machine** in the monorepo; it does **not** exist on Vercel’s build output unless you copy report JSON into this app (e.g. under `brief-app/data/reports/`) or fetch from storage/API. On Vercel today:
+
+- **Tracking** (proxy + Slack + logs) still works for any `?id=`.
+- **Dynamic report HTML** on `/brief` falls back to **`data/briefs.json`** / placeholder when no bundled data matches — which is fine if leads mainly open **static** `public/*-brief.html` files or you expand data loading later.
+
+If you want report-backed pages in production without refactoring, shortest path is: commit the JSON you need under `brief-app/` and point `brief-loader` at it (separate small change).
