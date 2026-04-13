@@ -18,15 +18,17 @@ This app is designed to:
 
 ## Implemented Features
 
-### 1) `/brief` tracking middleware
+### 1) `/brief` tracking proxy (Next.js 16)
 
-File: `middleware.ts`
+File: `proxy.ts`
 
 - Intercepts requests to `/brief`
 - Reads `id` from query params
 - Logs:
   - `[ASSET OPENED] Lead ID: {id} at {timestamp}`
 - Sends the same message to Slack via webhook (non-blocking)
+- Appends source metadata when available (`utm_source`, `utm_campaign`)
+- Suppresses duplicate events for the same `id+source+campaign` within 60 seconds
 - Returns `NextResponse.next()` so the page loads normally
 
 ### 2) Real-time Slack alerting
@@ -37,7 +39,7 @@ Environment variable:
 SLACK_WEBHOOK_URL=...
 ```
 
-Middleware uses `event.waitUntil(...)` to avoid delaying page render.
+Proxy uses `event.waitUntil(...)` to avoid delaying page render.
 
 ### 3) Dynamic brief rendering
 
@@ -128,6 +130,23 @@ For production, set the same variable in Vercel project settings.
 
 ---
 
+## Health Check Endpoint
+
+Route:
+
+- `/api/health/tracking`
+
+Purpose:
+
+- Sends a test tracking message to your Slack webhook
+- Returns JSON with `ok`, `sentToSlack`, `status`, and the emitted message
+
+Example:
+
+- [http://localhost:3000/api/health/tracking](http://localhost:3000/api/health/tracking)
+
+---
+
 ## Deployment
 
 Deploy on Vercel as a standard Next.js app.
@@ -135,5 +154,5 @@ Deploy on Vercel as a standard Next.js app.
 Important:
 
 - Ensure `SLACK_WEBHOOK_URL` is configured in Vercel
-- Confirm middleware executes on `/brief`
+- Confirm proxy executes on `/brief`
 - Validate logs and Slack alerts after deployment
