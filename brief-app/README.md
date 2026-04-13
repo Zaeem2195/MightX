@@ -25,6 +25,7 @@ The site root **`/`** redirects to the newest mirrored full report in **`public/
 File: `proxy.ts`
 
 - Intercepts requests to `/brief` and to static vertical briefs at `/<slug>-brief.html` (files from `npm run generate-html-brief`, e.g. `/elearning-brief.html`)
+- **`/elearning-brief/brief`** (wrong but common) redirects to **`/elearning-brief.html`**, preserving query params (e.g. `?id=salesloft`).
 - Reads `id` from query params
 - Logs:
   - `[ASSET OPENED] Lead ID: {id} at {timestamp}`
