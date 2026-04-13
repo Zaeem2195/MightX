@@ -14,6 +14,8 @@ This app is designed to:
 - Alert Slack in real time
 - Render brief content by lead/company ID
 
+The site root **`/`** redirects to the newest mirrored full report in **`public/`** (files named like `demo-salesloft-report-<timestamp>.html`). If none exist, it redirects to **`/brief?id=salesloft`**.
+
 ---
 
 ## Implemented Features
@@ -78,6 +80,7 @@ npm run dev
 
 Open:
 
+- [http://localhost:3000/](http://localhost:3000/) — redirects to the latest `*-report-*.html` or `/brief?id=salesloft`
 - [http://localhost:3000/brief?id=salesloft](http://localhost:3000/brief?id=salesloft)
 - [http://localhost:3000/brief?id=apollo_io](http://localhost:3000/brief?id=apollo_io)
 - [http://localhost:3000/brief?id=unknown_company](http://localhost:3000/brief?id=unknown_company)
