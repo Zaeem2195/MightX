@@ -156,7 +156,8 @@ Pass flags after `npm run <script> --` so they reach the Node script.
 | **`generate-copy`** | `--file <path>` | Load a specific enriched JSON (same `{ leads }` shape), e.g. `data/processed-companyindustry-e-learning-equals-batch.json`. Otherwise uses the latest `data/enriched-*.json` by filename. |
 | | `--first N` | Generate copy for only the **first N** rows in the loaded enriched file. Overrides offset/limit. |
 | | `--offset O` `--limit L` | Generate for a **slice** of the enriched file (0-based). Example: second batch of 500 → `--offset 500 --limit 500`. |
-| | (env) `GTM_BRIEF_CTA_BASE_URL` | Optional. Replaces `https://yourdomain.com` in the prompt so the CTA uses your live host without editing `personalization.txt`. No trailing slash. |
+| | (env) `GTM_BRIEF_CTA_BASE_URL` | Optional. Replaces `https://yourdomain.com` in the prompt. No trailing slash. |
+| | (env) `GTM_BRIEF_HTML_FILENAME` | Optional. Replaces `__BRIEF_HTML_FILENAME__` in the prompt (default `elearning-brief.html`). Example: `management-consulting-brief.html`. |
 | **`push-instantly`** | `--file <path>` | Load a **specific** copy file instead of the latest `copy-*.json`. Bare filename → `data/<filename>`. You can also pass `data/copy-….json` or an absolute path. |
 | | `--first N` | Push only the **first N** entries from that copy file. |
 | | `--offset O` `--limit L` | Push a **slice** of the copy file (same rules as `generate-copy`). |

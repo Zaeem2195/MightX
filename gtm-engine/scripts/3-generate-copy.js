@@ -16,8 +16,9 @@
  *   npm run generate-copy -- --offset 500 --limit 500   # next 500 (501–1000)
  *   npm run generate-copy -- --file data/processed-companyindustry-e-learning-equals-batch.json
  *
- * CTA host/path: edit prompts/personalization.txt, or set GTM_BRIEF_CTA_BASE_URL in .env
- * (e.g. https://intel.nextbuildtech.com) to replace https://yourdomain.com in the prompt only.
+ * CTA URL: set GTM_BRIEF_CTA_BASE_URL (host) and GTM_BRIEF_HTML_FILENAME (e.g. elearning-brief.html
+ * or management-consulting-brief.html) in .env. personalization.txt uses __BRIEF_HTML_FILENAME__
+ * plus https://yourdomain.com — both are substituted before the prompt is sent to Claude.
  */
 
 import 'dotenv/config';
@@ -149,12 +150,18 @@ function loadEnrichedData() {
   };
 }
 
+function resolveBriefHtmlFilename() {
+  const rawBrief = process.env.GTM_BRIEF_HTML_FILENAME;
+  return (rawBrief?.trim() || 'elearning-brief.html').replace(/^\/+/, '');
+}
+
 // ── Load prompt template ──────────────────────────────────────────────────────
 function loadPrompt() {
   let text = fs.readFileSync(
     path.join(ROOT, 'prompts', 'personalization.txt'),
     'utf8'
   );
+  text = text.replace(/__BRIEF_HTML_FILENAME__/g, resolveBriefHtmlFilename());
   const base = process.env.GTM_BRIEF_CTA_BASE_URL?.trim().replace(/\/+$/, '');
   if (base) {
     text = text.replace(/https:\/\/yourdomain\.com/gi, base);
@@ -219,6 +226,9 @@ async function main() {
   const allLeads = data.leads || [];
   const { leads, batchMeta } = resolveLeadsSlice(allLeads);
   const prompt = loadPrompt();
+  const host = process.env.GTM_BRIEF_CTA_BASE_URL?.trim().replace(/\/+$/, '') || 'https://yourdomain.com';
+  const briefFile = resolveBriefHtmlFilename();
+  console.log(`\n🔗  CTA template for this run: ${host}/${briefFile}?id={{companyName}}`);
 
   console.log(`\n✍️   Generating copy for ${leads.length} leads via Claude (${MODEL})...\n`);
   if (batchMeta.mode !== 'all') {
@@ -277,7 +287,8 @@ async function main() {
       totalFailed:    failures.length,
       estimatedCost:  `~$${estimatedCost}`,
       enrichedSource: sourceLabel,
-      briefCtaBase:     process.env.GTM_BRIEF_CTA_BASE_URL?.trim() || null,
+      briefCtaBase:       process.env.GTM_BRIEF_CTA_BASE_URL?.trim() || null,
+      briefHtmlFilename: resolveBriefHtmlFilename(),
       batch:          batchMeta,
       reviewNote:     'REVIEW THIS FILE before running push-instantly. Spot-check at least 10% of entries.',
     },
