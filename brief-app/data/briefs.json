@@ -1,0 +1,42 @@
+{
+  "salesloft_inc": {
+    "companyName": "Salesloft",
+    "weekSummary": "High-signal week across Outreach, Gong, Apollo.io, and Clari. Multiple competitors pushed stronger AI-led positioning and direct comparison framing that can influence active deal cycles immediately.",
+    "topAlert": "Outreach is naming Salesloft directly on its pricing page while pushing an 'agentic AI platform' narrative across public channels.",
+    "competitorSignals": [
+      {
+        "title": "Outreach",
+        "detail": "Direct pricing-page comparisons plus broad agentic-AI category language are increasing competitive pressure in live evaluations."
+      },
+      {
+        "title": "Gong",
+        "detail": "A deadline-driven CRO campaign and 'AI Revenue Operating System' positioning can pre-frame buyer conversations before reps engage."
+      }
+    ],
+    "recommendedActions": [
+      "Refresh battlecards with direct Outreach comparison responses.",
+      "Arm reps with a concise 'agentic AI' objection response.",
+      "Prioritize pipeline deals where Gong positioning is likely influencing buyer criteria."
+    ]
+  },
+  "apollo_io": {
+    "companyName": "Apollo.io",
+    "weekSummary": "Competitive messaging is consolidating around platform narratives and benchmark-style proof points. Buyers are increasingly exposed to category-level claims before discovery calls.",
+    "topAlert": "Apollo's GTM platform positioning and benchmark messaging are being used as a front-loaded credibility wedge.",
+    "competitorSignals": [
+      {
+        "title": "Platform Narrative",
+        "detail": "Prospects are hearing broader operating-system claims early, so rep-level differentiation must be crisp and specific."
+      },
+      {
+        "title": "Proof Claims",
+        "detail": "Commissioned benchmark stats are shaping early perception; reps should pressure-test representativeness and context."
+      }
+    ],
+    "recommendedActions": [
+      "Add discovery questions that test trust in competitor data quality.",
+      "Use workflow-depth demos to separate execution from broad platform claims.",
+      "Reinforce value around measurable rep adoption and day-to-day throughput."
+    ]
+  }
+}

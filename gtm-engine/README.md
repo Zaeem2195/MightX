@@ -255,6 +255,34 @@ The reply classification prompt lives in `prompts/reply-classifier.txt`. Adjust 
 
 ---
 
+## Cold Email Framework (Current)
+
+`scripts/3-generate-copy.js` loads `prompts/personalization.txt` and sends it to Claude Sonnet as the instruction payload for each lead.
+
+The current framework is now:
+
+- **Prospect-first opener** (real, verifiable detail about the lead/company)
+- **Abstracted Authority sentence** in sentence 2 or 3:
+  - "My background is in engineering secure, enterprise-grade architectures for tier-1 financial institutions, but my team recently built an automated competitive intelligence engine specifically for the SaaS market."
+- **Exactly 2 real competitors** identified dynamically for each lead
+- **Direct-link CTA** ending with:
+  - `https://yourdomain.com/brief?id={{companyName}}`
+- **Literal Instantly token required**:
+  - `{{companyName}}` must remain literal in output so Instantly injects the value at send time
+- **Word budget**: under 125 words
+
+### Why `{{companyName}}` matters
+
+The generated email body intentionally contains a literal merge token in the link:
+
+```txt
+https://yourdomain.com/brief?id={{companyName}}
+```
+
+At send time, Instantly replaces `{{companyName}}` with each lead's company value, allowing per-lead tracking links without modifying generation code.
+
+---
+
 ## Scaling tips
 
 **Sending volume:** Instantly recommends max 40–50 emails/inbox/day. With 3 warmed inboxes across 2 sending domains, you can safely send 120–150 emails/day without reputation risk. Run the pipeline 3x per week targeting ~50 leads each run.
