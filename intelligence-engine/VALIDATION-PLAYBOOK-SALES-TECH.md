@@ -85,7 +85,7 @@ Use the current GTM prompt rules in `gtm-engine/prompts/personalization.txt`:
   - `https://yourdomain.com/brief?id={{companyName}}`
 - **`{{companyName}}` must remain literal** in generated copy so Instantly merges it per lead.
 
-That link hits **Brief App** (`brief-app`): server-side open logging, optional **Slack** alert (via `SLACK_WEBHOOK_URL`), and optional **report-backed** UI when `id` aligns with `intelligence-engine/data/demo-*` + latest `report-content-*.json`. Test connectivity with `GET /api/health/tracking` after deploy.
+That link hits **Brief App** (`brief-app`): server-side open logging, optional **Slack** alert (via `SLACK_WEBHOOK_URL`), and optional **report-backed** UI when `id` aligns with **`brief-app/data/demo-*`** (populated by `intelligence-engine/scripts/generate-report.js` when you run the report pipeline). Test connectivity with `GET /api/health/tracking` after deploy.
 
 **Deliverability:** URLs in email 1 can hurt inbox placement on some domains; many teams put the first link in **step 2–3** of the Instantly sequence. See `gtm-engine/README.md` and `START-HERE.md` (Phase 2).
 

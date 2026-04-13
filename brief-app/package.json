@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate-html-brief": "node scripts/generate-html-brief.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.88.0",
+    "dotenv": "^17.4.2",
     "next": "16.2.3",
     "react": "19.2.4",
     "react-dom": "19.2.4"

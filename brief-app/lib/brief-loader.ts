@@ -21,12 +21,8 @@ type ReportContent = {
   salesPlayThisWeek?: string;
 };
 
-const INTELLIGENCE_DATA_ROOT = path.resolve(
-  process.cwd(),
-  "..",
-  "intelligence-engine",
-  "data",
-);
+/** Report JSON mirrored here by intelligence-engine `scripts/generate-report.js` (per clientId / demo-*). */
+const REPORTS_DATA_ROOT = path.resolve(process.cwd(), "data");
 
 function toTitleCase(value: string) {
   return value.replace(/\b\w/g, (char) => char.toUpperCase());
@@ -108,7 +104,7 @@ async function loadLatestReportFromDemoDir(
 
 export async function loadBriefsFromReports(): Promise<Record<string, BriefRecord>> {
   try {
-    const entries = await fs.readdir(INTELLIGENCE_DATA_ROOT, {
+    const entries = await fs.readdir(REPORTS_DATA_ROOT, {
       withFileTypes: true,
     });
     const demoDirs = entries.filter(
@@ -119,7 +115,7 @@ export async function loadBriefsFromReports(): Promise<Record<string, BriefRecor
 
     for (const dir of demoDirs) {
       const report = await loadLatestReportFromDemoDir(
-        path.join(INTELLIGENCE_DATA_ROOT, dir.name),
+        path.join(REPORTS_DATA_ROOT, dir.name),
       );
       if (!report) continue;
 

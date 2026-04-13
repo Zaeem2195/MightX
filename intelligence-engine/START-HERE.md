@@ -16,7 +16,7 @@ GTM ENGINE  (C:\mightx\gtm-engine)
 BRIEF APP  (C:\mightx\brief-app)
     Purpose: hosted HTML brief + server-side open tracking for outbound CTAs
     Next.js on Vercel → /brief?id=… (and optional static HTML in public/) → proxy logs opens + Slack webhook
-    Can render briefs from latest intelligence-engine report JSON under data/demo-* (see brief-app/README.md)
+    Reads mirrored report JSON from brief-app/data/demo-* (written by intelligence-engine generate-report; see brief-app/README.md)
 
 INTELLIGENCE ENGINE  (C:\mightx\intelligence-engine)
     Purpose: the service you sell to those clients
@@ -110,7 +110,7 @@ node scripts/run-client.js demo-salesloft --no-email
 
 **Concierge fulfillment — custom runs vs hosted sample brief**
 
-Current outbound copy (`gtm-engine/prompts/personalization.txt`) uses a **delivery-assuming CTA** with a link like `https://yourdomain.com/brief?id={{companyName}}` (Instantly injects `{{companyName}}` per lead). That link hits **Brief App** (`brief-app`): server-side logging, optional Slack alert, and a page that can pull from your latest `report-content-*.json` under `data/demo-*` when the `id` matches your folder naming convention (see `brief-app/README.md`).
+Current outbound copy (`gtm-engine/prompts/personalization.txt`) uses a **delivery-assuming CTA** with a link like `https://yourdomain.com/brief?id={{companyName}}` (Instantly injects `{{companyName}}` per lead). That link hits **Brief App** (`brief-app`): server-side logging, optional Slack alert, and a page that reads the latest mirrored `report-content-*.json` from **`brief-app/data/demo-*`** when the `id` matches your folder naming convention (mirrors are written whenever `intelligence-engine/scripts/generate-report.js` runs — see `brief-app/README.md`).
 
 1. **If they only clicked the link** (no reply yet): you already have an open signal in Slack / logs — follow up in sequence or manually.
 2. **If they reply with interest** (or you promised a deeper custom run): create `config/clients/prospect-[name].json` with their 2–4 competitors (name, website, G2 slug if known).
@@ -419,7 +419,9 @@ C:\mightx\
 │   ├── README.md                ← /brief, proxy, Slack, report-backed rendering, health check
 │   ├── proxy.ts                 ← Edge: log + Slack on /brief (filters + dedupe)
 │   ├── app\brief\page.tsx       ← Dynamic brief UI by ?id=
-│   ├── lib\brief-loader.ts      ← Loads latest report-content-*.json from ../intelligence-engine/data/demo-*
+│   ├── lib\brief-loader.ts      ← Loads latest report-content-*.json from data/demo-* (mirrored by IE generate-report)
+│   ├── data\demo-*\             ← Mirrored JSON for /brief (written by intelligence-engine generate-report)
+│   ├── public\*-report-*.html   ← Mirrored weekly HTML (same source; optional to link in email)
 │   ├── scripts\generate-html-brief.js  ← Claude → public/<slug>-brief.html (vertical collateral)
 │   ├── public\                  ← Static assets + generated *-brief.html files
 │   └── .env.local               ← ANTHROPIC_API_KEY, SLACK_WEBHOOK_URL (not committed)
@@ -451,6 +453,6 @@ C:\mightx\
 | n8n workflow not firing                   | Check n8n → Executions log. Most common: path in Execute Command node is wrong                 |
 | No Instantly API (Starter plan)           | Use `**npm run export-copy-csv**` in `gtm-engine` → upload CSV; see `**gtm-engine/README.md**` |
 | Brief link opens not in Slack / wrong id  | Confirm `SLACK_WEBHOOK_URL` on Vercel; test `GET /api/health/tracking` on deployed `brief-app`; verify Instantly replaces `{{companyName}}` to match `brief-app` id mapping (`demo-salesloft` → `salesloft`) |
-| `/brief` shows fallback not report data   | Ensure `intelligence-engine/data/demo-<slug>/report-content-*.json` exists and `?id=` matches slug rule in `brief-app/README.md` |
+| `/brief` shows fallback not report data   | Run `run-client` (or any flow that calls `generate-report`) so JSON mirrors into **`brief-app/data/demo-<slug>/`**, commit if deploying to Vercel; ensure `?id=` matches slug rule in `brief-app/README.md` |
 
 

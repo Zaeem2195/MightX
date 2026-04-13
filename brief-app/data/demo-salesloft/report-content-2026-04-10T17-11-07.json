@@ -1,0 +1,229 @@
+{
+  "coverageSummary": "Full coverage this week: 24 signals analysed across Outreach, Apollo.io, Gong, and Clari — spanning website, news, funding, G2 reviews, jobs, and LinkedIn. Zero pipeline fallbacks and zero parse errors. All signals completed fact-check phase. LinkedIn returned no findings for Outreach or Apollo this cycle.",
+  "dataGapsThisWeek": [
+    "LinkedIn monitoring for Outreach returned no findings this week — manual check of Outreach LinkedIn page recommended to validate whether 'agentic AI platform' messaging has been pushed organically.",
+    "LinkedIn monitoring for Apollo.io returned no findings this week — worth a manual skim given their aggressive SMB hiring push and Pocus acquisition announcement.",
+    "Outreach news and funding signals returned no findings — no external press coverage detected. Could reflect a quiet week or a monitoring gap on trade press."
+  ],
+  "weekSummary": "This was a high-signal week. Outreach made its most aggressive competitive move in recent memory — naming Salesloft directly on its pricing page while rolling out a coordinated 'agentic AI platform' narrative across every public surface. Simultaneously, Gong is running a hard-deadline CRO campaign built around an 'AI Revenue Operating System' framing designed to disqualify point solutions before a rep arrives. Apollo acquired Pocus and published a self-commissioned benchmark report to accelerate an 'AI-native GTM platform' consolidation pitch. Any rep in a live deal this week is walking into buyers who have already been primed by competitor messaging.",
+  "topAlert": {
+    "exists": true,
+    "headline": "IMMEDIATE: Outreach is naming Salesloft directly on their pricing page — and calling themselves the only 'agentic AI platform' for revenue teams.",
+    "detail": "Outreach has added Salesloft by name to their pricing page in a direct comparison play — the clearest signal yet that they are actively targeting Salesloft displacement. At the same time, every Outreach job posting now leads with 'the only complete agentic AI platform for revenue teams,' giving their reps a sharp category claim to open deals with. Battlecards need an updated head-to-head section addressing both the pricing comparison and the agentic AI label before any rep walks into a competitive call this week.",
+    "urgency": "immediate"
+  },
+  "competitorSections": [
+    {
+      "competitorName": "Outreach",
+      "hasFindings": true,
+      "summaryLine": "Outreach has launched a coordinated, multi-surface offensive — naming Salesloft on their pricing page, shifting to outcome-based CRO messaging, and embedding 'agentic AI platform' language across every public touchpoint.",
+      "findings": [
+        {
+          "headline": "Outreach names Salesloft directly on its pricing page",
+          "detail": "Outreach's pricing page now contains significantly more content and explicitly references Salesloft by name as a direct comparison point. The page also surfaces terms including 'governance,' 'marketplace,' 'mutual action,' and 'orchestration' — framing platform depth at the pricing stage, before a rep ever enters the conversation.",
+          "implication": "Any prospect who visits Outreach's pricing page before a Salesloft discovery call will have already seen a structured competitive comparison. Reps need a ready response to 'I looked at Outreach's pricing page and they compared themselves to you directly' — not a defensive one, a confident one that reframes what the comparison leaves out.",
+          "repTalkTrack": "Outreach named us on their own pricing page — which tells you they're losing deals to us and need to change that narrative before buyers talk to us.",
+          "sourceNote": "Website · high confidence · first-party"
+        },
+        {
+          "headline": "Outreach is calling itself 'the only complete agentic AI platform for revenue teams' across all job postings",
+          "detail": "Every Outreach job description leads with this phrase verbatim. It also states that Outreach 'infuses agentic AI, conversation intelligence, and assistive AI to power hundreds of use cases across revenue motions.' This is a deliberate, coordinated category claim — not a one-off marketing line.",
+          "implication": "Buyers in active deals will surface 'agentic AI' language from Outreach. Reps need a crisp, confident response to the claim — either by challenging what 'agentic' means in a live workflow today versus on a roadmap, or by articulating a differentiated AI story. Ceding this framing by default is a real risk.",
+          "repTalkTrack": "Ask Outreach to demo exactly which workflows their agentic AI runs autonomously today — not what's coming, what's live right now.",
+          "sourceNote": "Jobs · high confidence · first-party"
+        },
+        {
+          "headline": "Outreach homepage has shifted to outcome-based CRO language — pipeline precision, deal acceleration, real-time intelligence",
+          "detail": "New homepage terms include 'data-backed,' 'precision,' 'real-time intelligence,' 'shorten cycles,' 'proactively advance stage,' and 'mitigate.' This is a deliberate move away from feature-led messaging toward the ROI and risk-reduction language that resonates with CROs and revenue leaders — the same buyer Salesloft targets.",
+          "implication": "The 'broader revenue workflow' narrative that differentiates Salesloft is now being encroached on at the positioning level. Prospects who hit Outreach's homepage before a Salesloft call will find messaging that sounds equally strategic. The differentiation argument needs to be sharpened around what 'broader workflow' delivers in measurable outcomes — not just what it covers.",
+          "repTalkTrack": "Outreach's messaging now sounds strategic, but messaging and execution are different — let me walk you through where our workflow actually goes deeper and what that means for your RevOps team day-to-day.",
+          "sourceNote": "Website · high confidence · first-party"
+        },
+        {
+          "headline": "Outreach's G2 reviews reveal a persistent, multi-reviewer dialer gap — no parallel dialing, separate dialer costs, manual call logging",
+          "detail": "Five separate April 2026 reviews cite the same dialing limitations: no parallel or multi-line dialing, no auto-dialer included in core product, a separate dialer purchase required, and manual call disposition entry. At least one user has stitched in Nooks as a third-party workaround, adding cost and friction.",
+          "implication": "This is a live wedge in deals where calling volume matters. If Salesloft has a tighter dialer integration or native calling capability, reps should surface Outreach's dialer gap proactively in discovery — buyers are actively feeling this pain and some are already paying for a second tool to compensate.",
+          "repTalkTrack": "Several Outreach users are paying for a separate dialer on top of their Outreach contract — how are you handling calling today and is that a cost you're trying to close?",
+          "sourceNote": "G2 reviews · high confidence"
+        },
+        {
+          "headline": "Outreach complexity and steep learning curve is a consistent user complaint spanning SMB through enterprise",
+          "detail": "Three April 2026 reviews flag the interface as 'overwhelming,' 'cumbersome,' and 'way too complicated,' with criticism of the absence of in-platform tutorials. This pattern spans company sizes and reviewer roles.",
+          "implication": "In deals where Outreach is the incumbent or a finalist, ask about rep adoption rates after the first 30 days. The hidden cost of Outreach is not just licensing — it is ramp time and rep resistance. If Salesloft has a demonstrably faster time-to-value, this should appear in discovery and demos.",
+          "repTalkTrack": "Teams who've moved off Outreach tell us reps avoid using it after 30 days because it's too complex — what's your current tool adoption rate across your reps?",
+          "sourceNote": "G2 reviews · high confidence"
+        },
+        {
+          "headline": "Outreach pricing is flagged as prohibitive for lower-headcount companies — and dialer is an additional cost",
+          "detail": "A satisfied SMB and mid-market sales leader in the UK explicitly states Outreach's cost is acceptable for large multinationals but 'just too expensive' as headcount decreases. Combined with separate dialer costs confirmed in other reviews, Outreach's total cost of ownership is a material issue in the 50-500 employee segment.",
+          "implication": "In competitive deals at the lower end of the target segment, pricing is a legitimate lever. Reps should walk prospects through a full TCO comparison — base platform plus dialer add-ons — rather than a per-seat list price comparison.",
+          "repTalkTrack": "At your headcount, Outreach adds up quickly once you factor in the dialer as an add-on — have you done a full TCO comparison or is that something worth walking through?",
+          "sourceNote": "G2 reviews · medium confidence"
+        },
+        {
+          "headline": "Outreach is expanding EMEA enterprise sales with two active hires — Senior Enterprise AE and Senior Enterprise CSM",
+          "detail": "Outreach has posted two EMEA enterprise-focused roles simultaneously, signalling active investment in larger deal pursuit and post-sale retention in that market. This is a first-party signal of intent, not yet established execution.",
+          "implication": "AEs and AMs covering EMEA enterprise accounts should be alerted. Proactive outreach to existing EMEA customers to reinforce value and roadmap is warranted. In competitive deals involving EMEA enterprise prospects, Outreach should be flagged as an actively resourced threat.",
+          "repTalkTrack": "Outreach is doubling down on EMEA enterprise right now — worth asking them what their local support and CSM coverage looks like today versus what they're still building out.",
+          "sourceNote": "Jobs · high confidence · first-party"
+        }
+      ]
+    },
+    {
+      "competitorName": "Gong",
+      "hasFindings": true,
+      "summaryLine": "Gong is running a coordinated, time-pressured CRO campaign built around an 'AI Revenue Operating System' narrative designed to disqualify point solutions and category competitors before a rep arrives — and their April 23 event creates a hard deadline this week.",
+      "findings": [
+        {
+          "headline": "Gong is actively marketing to CROs with a hard-deadline April 23 event and a frictionless 5-minute demo — this is in-flight now",
+          "detail": "Gong's confirmation page frames its pitch around moving 'from AI-assisted reps to AI revenue systems that drive growth,' with an April 23 event and an instant 5-minute demo format targeting CROs by name. This is a live, time-bound buyer activation campaign. Prospects currently in pipeline may be receiving Gong outreach right now.",
+          "implication": "Outbound reps targeting CROs at companies that may also be evaluating Gong should accelerate outreach before April 23 to establish the Salesloft frame before Gong's event does. Email sequences should explicitly address the 'AI revenue system' narrative.",
+          "repTalkTrack": "Before you sit through Gong's revenue system pitch, I'd love 20 minutes to show you how we think about that problem differently — and why some teams find platform consolidation creates more complexity, not less.",
+          "sourceNote": "News · high confidence · first-party"
+        },
+        {
+          "headline": "Gong is running a public LinkedIn campaign telling buyers to 'STOP BUYING MORE AI TOOLS' — designed to disqualify point solutions",
+          "detail": "Gong's LinkedIn About section explicitly states 'STOP BUYING MORE AI TOOLS' and frames the winning approach as building AI systems rather than stacking tools. This language is targeted directly at revenue leaders and will surface in competitive conversations as a buyer-priming move.",
+          "implication": "Reps must have a counter-narrative ready before this framing hardens in a prospect's mind. The response should not defend 'tool buying' — it should reframe Salesloft as the execution system that makes the revenue stack work, not another tool in it.",
+          "repTalkTrack": "That's exactly the right instinct — the question is whether Gong's 'system' starts from the insight layer or the execution layer, because teams I talk to are drowning in insights and struggling with consistent rep execution.",
+          "sourceNote": "LinkedIn · high confidence · first-party"
+        },
+        {
+          "headline": "Gong's AI insights are flagged as arbitrary, inaccurate, or unexplained across multiple independent G2 reviews",
+          "detail": "Four separate 2026 reviewers across different roles described Gong's AI recommendations as lacking context, sometimes inaccurate, and difficult to act on. Specific complaints include coaching advice with no rationale given, inaccurate AI insights, and forecasting that lacks accuracy.",
+          "implication": "This is a live positioning angle. In deals where Gong is the incumbent or shortlisted, probe whether the prospect's managers and reps trust the AI outputs they're getting. If Salesloft's AI delivers more explainable or workflow-grounded guidance, 'explainable AI' is a credible differentiator to build into demos.",
+          "repTalkTrack": "Teams using Gong tell us the AI tells them what to do but not why — our approach is built around giving reps and managers context they can actually act on, not just scores.",
+          "sourceNote": "G2 reviews · high confidence"
+        },
+        {
+          "headline": "Gong's AE-facing functionality is weak — the platform serves managers, not frontline reps",
+          "detail": "A Gong Account Executive reviewer explicitly stated that sales dashboards 'should also be created for sales reps' and that current views are 'not very helpful from an AE perspective.' Gong is perceived by at least this segment of users as a forecasting and intelligence tool for leadership, not a daily execution tool for quota-carrying reps.",
+          "implication": "This is a direct opening for Salesloft's sales engagement narrative. In deals where the buyer is a VP Sales evaluating both, push the question of who the platform actually serves day-to-day — leadership during the forecast call, or reps between forecast calls where pipeline actually moves.",
+          "repTalkTrack": "Gong is built for the forecast call — we're built for what happens between forecast calls, at the rep level, where pipeline actually moves.",
+          "sourceNote": "G2 reviews · high confidence"
+        },
+        {
+          "headline": "Gong is scaling its commercial sales team with six simultaneous AE hires, including vertical-specific roles for Financial Services, Healthcare, and DACH",
+          "detail": "Six of Gong's 15 visible open roles are Commercial AE positions, with specialised hires for Financial Services and Healthcare verticals and the DACH region. This is the single largest functional cluster on their careers page.",
+          "implication": "Pipeline in mid-market FS, healthcare, and DACH accounts is most exposed to increased Gong competitive presence. Reps covering those segments should review battlecards and be prepared for a more structured Gong competitive motion in those deals.",
+          "repTalkTrack": "Gong is scaling their vertical sales team right now — worth asking how long their vertical expertise has actually been in place versus what they're building toward.",
+          "sourceNote": "Jobs · high confidence · first-party"
+        },
+        {
+          "headline": "Gong users are explicitly asking for generative AI that helps create outputs — business cases, follow-up drafts — and Gong is not delivering this yet",
+          "detail": "An Account Executive reviewer stated: 'I would love it if Gong had a more generative AI capability, where it actually helped me to write business cases rather than just giving me notes from a call.' This is a documented user expectation gap — buyers want AI that accelerates revenue workflow downstream of the call, not only transcribes and summarises.",
+          "implication": "If Salesloft supports post-call workflow automation, follow-up generation, or downstream deal execution, this is the moment to make that the centrepiece of demos with AE and BDR personas. The market is explicitly signalling it wants workflow, not just recording.",
+          "repTalkTrack": "What if the platform didn't just capture the call but actually helped your reps write the follow-up, draft the business case, and move the deal forward the same day?",
+          "sourceNote": "G2 reviews · medium confidence"
+        }
+      ]
+    },
+    {
+      "competitorName": "Apollo.io",
+      "hasFindings": true,
+      "summaryLine": "Apollo acquired Pocus to advance a 'GTM Operating System' narrative, published a self-commissioned benchmark report to arm their reps with a consolidation pitch, and is simultaneously scaling SMB and mid-market sales headcount — expect to see them more in pipeline this quarter.",
+      "findings": [
+        {
+          "headline": "Apollo acquired Pocus to build a 'GTM Operating System' — directly overlapping with Salesloft's workflow platform narrative",
+          "detail": "Apollo's acquisition of Pocus was reported by Demand Gen Report on March 31, 2026, with the headline explicitly framing the deal as an effort to 'Advance GTM Operating System.' No detail on Pocus capabilities or deal terms is available in source data. The GTM operating system framing is confirmed in the sourced headline.",
+          "implication": "Apollo is publicly positioning itself as a GTM operating system using language that overlaps with Salesloft's platform narrative. Reps should be prepared for buyers to raise this and should be able to articulate where Salesloft executes more deeply than a platform assembling that story through acquisition.",
+          "repTalkTrack": "Apollo just acquired Pocus to build toward a GTM operating system — the question for your team is whether you want a platform purpose-built for revenue workflow or one stitching that story together through acquisitions.",
+          "sourceNote": "Funding / news · medium confidence · third-party press"
+        },
+        {
+          "headline": "Apollo published a self-commissioned benchmark report claiming 2.37% cold-to-meeting conversion — reps will use this in active deals",
+          "detail": "Apollo's report was conducted by The Tolly Group and commissioned by Apollo. Core claims: 2.37% email-to-meeting conversion on 384 contacts across 205 companies over one month, versus a stated 0.5-1.5% industry average. The source text confirms this is a paid press release. The campaign ran without a standard 4-6 week email warm-up period and used a new product with no prior brand recognition — conditions the source text itself acknowledges are atypical.",
+          "implication": "Apollo reps will share this report in deals as proof of platform superiority. Salesloft reps need a ready counter: the report is vendor-commissioned, uses a small non-representative sample, and was conducted under atypical conditions. Reps should use discovery questions to expose the gap between the study's narrow conditions and the buyer's actual sales environment.",
+          "repTalkTrack": "That report was commissioned and paid for by Apollo — ask them to show you results from a company your size running a workflow that matches your actual sales motion.",
+          "sourceNote": "News · high confidence · first-party source confirmed"
+        },
+        {
+          "headline": "Apollo's data quality problems are a consistent, multi-reviewer complaint — not an isolated case",
+          "detail": "At least 7 of 15 April 2026 G2 reviews explicitly cite outdated contacts, wrong phone numbers, high email bounce rates, or incomplete records. Multiple reviewers note this as an ongoing issue. One reviewer specifically flags that bounce rates are 'much higher than expected — especially outside the US.'",
+          "implication": "Data quality is the single most actionable positioning angle against Apollo. Reps can credibly challenge Apollo's core value proposition when competing in deals where data accuracy is a selection criterion. This is particularly powerful in international deals given the documented geographic weakness.",
+          "repTalkTrack": "We hear from teams coming off Apollo that bounce rates and stale contact data eat into deliverability and rep productivity — how are you currently measuring data accuracy in your outreach stack?",
+          "sourceNote": "G2 reviews · high confidence"
+        },
+        {
+          "headline": "Apollo is hiring three SMB AEs simultaneously and a dedicated mid-market AE — expect increased pipeline presence this quarter",
+          "detail": "Three identical SMB Account Executive roles and one Mid-Market AE role are posted concurrently on Apollo's careers page. Apollo has also posted a 'Founding Team' Enterprise AE role — a first-party signal that their enterprise motion is in very early stages.",
+          "implication": "Apollo is scaling their SMB and mid-market sales teams now. SMB and mid-market pipeline should be monitored for Apollo presence. In enterprise deals where Apollo appears, their nascent enterprise motion is a concrete contrast point against Salesloft's established enterprise relationships.",
+          "repTalkTrack": "Apollo is just now hiring their first enterprise sellers — if you're making a platform decision at this scale, ask them what their enterprise onboarding, CSM coverage, and SLA commitment looks like today, not on the roadmap.",
+          "sourceNote": "Jobs · high confidence · first-party"
+        }
+      ]
+    },
+    {
+      "competitorName": "Clari",
+      "hasFindings": true,
+      "summaryLine": "The Clari + Salesloft merged entity is now positioning publicly as the 'industry's first Predictive Revenue System' — a direct challenge to Salesloft's standalone narrative — while a new CFO hire and third-party commentary about post-merger product uncertainty create a legitimate line of questioning for reps to open.",
+      "findings": [
+        {
+          "headline": "Clari + Salesloft are publicly framing the merger as the 'industry's first Predictive Revenue System' across all job postings and LinkedIn",
+          "detail": "Every Clari job description uses identical messaging around 'Predictive Revenue System,' 'Revenue Context,' and human-AI collaboration. Their LinkedIn About section describes 'a category-transforming AI company for revenue' combining Salesloft and Clari capabilities, with Adobe, IBM, 3M, and Zoom cited as anchor customers.",
+          "implication": "Reps competing against the merged entity need a direct, rehearsed response to the 'Predictive Revenue System' framing. The counter-narrative should focus on what is actually unified today versus what is on the roadmap post-merger — and whether buyers want to be among the first cohort running a newly integrated platform.",
+          "repTalkTrack": "When you evaluate their 'Predictive Revenue System' claim, it's worth asking what's actually unified in production today versus what the roadmap says — those are very different things 18 months post-merger.",
+          "sourceNote": "Jobs + LinkedIn · high confidence · first-party"
+        },
+        {
+          "headline": "Clari + Salesloft hired a new CFO — third-party commentary signals post-merger product uncertainty worth probing in deals",
+          "detail": "Business Wire confirmed Rick Hasselman as CFO on April 2, 2026. A separate third-party source — with low confidence — used the phrases 'product turmoil' and 'incomplete AI strategy' to frame the incoming CFO's situation. Reps should not assert this characterisation as fact; it should be treated only as a discovery prompt reflecting potential buyer perception.",
+          "implication": "A CFO hire post-merger can signal a shift toward financial discipline and product prioritisation decisions. In deals where the buyer is evaluating the merged platform, reps should ask whether they have seen a clear and coherent AI roadmap from the combined entity — letting the buyer surface their own doubts.",
+          "repTalkTrack": "Clari and Salesloft just hired a new CFO — when a merged entity brings in financial leadership, it's worth asking them specifically what's on the product roadmap for the next 12 months and how that's being funded.",
+          "sourceNote": "Funding / news · high confidence (CFO hire) · low confidence (product turmoil framing — third-party editorial)"
+        },
+        {
+          "headline": "Clari Copilot is generating strong G2 reviews and expanding into sales engagement territory — reps need a direct comparison ready",
+          "detail": "April 2026 G2 reviews praise Clari Copilot for real-time battlecard surfacing, automated CRM summaries, and action item extraction. This is confirmed user validation of Copilot as an active, named product line with dedicated engineering investment in Bengaluru per job postings. Clari is expanding its surface area toward Salesloft's core territory.",
+          "implication": "Reps should expect prospects in deals where Clari is deployed for forecasting to ask 'why not just use Clari Copilot for this too?' Battlecards need a dedicated Copilot comparison module focused on depth of outbound execution, sequence management, and workflow automation — not just recording and call summaries.",
+          "repTalkTrack": "Clari Copilot handles conversation capture well — how are your reps executing outbound and managing follow-through between calls? That's where the workflow gap tends to show up.",
+          "sourceNote": "G2 reviews · high confidence + Jobs · medium confidence"
+        },
+        {
+          "headline": "Clari's AE-facing functionality is a documented weak point — it is built for managers, not frontline reps",
+          "detail": "An Account Executive G2 reviewer explicitly states that dashboards 'should also be created for sales reps' and are 'not very helpful from an AE perspective.' UX inconsistency, non-intuitive navigation, and delayed CRM sync appear as independent complaints across multiple mid-market and enterprise reviews.",
+          "implication": "In deals where VP Sales is the buyer and rep adoption is a concern, this is a direct opening for Salesloft's rep-first narrative. Ask how many of their reps actually log in to Clari daily versus how many managers reference it in the forecast call.",
+          "repTalkTrack": "Clari is built for the forecast call — we're built for what happens between forecast calls, at the rep level, where pipeline actually moves.",
+          "sourceNote": "G2 reviews · high confidence"
+        },
+        {
+          "headline": "Clari + Salesloft expanded their Vidyard partnership — but it is a third-party integration, not a native capability",
+          "detail": "Business Wire reported on April 9, 2026 that Clari + Salesloft and Vidyard expanded their partnership to help revenue teams act on buyer engagement signals. This is a partnership-based capability addition, confirmed in third-party press.",
+          "implication": "Clari reps may demo Vidyard-powered buyer engagement signals as a differentiator. Reps should be prepared to highlight the operational dependency this creates on a third-party partnership for a core engagement signal.",
+          "repTalkTrack": "Clari added Vidyard video engagement through a partnership — but when a key signal in your sales motion depends on a third-party integration staying healthy, that's a dependency worth pressure-testing before you commit.",
+          "sourceNote": "News · high confidence · third-party press"
+        }
+      ]
+    }
+  ],
+  "salesPlayThisWeek": "Target VP Sales and CROs at 100-400 employee B2B SaaS companies who have Gong for call intelligence but no dedicated sales engagement platform. Gong's own G2 reviews confirm a documented gap between conversation capture and rep-level execution — and Gong's 'stop buying tools' campaign is actively priming these buyers to consolidate. Get in front of those prospects before April 23, when Gong's CRO event runs. Lead with the question: 'Your team is great at capturing what happened in deals — how consistent is rep execution in the days between calls?' That gap is where Salesloft wins.",
+  "enablementUpdate": "Three battlecard updates are needed before end of week. First, add a dedicated head-to-head section addressing Outreach's pricing page comparison — reps need a confident, non-defensive response ready for any prospect who has already seen it. Second, build an 'agentic AI' objection handling module for Outreach that challenges what 'agentic' means in a live workflow today versus on a roadmap. Third, add a Clari Copilot comparison module that focuses on outbound execution depth and sequence management — Copilot is gaining positive reviews and will come up in deals where Clari is already deployed. As a separate action, update the Apollo battlecard with the data quality talking points from this week's G2 review cluster — at least seven reviewers flagged bounce rates and stale contacts in April 2026 alone.",
+  "triggerEmails": {
+    "exists": true,
+    "context": "Outreach named Salesloft directly on their pricing page this week — this is the trigger event most likely to surface in prospect conversations immediately.",
+    "emails": [
+      {
+        "label": "Email 1 — For reps with active Outreach-competitive deals (prospect has seen or may see Outreach pricing page)",
+        "subject": "Quick heads up before your next call",
+        "body": "Hey [Name] — wanted to flag something relevant before you're in front of a prospect this week.\n\nOutreach updated their pricing page and is now naming Salesloft by name in a direct comparison. If any of your active prospects have done their own research, there's a real chance they've already seen it.\n\nYour talking point if it comes up: \"That tells you something — Outreach is worried enough about losing deals to us that they're putting our name on their own pricing page. Let's talk about what their comparison leaves out.\"\n\nHappy to walk through the updated battlecard if useful. The short version: their dialer is a separate paid add-on, their platform is consistently flagged as too complex for rep adoption, and their pricing becomes prohibitive as headcount decreases — all documented in their own customer reviews this month.\n\nLet me know what you're seeing in deals this week."
+      },
+      {
+        "label": "Email 2 — Outbound to VP Sales / CROs being targeted by Gong's April 23 event",
+        "subject": "Before you sit through the 'AI Revenue System' pitch",
+        "body": "Hi [First Name],\n\nGong is running a CRO campaign right now built around a pitch called the 'AI Revenue System' — and they have an event on April 23 designed to get revenue leaders thinking about platform consolidation on their terms.\n\nBefore that conversation shapes your evaluation frame, I'd love 20 minutes to offer a different perspective.\n\nThe teams we work with have found that consolidation sounds appealing until you realise you're trading execution depth for breadth. Gong's own users are publicly asking for help with the gap between call intelligence and rep execution — writing follow-ups, moving deals forward between calls, running consistent outbound. That's the gap we're built for.\n\nWorth a quick conversation? I can work around your schedule this week.\n\n[Signature]"
+      },
+      {
+        "label": "Email 3 — Outbound to prospects who may have seen Apollo's benchmark report",
+        "subject": "About that Apollo benchmark report...",
+        "body": "Hi [First Name],\n\nYou may have come across a benchmark report from Apollo this week claiming a 2.37% cold-to-meeting conversion rate. It's being circulated widely.\n\nWorth knowing: the report was commissioned and paid for by Apollo, run on 384 contacts over one month, without a standard email warm-up period, for a product with no prior brand recognition. Those are very specific conditions that don't map to how most revenue teams actually operate.\n\nI'm not saying the data is wrong — I'm saying it's worth asking them to show you results from a company your size, running a workflow that matches your actual sales motion.\n\nIf you're evaluating your sales engagement stack right now, I'd be glad to show you how we approach that comparison honestly — including where we'd tell you a different tool might be a better fit.\n\nOpen to a conversation this week?\n\n[Signature]"
+      }
+    ]
+  },
+  "watchNextWeek": [
+    "Monitor whether Gong's April 23 CRO event generates public content or social amplification that sharpens their 'AI Revenue Operating System' category claim — this will inform how buyers frame evaluations in May.",
+    "Watch for Apollo to publish further content off the back of the Pocus acquisition announcement — 'GTM Operating System' positioning may harden into a formal category play with dedicated messaging.",
+    "Track whether Outreach's new Director of Portfolio Product Marketing hire produces updated sales collateral or case studies that sharpen their head-to-head Salesloft comparison beyond the pricing page.",
+    "Monitor Clari + Salesloft for any product announcement or roadmap reveal tied to their 'Predictive Revenue System' framing — the CFO hire and merger integration make a formal product update likely in the next 30-60 days.",
+    "Watch LinkedIn and news for any Outreach funding or partnership announcement — no news or funding signal was detected this week, which is either a quiet period or a monitoring gap worth closing."
+  ]
+}

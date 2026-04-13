@@ -173,11 +173,14 @@ Yes — deploy **`brief-app`** as a normal Next.js app on Vercel so leads hit yo
 
 Replace placeholder `https://yourdomain.com` in `gtm-engine/prompts/personalization.txt` with your **real** production origin (or the domain you attach in Vercel). Instantly still injects `{{companyName}}` into `?id=`.
 
-### Production caveat: report-backed `/brief` content
+### Report-backed `/brief` content (production)
 
-`lib/brief-loader.ts` reads from **`../intelligence-engine/data`** relative to the app root. That path exists on your **local machine** in the monorepo; it does **not** exist on Vercel’s build output unless you copy report JSON into this app (e.g. under `brief-app/data/reports/`) or fetch from storage/API. On Vercel today:
+`lib/brief-loader.ts` reads the latest `report-content-*.json` from **`brief-app/data/<demo-folder>/`** for each directory whose name starts with `demo-` (e.g. `data/demo-salesloft/`). That data is **mirrored automatically** whenever the Intelligence Engine runs `scripts/generate-report.js` (same run that writes `intelligence-engine/data/<clientId>/…`).
 
-- **Tracking** (proxy + Slack + logs) still works for any `?id=`.
-- **Dynamic report HTML** on `/brief` falls back to **`data/briefs.json`** / placeholder when no bundled data matches — which is fine if leads mainly open **static** `public/*-brief.html` files or you expand data loading later.
+**Workflow for Vercel:**
 
-If you want report-backed pages in production without refactoring, shortest path is: commit the JSON you need under `brief-app/` and point `brief-loader` at it (separate small change).
+1. On your machine (monorepo): run `node scripts/run-client.js demo-salesloft --no-email` (or any client id) from **`intelligence-engine`** — or any path that calls `generateReport`.
+2. Commit the new files under **`brief-app/data/<clientId>/`** and **`brief-app/public/<clientId>-report-*.html`** if you want them deployed (or rely on CI that runs the pipeline and commits).
+3. Deploy **`brief-app`** — `/brief?id=salesloft` resolves using `demo-salesloft` → lead id `salesloft`.
+
+**Tracking** still works for any `?id=` even when no JSON matches (fallback UI + Slack).

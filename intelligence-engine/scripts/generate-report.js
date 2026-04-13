@@ -3,6 +3,11 @@
  * ────────────────────────────────────────────────────
  * Takes all analyses → Claude synthesises into structured report JSON →
  * Injects into HTML template → saves final HTML report
+ *
+ * Outputs (monorepo):
+ * - Primary: intelligence-engine/data/<clientId>/report-*.html + report-content-*.json
+ * - Mirror:  brief-app/public/<clientId>-report-*.html + brief-app/data/<clientId>/report-content-*.json
+ *   (so Vercel can deploy `brief-app` alone with static HTML + JSON for `/brief` — see brief-app/lib/brief-loader.ts)
  */
 
 import 'dotenv/config';
@@ -14,6 +19,8 @@ import { tryParseJSON } from './collectors/_utils.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
+/** Monorepo sibling: mirrored artifacts for Vercel (`brief-app` root as deploy target). */
+const BRIEF_APP_ROOT = path.join(ROOT, '..', 'brief-app');
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const MODEL  = 'claude-sonnet-4-6';
@@ -274,6 +281,38 @@ function buildHTML(clientConfig, reportContent) {
     .replace('{{WATCH_LIST_ITEMS}}', watch);
 }
 
+/**
+ * Copy the same HTML + report-content JSON into `brief-app` so a Vercel deploy
+ * (root = brief-app) can serve static HTML and `/brief` can read JSON without
+ * reaching back into intelligence-engine on the server.
+ *
+ * - HTML → brief-app/public/<clientId>-report-<timestamp>.html
+ * - JSON → brief-app/data/<clientId>/report-content-<timestamp>.json
+ */
+function mirrorReportArtifactsToBriefApp(clientId, timestamp, html, reportContent) {
+  if (!fs.existsSync(BRIEF_APP_ROOT)) {
+    console.warn(
+      `\n⚠️  brief-app not found at ${BRIEF_APP_ROOT} — skipping mirror (expected monorepo layout).`,
+    );
+    return;
+  }
+
+  const publicDir = path.join(BRIEF_APP_ROOT, 'public');
+  const mirrorDataDir = path.join(BRIEF_APP_ROOT, 'data', clientId);
+  fs.mkdirSync(publicDir, { recursive: true });
+  fs.mkdirSync(mirrorDataDir, { recursive: true });
+
+  const publicHtmlName = `${clientId}-report-${timestamp}.html`;
+  const publicHtmlPath = path.join(publicDir, publicHtmlName);
+  fs.writeFileSync(publicHtmlPath, html);
+
+  const mirrorJsonPath = path.join(mirrorDataDir, `report-content-${timestamp}.json`);
+  fs.writeFileSync(mirrorJsonPath, JSON.stringify(reportContent, null, 2));
+
+  console.log(`📁  (brief-app) HTML  → public/${publicHtmlName}`);
+  console.log(`📁  (brief-app) JSON → data/${clientId}/report-content-${timestamp}.json`);
+}
+
 // ── Main export ───────────────────────────────────────────────────────────────
 export async function generateReport(clientId, analyses, clientConfig) {
   console.log('\n📝  Generating weekly report via Claude...');
@@ -290,6 +329,8 @@ export async function generateReport(clientId, analyses, clientConfig) {
 
   fs.writeFileSync(htmlPath, html);
   fs.writeFileSync(jsonPath, JSON.stringify(reportContent, null, 2));
+
+  mirrorReportArtifactsToBriefApp(clientId, timestamp, html, reportContent);
 
   const hasTrigger = reportContent.topAlert?.exists || reportContent.triggerEmails?.exists;
 
