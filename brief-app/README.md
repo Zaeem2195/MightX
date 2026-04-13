@@ -29,6 +29,7 @@ File: `proxy.ts`
 - Sends the same message to Slack via webhook (non-blocking)
 - Appends source metadata when available (`utm_source`, `utm_campaign`)
 - Suppresses duplicate events for the same `id+source+campaign` within 60 seconds
+- Skips noisy non-human events (`HEAD`, prefetch headers, common bot user-agents)
 - Returns `NextResponse.next()` so the page loads normally
 
 ### 2) Real-time Slack alerting

@@ -2,7 +2,16 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   const timestamp = new Date().toISOString();
-  const message = `[ASSET OPENED] Lead ID: tracking_healthcheck at ${timestamp}`;
+  const message = [
+    "*ASSET OPENED*",
+    "Lead ID: tracking_healthcheck",
+    `Time (UTC): ${timestamp}`,
+    "Source: healthcheck",
+    "Campaign: healthcheck",
+    "IP: n/a",
+    "Path: /api/health/tracking",
+    "User-Agent: internal-healthcheck",
+  ].join("\n");
   const webhookUrl = process.env.SLACK_WEBHOOK_URL;
 
   if (!webhookUrl) {
