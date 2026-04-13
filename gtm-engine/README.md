@@ -237,25 +237,32 @@ All output is saved to `data/` (gitignored):
 | `copy-[timestamp].json` | AI-generated subject lines and email bodies |
 | `copy-export-[timestamp].csv` | CSV from **`export-copy-csv`** for manual Instantly upload (`ai_subject`, `ai_body`, `title` columns) |
 | `push-log-[timestamp].json` | Instantly push results (success/failure per lead); includes `copyFile` / `batch` when flags were used |
-| `processed_elearning_batch.json` | Optional: e-learning slice produced by `scripts/process_elearning_batch.py` |
+| `processed-<field>-<value>-equals|contains-batch.json` | Optional: slice produced by `scripts/process_elearning_batch.py` (override with `--batch-out`) |
 
 Each script reads the most recently dated file from the previous step, so you can re-run individual steps without re-processing the whole pipeline. **`push-instantly --file`** is the exception: it uses the path you pass instead of the latest `copy-*.json`.
 
-### Python: split e-learning leads + Instantly push
+### Python: extract leads by field + Instantly push
 
-There is **no existing Node step** that filters `enriched-*.json` by `companyIndustry`, rewrites the master file, and pushes only that slice. The main path is still: enrich → **generate-copy** (all or sliced leads) → **push-instantly**. For a one-off industry extract + master update + API upload, use:
+There is **no existing Node step** that filters `enriched-*.json` by an arbitrary field, rewrites the master file, and pushes only that slice. The main path is still: enrich → **generate-copy** (all or sliced leads) → **push-instantly**. For a one-off extract + master update + API upload, use **`scripts/process_elearning_batch.py`** (generic matcher; name is historical).
 
 ```bash
 cd gtm-engine
-# Preview counts (no writes)
+# Default: companyIndustry equals e-learning (same as before)
 python scripts/process_elearning_batch.py --dry-run
-# Write batch + update master; skip Instantly
-python scripts/process_elearning_batch.py --no-instantly
-# Full run: writes + Instantly v2 (needs INSTANTLY_* in .env); merge AI copy by email
-python scripts/process_elearning_batch.py --copy-json data/copy-2026-04-13T15-53-31.json
+
+# Another industry (auto batch name: processed-company-industry-computer-software-equals-batch.json)
+python scripts/process_elearning_batch.py --equals "Computer Software" --no-instantly
+
+# Substring on title, custom output file
+python scripts/process_elearning_batch.py --field title --contains "Chief Revenue" --batch-out processed-cro-title-batch.json --dry-run
+
+# Instantly v2 + optional copy merge by email
+python scripts/process_elearning_batch.py --equals "e-learning" --copy-json data/copy-2026-04-13T15-53-31.json
 ```
 
-Defaults: reads `data/enriched-2026-04-06T15-55-49.json`, writes `data/processed_elearning_batch.json`, removes matching leads in place. Prints **before/after counts** and aborts if `remaining + extracted ≠ original`. Uses stdlib only (no `pip install`). Without `--copy-json`, leads are still added with empty `ai_subject` / `ai_body` custom variables (fine if your Instantly sequence does not depend on them).
+**Flags:** `--field` (default `companyIndustry`; reads `personalization.<field>` then top-level), **`--equals`** (default `e-learning` when neither flag is passed), **`--contains`** (substring; wins over `--equals`), **`--source`**, **`--batch-out`** (default derived from field + value), **`--dry-run`**, **`--no-instantly`**, **`--copy-json`**.
+
+Prints **before/after counts** and aborts if `remaining + extracted ≠ original`. Stdlib only. Without `--copy-json`, Instantly rows use empty `ai_subject` / `ai_body` unless your sequence does not need them.
 
 ---
 
