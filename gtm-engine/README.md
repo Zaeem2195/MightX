@@ -237,8 +237,25 @@ All output is saved to `data/` (gitignored):
 | `copy-[timestamp].json` | AI-generated subject lines and email bodies |
 | `copy-export-[timestamp].csv` | CSV from **`export-copy-csv`** for manual Instantly upload (`ai_subject`, `ai_body`, `title` columns) |
 | `push-log-[timestamp].json` | Instantly push results (success/failure per lead); includes `copyFile` / `batch` when flags were used |
+| `processed_elearning_batch.json` | Optional: e-learning slice produced by `scripts/process_elearning_batch.py` |
 
 Each script reads the most recently dated file from the previous step, so you can re-run individual steps without re-processing the whole pipeline. **`push-instantly --file`** is the exception: it uses the path you pass instead of the latest `copy-*.json`.
+
+### Python: split e-learning leads + Instantly push
+
+There is **no existing Node step** that filters `enriched-*.json` by `companyIndustry`, rewrites the master file, and pushes only that slice. The main path is still: enrich → **generate-copy** (all or sliced leads) → **push-instantly**. For a one-off industry extract + master update + API upload, use:
+
+```bash
+cd gtm-engine
+# Preview counts (no writes)
+python scripts/process_elearning_batch.py --dry-run
+# Write batch + update master; skip Instantly
+python scripts/process_elearning_batch.py --no-instantly
+# Full run: writes + Instantly v2 (needs INSTANTLY_* in .env); merge AI copy by email
+python scripts/process_elearning_batch.py --copy-json data/copy-2026-04-13T15-53-31.json
+```
+
+Defaults: reads `data/enriched-2026-04-06T15-55-49.json`, writes `data/processed_elearning_batch.json`, removes matching leads in place. Prints **before/after counts** and aborts if `remaining + extracted ≠ original`. Uses stdlib only (no `pip install`). Without `--copy-json`, leads are still added with empty `ai_subject` / `ai_body` custom variables (fine if your Instantly sequence does not depend on them).
 
 ---
 
