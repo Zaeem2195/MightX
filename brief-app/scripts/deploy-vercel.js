@@ -19,8 +19,40 @@ const { spawnSync } = require("child_process");
 
 const appRoot = path.join(__dirname, "..");
 
-require("dotenv").config({ path: path.join(appRoot, ".env.local") });
+// Load `.env` first, then `.env.local` with override so local secrets win.
+// (If `.env` defines VERCEL_TOKEN=` empty, loading it second used to wipe a good `.env.local` value.)
 require("dotenv").config({ path: path.join(appRoot, ".env") });
+require("dotenv").config({
+  path: path.join(appRoot, ".env.local"),
+  override: true,
+});
+
+function listEnvFileKeys(filePath) {
+  if (!fs.existsSync(filePath)) return [];
+  let raw = fs.readFileSync(filePath, "utf8");
+  if (raw.charCodeAt(0) === 0xfeff) raw = raw.slice(1);
+  return raw
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"))
+    .map((line) => {
+      const m = line.match(/^(?:export\s+)?([\w.-]+)\s*=/);
+      return m ? m[1] : null;
+    })
+    .filter(Boolean);
+}
+
+// Personal Access Token (PAT) from https://vercel.com/account/tokens — use `vcp_...` / legacy `...` form.
+// Do NOT put `VERCEL_OIDC_TOKEN` (JWT) into `VERCEL_TOKEN`: the CLI rejects values containing `.` and `-`.
+const classicToken = [process.env.VERCEL_TOKEN, process.env.VERCEL_ACCESS_TOKEN]
+  .find((v) => typeof v === "string" && v.trim().length > 0)
+  ?.trim();
+
+if (classicToken) {
+  process.env.VERCEL_TOKEN = classicToken;
+} else if (process.env.VERCEL_OIDC_TOKEN?.trim()) {
+  delete process.env.VERCEL_TOKEN;
+}
 
 const isPreview = process.argv.includes("--preview");
 const vercelProject = path.join(appRoot, ".vercel", "project.json");
@@ -40,21 +72,34 @@ function run(cmd, args) {
 }
 
 if (!process.env.VERCEL_TOKEN?.trim()) {
-  console.error(`
-Missing VERCEL_TOKEN.
+  const localPath = path.join(appRoot, ".env.local");
+  const keys = listEnvFileKeys(localPath);
+  const hasOidc = Boolean(process.env.VERCEL_OIDC_TOKEN?.trim());
 
-1. Create a token: https://vercel.com/account/tokens
+  console.error(`
+Missing VERCEL_TOKEN (Personal Access Token from your Vercel account).
+
+This script does not use VERCEL_OIDC_TOKEN for local deploy — that value is a JWT for GitHub Actions OIDC and the CLI rejects it as --token.
+
+1. Create a PAT: https://vercel.com/account/tokens  (scope: Full account or enough to deploy)
 2. Add to brief-app/.env.local:
 
-   VERCEL_TOKEN=your_token_here
+   VERCEL_TOKEN=vcp_xxxxxxxx
 
-3. From brief-app, link the project once (if you have not already):
+3. You can keep VERCEL_OIDC_TOKEN for CI; just add VERCEL_TOKEN for local \`npm run deploy:vercel\`.
 
-   cd brief-app
+4. From brief-app, link once if needed:
+
    npx vercel link
-
-Then run: npm run deploy:vercel
 `);
+  if (hasOidc) {
+    console.error(
+      "(You have VERCEL_OIDC_TOKEN set — add a separate VERCEL_TOKEN PAT for local CLI deploy.)",
+    );
+  }
+  if (keys.length) {
+    console.error(`Variable names in .env.local: ${keys.join(", ")}`);
+  }
   process.exit(1);
 }
 

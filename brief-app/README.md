@@ -198,6 +198,10 @@ npm run deploy:vercel -- --preview
 
 The script runs `npx vercel@latest deploy --prod --yes` with your env so it is non-interactive after link + token are set.
 
+**If deploy says “Missing VERCEL_TOKEN” but you added it:** a root **`brief-app/.env`** file may have been loaded after `.env.local` and cleared the value. The script now loads `.env` first, then `.env.local` with override. Also use the exact name `VERCEL_TOKEN` (or `VERCEL_ACCESS_TOKEN`). Check for UTF-8 BOM or stray spaces around `=`.
+
+**If you see `invalid-token-value` / “Must not contain `-`, `.`”:** you probably put **`VERCEL_OIDC_TOKEN`** (a JWT for GitHub Actions) into **`VERCEL_TOKEN`**. For local deploy, create a **Personal Access Token** at [vercel.com/account/tokens](https://vercel.com/account/tokens) and set **`VERCEL_TOKEN=vcp_...`** separately. Keep OIDC for Actions only.
+
 ### After deploy — verify tracking
 
 1. Open: `https://<your-deployment>/api/health/tracking` — JSON should show `sentToSlack: true` and a message should appear in Slack.
