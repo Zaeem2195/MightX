@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "generate-html-brief": "node scripts/generate-html-brief.js"
+    "generate-html-brief": "node scripts/generate-html-brief.js",
+    "deploy:vercel": "node scripts/deploy-vercel.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.88.0",

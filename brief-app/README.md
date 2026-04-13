@@ -179,6 +179,25 @@ Create the Vercel project once using **Option A** (dashboard, root `brief-app`) 
 
 > I cannot run interactive `vercel login` from this environment. If you prefer CLI-only: from `brief-app`, run `npx vercel login` once on your machine, then `npx vercel link` and `npx vercel --prod`.
 
+### Deploy from this machine (script)
+
+1. Add **`VERCEL_TOKEN`** to `brief-app/.env.local` ([create token](https://vercel.com/account/tokens)).
+2. One-time: `cd brief-app` → `npx vercel link` (creates `.vercel/project.json`).
+3. Deploy:
+
+```bash
+cd brief-app
+npm run deploy:vercel
+```
+
+Preview (not production alias):
+
+```bash
+npm run deploy:vercel -- --preview
+```
+
+The script runs `npx vercel@latest deploy --prod --yes` with your env so it is non-interactive after link + token are set.
+
 ### After deploy — verify tracking
 
 1. Open: `https://<your-deployment>/api/health/tracking` — JSON should show `sentToSlack: true` and a message should appear in Slack.
