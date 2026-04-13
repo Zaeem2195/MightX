@@ -163,6 +163,22 @@ Yes — deploy **`brief-app`** as a normal Next.js app on Vercel so leads hit yo
    - `ANTHROPIC_API_KEY` — only if you ever run `generate-html-brief` from CI on Vercel (optional; most people run that script locally and commit `public/*-brief.html`).
 6. **Deploy**. Note the production URL (e.g. `https://might-x.vercel.app`) or attach a **custom domain** (Project → Settings → Domains).
 
+### Option B — Deploy from GitHub Actions (no local CLI login)
+
+This repo includes **`.github/workflows/deploy-brief-app.yml`** (repo root). It runs on pushes to `main` that touch `brief-app/**` (and on **manual** *Run workflow*).
+
+Add these **repository secrets** (GitHub → *Settings* → *Secrets and variables* → *Actions*):
+
+| Secret | Where to get it |
+|--------|------------------|
+| `VERCEL_TOKEN` | [vercel.com/account/tokens](https://vercel.com/account/tokens) |
+| `VERCEL_ORG_ID` | Vercel → Team → **Settings** → **General** → *Team ID* |
+| `VERCEL_PROJECT_ID` | Vercel → **brief-app** project → **Settings** → **General** → *Project ID* |
+
+Create the Vercel project once using **Option A** (dashboard, root `brief-app`) so a project exists to copy IDs from. After secrets are set, push to `main` or run the workflow manually — production deploy uses `vercel pull` → `vercel build` → `vercel deploy --prebuilt`.
+
+> I cannot run interactive `vercel login` from this environment. If you prefer CLI-only: from `brief-app`, run `npx vercel login` once on your machine, then `npx vercel link` and `npx vercel --prod`.
+
 ### After deploy — verify tracking
 
 1. Open: `https://<your-deployment>/api/health/tracking` — JSON should show `sentToSlack: true` and a message should appear in Slack.
