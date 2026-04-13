@@ -2,23 +2,30 @@
 
 ## Your Complete Execution Playbook
 
-This is the only document you need open day-to-day. It tells you exactly what to do and in what order. When you want strategic context or deeper explanation, open `BUSINESS-OPERATIONS.md`. For **how the revenue tables are calculated, path conventions, and product/marketing caveats**, open `DOCUMENTATION-NOTES.md`. For **GTM details** (CLI flags, Instantly CSV vs API), open `gtm-engine/README.md`. For the current highest-odds validation path, open `VALIDATION-PLAYBOOK-SALES-TECH.md`.
+This is the only document you need open day-to-day. It tells you exactly what to do and in what order. When you want strategic context or deeper explanation, open `BUSINESS-OPERATIONS.md`. For **how the revenue tables are calculated, path conventions, and product/marketing caveats**, open `DOCUMENTATION-NOTES.md`. For **GTM details** (CLI flags, Instantly CSV vs API, cold-email prompt rules), open `gtm-engine/README.md`. For **hosted briefs, link tracking, and Slack alerts**, open `brief-app/README.md`. For the current highest-odds validation path, open `VALIDATION-PLAYBOOK-SALES-TECH.md`.
 
 ---
 
-## How the two systems work together
+## How the systems work together
 
 ```
 GTM ENGINE  (C:\mightx\gtm-engine)
     Purpose: finds and contacts prospects for YOU
-    Apollo → Claude writes emails → Instantly sends → you get discovery calls
+    Apollo → enrich → Claude writes cold email copy → Instantly sends → replies / discovery calls
+
+BRIEF APP  (C:\mightx\brief-app)
+    Purpose: hosted HTML brief + server-side open tracking for outbound CTAs
+    Next.js on Vercel → /brief?id=… (and optional static HTML in public/) → proxy logs opens + Slack webhook
+    Can render briefs from latest intelligence-engine report JSON under data/demo-* (see brief-app/README.md)
 
 INTELLIGENCE ENGINE  (C:\mightx\intelligence-engine)
     Purpose: the service you sell to those clients
     n8n cron → scrape competitors → Claude analyses → HTML report emailed every Monday
+    Outputs report-content-*.json + report-*.html under data/<client-or-demo-id>/
 ```
 
 You use the GTM Engine to fill your own pipeline.
+You use the Brief App so prospects can open a tracked sample brief (aligned with your cold-email CTA).
 You sell clients access to the Intelligence Engine.
 
 ---
@@ -35,6 +42,8 @@ You need these active with API access before running either system:
 | Instantly           | Sending your cold emails                    | Instantly → Settings → Integrations → API |
 | Gmail (or any SMTP) | Delivering client reports                   | Google Account → Security → App Passwords |
 | n8n (self-hosted)   | Orchestration and cron scheduling           | Already have this                         |
+| Vercel (optional)   | Host `brief-app` (tracked `/brief` links)   | vercel.com — connect GitHub repo          |
+| Slack Incoming Webhook (optional) | Brief open alerts from `brief-app` | Slack → Apps → Incoming Webhooks          |
 
 
 Clay free account has no API — used manually for research only until upgraded.
@@ -99,19 +108,23 @@ node scripts/run-client.js demo-salesloft --no-email
 
 **Zero premium API spend until first paying client.** The current free collectors (Google News RSS, careers pages, G2 search snippets, Crunchbase public data) already produce the quality shown in this report. Do **not** buy Proxycurl, BrightData, Exa, or any premium scraping API until revenue covers it.
 
-**Concierge fulfillment — how to deliver the custom baseline you promised in cold email:**
+**Concierge fulfillment — custom runs vs hosted sample brief**
 
-1. Prospect replies with interest (their competitors were named in your CTA, or they confirm on reply).
-2. Create a throwaway config: `config/clients/prospect-[name].json` with their 2-4 competitors (name, website, G2 slug if known).
+Current outbound copy (`gtm-engine/prompts/personalization.txt`) uses a **delivery-assuming CTA** with a link like `https://yourdomain.com/brief?id={{companyName}}` (Instantly injects `{{companyName}}` per lead). That link hits **Brief App** (`brief-app`): server-side logging, optional Slack alert, and a page that can pull from your latest `report-content-*.json` under `data/demo-*` when the `id` matches your folder naming convention (see `brief-app/README.md`).
+
+1. **If they only clicked the link** (no reply yet): you already have an open signal in Slack / logs — follow up in sequence or manually.
+2. **If they reply with interest** (or you promised a deeper custom run): create `config/clients/prospect-[name].json` with their 2–4 competitors (name, website, G2 slug if known).
 3. Run: `node scripts/run-client.js prospect-[name] --no-email`
 4. Review the HTML — manual QA is expected at this stage. Fix anything thin.
-5. Send the HTML by Monday as promised. Time cost: ~30 min per prospect on your weekend.
+5. Send the HTML by Monday as promised (or attach / host as agreed). Time cost: ~30 min per prospect on your weekend.
 
-This is concierge MVP: you do the work manually to deliver real value before you automate or buy premium tools. **Do not redirect prospects to a canned PDF or Gold Standard sample instead of the custom run you offered.** The Gold Standard demo is backup portfolio proof, not the default fulfillment.
+The Gold Standard demo (`demo-salesloft`) remains **portfolio proof** and can power the **hosted** brief experience when IDs align; for a named prospect, still prefer a **custom** `run-client` output when you promised bespoke work.
+
+**Vertical sample HTML (optional):** From `brief-app`, run `npm run generate-html-brief` after editing `scripts/generate-html-brief.js` (industry + two competitors). Claude writes a polished static brief to `public/<industry-slug>-brief.html` (e.g. `elearning-brief.html`). Use for vertical-specific collateral; it is separate from the weekly `run-client` pipeline.
 
 **After first paying client:** Their retainer funds premium API access (Proxycurl for LinkedIn enrichment, BrightData for deeper scraping). This improves ongoing weekly quality but is not required to close the first deal.
 
-More detail: `VALIDATION-PLAYBOOK-SALES-TECH.md`. GTM copy rules: `gtm-engine/prompts/personalization.txt`.
+More detail: `VALIDATION-PLAYBOOK-SALES-TECH.md`. GTM copy rules: `gtm-engine/prompts/personalization.txt`. Brief hosting + tracking: `brief-app/README.md`.
 
 ### Step 5: Import n8n workflows
 
@@ -165,11 +178,18 @@ Repeat every Wednesday. Target: 50 new leads per week, ~150 in the Instantly seq
 
 ### Cold email angle that works
 
-Do not pitch "competitive intelligence." Lead with a specific pain. **Do not** promise a generic “sample report for your category” (you cannot pre-build credible reports for every industry). The live pipeline uses Claude with rules in `gtm-engine/prompts/personalization.txt`: name **1–2 real competitors**, then close with a **custom weekend baseline** and Monday send, e.g.:
+Do not pitch "competitive intelligence" as an abstract category. Lead with a specific pain. The live pipeline uses Claude with rules in `gtm-engine/prompts/personalization.txt`:
 
-> I'm setting up my intelligence engine this week. If I configure a baseline capture on [Competitor A] and [Competitor B], would you be opposed to me sending over the findings next Monday?
+- **Prospect-first opener** (one verifiable detail — never invent facts).
+- **Abstracted Authority** line after the opener (tier-1 engineering background + automated competitive intelligence engine for SaaS).
+- Exactly **two real competitors** named in the body.
+- **Delivery-assuming CTA** (no permission-then-link contradiction): baseline capture on those two ecosystems + Rep Talk Tracks framing, then the hosted link on its own line:
+  - `https://yourdomain.com/brief?id={{companyName}}`
+- **`{{companyName}}` must stay literal** in generated copy so Instantly merges it at send time (underscores/spaces per your Instantly variable setup).
 
-When they reply with interest, **deliver that custom run** (same competitors you named, or confirm on email if you were wrong). Do not ask for a call first. The **custom** report is the pitch. Keep the two demo HTML files from Step 4 as **backup proof of format**, not the default fulfillment.
+**Deliverability:** Putting a URL in email 1 can hurt placement for some domains; many operators put the first link in step 2–3 of the Instantly sequence. See `gtm-engine/README.md` (*Cold Email Framework*) for the full prompt contract.
+
+When they reply with interest (or you promised a bespoke run), **deliver that custom run** via `run-client.js` for the same competitors you named (or confirm on email if you were wrong). The hosted `/brief` link is for **tracked sample opens** and optional report-backed rendering — the **custom** HTML from the Intelligence Engine is still your deepest proof for serious buyers.
 
 ---
 
@@ -366,6 +386,22 @@ node scripts/generate-quarterly-summary.js [id]          # Generate Q summary (p
 node scripts/generate-quarterly-summary.js [id] --quarter Q2-2026   # Specific quarter
 ```
 
+### Brief App (`C:\mightx\brief-app`)
+
+```bash
+cd C:\mightx\brief-app
+npm install
+npm run dev                                              # Local Next.js — test /brief?id=…
+npm run lint                                             # ESLint
+npm run generate-html-brief                              # Claude → public/<industry>-brief.html (edit inputs in scripts/generate-html-brief.js first)
+```
+
+**Production (Vercel):** set `SLACK_WEBHOOK_URL` in project env vars. **Local:** `brief-app/.env.local` (gitignored) with `ANTHROPIC_API_KEY` for the HTML generator and `SLACK_WEBHOOK_URL` for open alerts.
+
+**Observability:** `GET /api/health/tracking` — posts a test message to Slack and returns JSON status (see `brief-app/README.md`).
+
+**Open tracking:** Requests to `/brief` run through `brief-app/proxy.ts` — logs `[ASSET OPENED] Lead ID: {id} at {timestamp}` and sends a formatted Slack message; bot/prefetch/HEAD traffic is filtered to reduce noise; short dedupe window per `id` + UTM keys.
+
 ---
 
 ## File Locations
@@ -374,9 +410,19 @@ node scripts/generate-quarterly-summary.js [id] --quarter Q2-2026   # Specific q
 C:\mightx\
 ├── gtm-engine\                  ← Your outbound system (finds clients for you)
 │   ├── README.md                ← GTM commands, CLI flags, Instantly CSV vs API push
+│   ├── prompts\personalization.txt  ← Claude cold-email rules (CTA, {{companyName}}, competitors)
 │   ├── config\icp.json          ← Edit this to define who you're targeting
 │   ├── scripts\                 ← Pipeline steps (incl. 6-export-copy-csv.js)
 │   └── .env                     ← Your API keys (create from .env.example)
+│
+├── brief-app\                   ← Hosted briefs + link open tracking (Next.js / Vercel)
+│   ├── README.md                ← /brief, proxy, Slack, report-backed rendering, health check
+│   ├── proxy.ts                 ← Edge: log + Slack on /brief (filters + dedupe)
+│   ├── app\brief\page.tsx       ← Dynamic brief UI by ?id=
+│   ├── lib\brief-loader.ts      ← Loads latest report-content-*.json from ../intelligence-engine/data/demo-*
+│   ├── scripts\generate-html-brief.js  ← Claude → public/<slug>-brief.html (vertical collateral)
+│   ├── public\                  ← Static assets + generated *-brief.html files
+│   └── .env.local               ← ANTHROPIC_API_KEY, SLACK_WEBHOOK_URL (not committed)
 │
 └── intelligence-engine\         ← The product you sell
     ├── START-HERE.md            ← This file
@@ -404,5 +450,7 @@ C:\mightx\
 | A client's report looks wrong             | Adjust their config in `config/clients/[id].json`, re-run with `--no-email`                    |
 | n8n workflow not firing                   | Check n8n → Executions log. Most common: path in Execute Command node is wrong                 |
 | No Instantly API (Starter plan)           | Use `**npm run export-copy-csv**` in `gtm-engine` → upload CSV; see `**gtm-engine/README.md**` |
+| Brief link opens not in Slack / wrong id  | Confirm `SLACK_WEBHOOK_URL` on Vercel; test `GET /api/health/tracking` on deployed `brief-app`; verify Instantly replaces `{{companyName}}` to match `brief-app` id mapping (`demo-salesloft` → `salesloft`) |
+| `/brief` shows fallback not report data   | Ensure `intelligence-engine/data/demo-<slug>/report-content-*.json` exists and `?id=` matches slug rule in `brief-app/README.md` |
 
 
