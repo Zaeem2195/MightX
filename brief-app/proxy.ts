@@ -96,6 +96,8 @@ export function proxy(request: NextRequest, event: NextFetchEvent) {
   return NextResponse.next();
 }
 
+// `/brief` — dynamic Next route. `/:slug-brief.html` — static HTML from
+// `scripts/generate-html-brief.js` (public/<slug>-brief.html). Both use ?id= for tracking.
 export const config = {
-  matcher: "/brief",
+  matcher: ["/brief", "/((?!_next/|api/).*)-brief.html"],
 };

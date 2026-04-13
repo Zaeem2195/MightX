@@ -22,7 +22,7 @@ This app is designed to:
 
 File: `proxy.ts`
 
-- Intercepts requests to `/brief`
+- Intercepts requests to `/brief` and to static vertical briefs at `/<slug>-brief.html` (files from `npm run generate-html-brief`, e.g. `/elearning-brief.html`)
 - Reads `id` from query params
 - Logs:
   - `[ASSET OPENED] Lead ID: {id} at {timestamp}`
