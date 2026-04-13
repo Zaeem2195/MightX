@@ -10,7 +10,9 @@
     "generate-copy":    "node scripts/3-generate-copy.js",
     "push-instantly":   "node scripts/4-push-instantly.js",
     "export-copy-csv":  "node scripts/6-export-copy-csv.js",
-    "classify-reply":   "node scripts/5-classify-replies.js"
+    "classify-reply":   "node scripts/5-classify-replies.js",
+    "extract-batch:dry-run": "node scripts/extract-enriched-batch.mjs --dry-run",
+    "extract-batch":  "node scripts/extract-enriched-batch.mjs --no-instantly"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",

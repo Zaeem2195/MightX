@@ -243,12 +243,15 @@ Each script reads the most recently dated file from the previous step, so you ca
 
 ### Python: extract leads by field + Instantly push
 
-There is **no existing Node step** that filters `enriched-*.json` by an arbitrary field, rewrites the master file, and pushes only that slice. The main path is still: enrich → **generate-copy** (all or sliced leads) → **push-instantly**. For a one-off extract + master update + API upload, use **`scripts/process_elearning_batch.py`** (generic matcher; name is historical).
+There is **no existing Node step** that filters `enriched-*.json` by an arbitrary field, rewrites the master file, and pushes only that slice. The main path is still: enrich → **generate-copy** (all or sliced leads) → **push-instantly**. For a one-off extract + master update + API upload, use **`scripts/process_elearning_batch.py`** (generic matcher; name is historical). If **Python is not installed**, the same extract + master update (no Instantly) is available as **`scripts/extract-enriched-batch.mjs`** or **`npm run extract-batch:dry-run`** / **`npm run extract-batch`**.
 
 ```bash
 cd gtm-engine
 # Default: companyIndustry equals e-learning (same as before)
 python scripts/process_elearning_batch.py --dry-run
+# Node equivalent (no Python):
+npm run extract-batch:dry-run
+npm run extract-batch
 
 # Another industry (auto batch name: processed-company-industry-computer-software-equals-batch.json)
 python scripts/process_elearning_batch.py --equals "Computer Software" --no-instantly
