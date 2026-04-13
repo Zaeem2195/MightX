@@ -14,6 +14,10 @@
  *   npm run generate-copy -- --first 10          # smoke test
  *   npm run generate-copy -- --first 500          # first batch of 500
  *   npm run generate-copy -- --offset 500 --limit 500   # next 500 (501–1000)
+ *   npm run generate-copy -- --file data/processed-companyindustry-e-learning-equals-batch.json
+ *
+ * CTA host/path: edit prompts/personalization.txt, or set GTM_BRIEF_CTA_BASE_URL in .env
+ * (e.g. https://intel.nextbuildtech.com) to replace https://yourdomain.com in the prompt only.
  */
 
 import 'dotenv/config';
@@ -95,8 +99,38 @@ function resolveLeadsSlice(allLeads) {
   return { leads: allLeads, batchMeta: { mode: 'all', totalInFile: total } };
 }
 
-// ── Load latest enriched file ─────────────────────────────────────────────────
-function loadLatestEnriched() {
+/** --file <name> → data/<name> or path relative to gtm-engine root (same as push-instantly). */
+function resolveExplicitEnrichedPath() {
+  const idx = process.argv.indexOf('--file');
+  if (idx === -1 || !process.argv[idx + 1]) return null;
+  const raw = process.argv[idx + 1].trim();
+  if (path.isAbsolute(raw)) return raw;
+  const dataPrefix = `data${path.sep}`;
+  if (
+    raw.startsWith('data/') ||
+    raw.startsWith('data\\') ||
+    raw.startsWith(dataPrefix)
+  ) {
+    return path.join(ROOT, raw);
+  }
+  return path.join(ROOT, 'data', path.basename(raw));
+}
+
+// ── Load enriched JSON: --file wins, else latest data/enriched-*.json ────────
+function loadEnrichedData() {
+  const explicit = resolveExplicitEnrichedPath();
+  if (explicit) {
+    if (!fs.existsSync(explicit)) {
+      console.error(`❌  Enriched file not found: ${explicit}`);
+      process.exit(1);
+    }
+    console.log(`📂  Loading: ${path.relative(ROOT, explicit).replace(/\\/g, '/')}`);
+    return {
+      data: JSON.parse(fs.readFileSync(explicit, 'utf8')),
+      sourceLabel: path.relative(ROOT, explicit).replace(/\\/g, '/'),
+    };
+  }
+
   const dataDir = path.join(ROOT, 'data');
   const files = fs.readdirSync(dataDir)
     .filter(f => f.startsWith('enriched-') && f.endsWith('.json'))
@@ -109,15 +143,23 @@ function loadLatestEnriched() {
   }
 
   console.log(`📂  Loading: ${files[0]}`);
-  return JSON.parse(fs.readFileSync(path.join(dataDir, files[0]), 'utf8'));
+  return {
+    data: JSON.parse(fs.readFileSync(path.join(dataDir, files[0]), 'utf8')),
+    sourceLabel: `data/${files[0]}`,
+  };
 }
 
 // ── Load prompt template ──────────────────────────────────────────────────────
 function loadPrompt() {
-  return fs.readFileSync(
+  let text = fs.readFileSync(
     path.join(ROOT, 'prompts', 'personalization.txt'),
     'utf8'
   );
+  const base = process.env.GTM_BRIEF_CTA_BASE_URL?.trim().replace(/\/+$/, '');
+  if (base) {
+    text = text.replace(/https:\/\/yourdomain\.com/gi, base);
+  }
+  return text;
 }
 
 // ── Build lead data block for the prompt ─────────────────────────────────────
@@ -173,7 +215,7 @@ async function generateCopy(lead, promptTemplate, attempt = 0) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 async function main() {
-  const data = loadLatestEnriched();
+  const { data, sourceLabel } = loadEnrichedData();
   const allLeads = data.leads || [];
   const { leads, batchMeta } = resolveLeadsSlice(allLeads);
   const prompt = loadPrompt();
@@ -234,6 +276,8 @@ async function main() {
       totalGenerated: results.length,
       totalFailed:    failures.length,
       estimatedCost:  `~$${estimatedCost}`,
+      enrichedSource: sourceLabel,
+      briefCtaBase:     process.env.GTM_BRIEF_CTA_BASE_URL?.trim() || null,
       batch:          batchMeta,
       reviewNote:     'REVIEW THIS FILE before running push-instantly. Spot-check at least 10% of entries.',
     },
