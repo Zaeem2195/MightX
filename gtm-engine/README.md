@@ -71,6 +71,8 @@ Open `.env` and fill in:
 | `N8N_WEBHOOK_URL` | Generated after importing the n8n workflow (Step 5 below) |
 | `SLACK_WEBHOOK_URL` | Slack → Apps → Incoming Webhooks (optional) |
 
+**Optional — vertical campaigns (recommended when the CTA points at a static HTML brief on Vercel):** set `GTM_BRIEF_CTA_BASE_URL`, `GTM_BRIEF_HTML_FILENAME`, and **both** `GTM_REPORT_COMPETITOR_A` / `GTM_REPORT_COMPETITOR_B` in `.env` so email copy matches the hosted report. Details: [docs/VERTICAL-BRIEF-AND-EMAIL.md](docs/VERTICAL-BRIEF-AND-EMAIL.md).
+
 ### 3. Configure your ICP
 
 Edit `config/icp.json` to define who you are targeting:
@@ -158,7 +160,7 @@ Pass flags after `npm run <script> --` so they reach the Node script.
 | | `--offset O` `--limit L` | Generate for a **slice** of the enriched file (0-based). Example: second batch of 500 → `--offset 500 --limit 500`. |
 | | (env) `GTM_BRIEF_CTA_BASE_URL` | Optional. Replaces `https://yourdomain.com` in the prompt. No trailing slash. |
 | | (env) `GTM_BRIEF_HTML_FILENAME` | Optional. Replaces `__BRIEF_HTML_FILENAME__` in the prompt (default `elearning-brief.html`). Example: `management-consulting-brief.html`. |
-| | (env) `GTM_REPORT_COMPETITOR_A` / `GTM_REPORT_COMPETITOR_B` | Optional but **recommended** for vertical batches. Set **both** to the same two names as in the static HTML brief so the email matches the CTA page. If either is unset, Claude infers competitors per lead (see [docs/VERTICAL-BRIEF-AND-EMAIL.md](docs/VERTICAL-BRIEF-AND-EMAIL.md)). |
+| | (env) `GTM_REPORT_COMPETITOR_A` / `GTM_REPORT_COMPETITOR_B` | **Recommended** for vertical batches: set **both** to the same two names as in your static HTML brief (`brief-app/public/…`) so the email’s competitor pair matches the page behind the link. If **either** is unset, the prompt uses **NO LOCK** and Claude may infer a different pair per lead (OK for tests; **not** aligned with a fixed report). See [docs/VERTICAL-BRIEF-AND-EMAIL.md](docs/VERTICAL-BRIEF-AND-EMAIL.md). |
 | **`push-instantly`** | `--file <path>` | Load a **specific** copy file instead of the latest `copy-*.json`. Bare filename → `data/<filename>`. You can also pass `data/copy-….json` or an absolute path. |
 | | `--first N` | Push only the **first N** entries from that copy file. |
 | | `--offset O` `--limit L` | Push a **slice** of the copy file (same rules as `generate-copy`). |
@@ -277,7 +279,9 @@ Prints **before/after counts** and aborts if `remaining + extracted ≠ original
 
 ## Customising the email prompt
 
-The email generation prompt lives in `prompts/personalization.txt`. Edit it to:
+The email generation prompt lives in `prompts/personalization.txt`. **`scripts/3-generate-copy.js`** substitutes placeholders before Claude runs: `https://yourdomain.com` → `GTM_BRIEF_CTA_BASE_URL`, `__BRIEF_HTML_FILENAME__` → `GTM_BRIEF_HTML_FILENAME`, and **`{{INJECTED_CAMPAIGN_CONTEXT}}`** with either **REPORT-LOCKED** (when both competitor env vars are set) or **NO LOCK**. Prefer env vars + the committed prompt over hand-editing URLs per vertical.
+
+You can still edit `personalization.txt` to:
 
 - Change the tone or voice
 - Add your specific service details and pricing
@@ -290,29 +294,30 @@ The reply classification prompt lives in `prompts/reply-classifier.txt`. Adjust 
 
 ## Cold Email Framework (Current)
 
-`scripts/3-generate-copy.js` loads `prompts/personalization.txt` and sends it to Claude Sonnet as the instruction payload for each lead.
+`scripts/3-generate-copy.js` loads `prompts/personalization.txt`, applies **env substitutions** (host, brief HTML filename, injected campaign context), then sends the result to Claude Sonnet for each lead.
 
 The current framework is now:
 
 - **Prospect-first opener** (real, verifiable detail about the lead/company)
 - **Abstracted Authority sentence** in sentence 2 or 3:
   - "My background is in engineering secure, enterprise-grade architectures for tier-1 financial institutions, but my team recently built an automated competitive intelligence engine specifically for the SaaS market."
-- **Exactly 2 real competitors** identified dynamically for each lead
-- **Delivery-assuming CTA** (no permission-asking): baseline capture + Rep Talk Tracks framing, then link on its own line:
-  - `https://yourdomain.com/brief?id={{companyName}}`
+- **Exactly 2 competitors in the baseline sentence** — **recommended:** set `GTM_REPORT_COMPETITOR_A` and `GTM_REPORT_COMPETITOR_B` to match the pair in your **static HTML brief** (same names as on the Vercel page). The prompt then uses **REPORT-LOCKED** and those names only. If those env vars are **not** both set, the prompt uses **NO LOCK** and Claude may infer two competitors per lead (not guaranteed to match a fixed report).
+- **Delivery-assuming CTA** (no permission-asking): baseline capture + Rep Talk Tracks framing, then link on its own line. The URL shape is built from env (see [docs/VERTICAL-BRIEF-AND-EMAIL.md](docs/VERTICAL-BRIEF-AND-EMAIL.md)), e.g. `https://<your-host>/<vertical>-brief.html?id={{companyName}}` after substitution — not a hardcoded `/brief` path unless your prompt says so.
 - **Literal Instantly token required**:
   - `{{companyName}}` must remain literal in output so Instantly injects the value at send time
 - **Word budget**: under 140 words
 
 ### Why `{{companyName}}` matters
 
-The generated email body intentionally contains a literal merge token in the link:
+The generated email body intentionally contains a literal merge token in the link query string, for example:
 
 ```txt
-https://yourdomain.com/brief?id={{companyName}}
+https://intel.nextbuildtech.com/elearning-brief.html?id={{companyName}}
 ```
 
-At send time, Instantly replaces `{{companyName}}` with each lead's company value, allowing per-lead tracking links without modifying generation code.
+(Actual host and path come from `GTM_BRIEF_CTA_BASE_URL` + `GTM_BRIEF_HTML_FILENAME` and `personalization.txt`.)
+
+At send time, Instantly replaces `{{companyName}}` with each lead’s value so tracking links stay per-lead without changing generation code.
 
 ---
 
