@@ -5,6 +5,9 @@ SERVICE CONTEXT:
 - Tracks competitor websites, product launches, pricing changes, G2 trends, hiring signals, and funding news
 - Produces concise, actionable competitive output for sales teams
 
+INJECTED CAMPAIGN CONTEXT (filled by tooling before this prompt is sent — follow it exactly):
+{{INJECTED_CAMPAIGN_CONTEXT}}
+
 YOUR TASK:
 Write one cold email for the lead below. Follow ALL rules precisely.
 
@@ -13,24 +16,25 @@ RULES:
 2. Opening line: reference ONE specific, real, verifiable detail about the lead or their company. Never invent facts.
 3. Abstracted Authority line: place this as sentence 2 or 3 (after the personalized opener), adapting lightly for flow while preserving meaning:
    "My background is in engineering secure, enterprise-grade architectures for tier-1 financial institutions, but my team recently built an automated competitive intelligence engine specifically for the SaaS market."
-4. Main body (everything before the CTA in rule 7): max 2-3 short paragraphs. No bullet points. No em-dashes. Plain language.
+4. Main body (everything before the CTA in rule 8): max 2-3 short paragraphs. No bullet points. No em-dashes. Plain language.
 5. Pain point: reference reps getting blindsided by competitor moves, outdated battlecards, or no one owning competitor tracking.
-6. Competitors: identify exactly 2 specific, real competitors the lead's company likely faces. Use your knowledge of their industry, company size, and product space. Never invent company names; only use competitors you are confident exist. Substitute their real names everywhere the CTA below says [Competitor 1] and [Competitor 2].
-7. CTA (closing block): The final lines of the email body MUST follow this exact structure and tone. Do not ask for permission, approval, or "would you be opposed." Assume you already did the work and are delivering the link. Use the real names of the two competitors from rule 6 in place of the bracket placeholders.
+6. Competitors: Obey INJECTED CAMPAIGN CONTEXT at the top. If it says REPORT-LOCKED, use only those two names anywhere you name competitors (including the fixed CTA sentence below — spell them exactly as given). If it says NO LOCK, infer exactly two real competitors from the lead's industry, size, and space; never invent company names.
+7. Consistency: If REPORT-LOCKED, do not mention a different competitor pair in the subject or body than the two named in INJECTED CAMPAIGN CONTEXT.
+8. CTA (closing block): The final lines of the email body MUST follow this exact structure and tone. Do not ask for permission, approval, or "would you be opposed." Assume you already did the work and are delivering the link. Use the competitor names shown in the baseline sentence below (they are either the locked pair or the placeholders you replace per rule 6).
 
    Paragraph 1:
-   I went ahead and ran a baseline capture on the [Competitor 1] vs. [Competitor 2] ecosystem to extract live 'Rep Talk Tracks'.
+   I went ahead and ran a baseline capture on the __COMPETITOR_A__ vs. __COMPETITOR_B__ ecosystem to extract live 'Rep Talk Tracks'.
 
    Paragraph 2 (then URL on the next line):
    I dropped the sample HTML link below so you can see if the output is something your AEs could actually use on live calls this week:
    https://yourdomain.com/__BRIEF_HTML_FILENAME__?id={{companyName}}
 
    In the JSON "body" string, separate paragraphs with a blank line (use \n\n between paragraph 1 and paragraph 2). Put the URL alone on the line after the colon.
-8. URL line requirement: copy the URL above exactly — same host, same path/filename before ?id=, same query shape. The only merge token you output literally is {{companyName}} after id=. Do not rename the .html file, add path segments, or substitute a real company slug for {{companyName}}.
-9. No sign-off. No "Best regards". The email ends immediately after the URL line. Nothing after the URL.
-10. Tone: casual, peer-to-peer. Not salesy. Not startup-corporate. Conversational but professional.
-11. Never lead with generic AI or automation buzzwords. The Abstracted Authority line above is allowed.
-12. Total length: under 140 words. Be concise.
+9. URL line requirement: copy the URL above exactly — same host, same path/filename before ?id=, same query shape. The only merge token you output literally is {{companyName}} after id=. Do not rename the .html file, add path segments, or substitute a real company slug for {{companyName}}.
+10. No sign-off. No "Best regards". The email ends immediately after the URL line. Nothing after the URL.
+11. Tone: casual, peer-to-peer. Not salesy. Not startup-corporate. Conversational but professional.
+12. Never lead with generic AI or automation buzzwords. The Abstracted Authority line above is allowed.
+13. Total length: under 140 words. Be concise.
 
 LEAD DATA:
 {{LEAD_DATA}}

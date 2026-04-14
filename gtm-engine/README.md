@@ -158,6 +158,7 @@ Pass flags after `npm run <script> --` so they reach the Node script.
 | | `--offset O` `--limit L` | Generate for a **slice** of the enriched file (0-based). Example: second batch of 500 → `--offset 500 --limit 500`. |
 | | (env) `GTM_BRIEF_CTA_BASE_URL` | Optional. Replaces `https://yourdomain.com` in the prompt. No trailing slash. |
 | | (env) `GTM_BRIEF_HTML_FILENAME` | Optional. Replaces `__BRIEF_HTML_FILENAME__` in the prompt (default `elearning-brief.html`). Example: `management-consulting-brief.html`. |
+| | (env) `GTM_REPORT_COMPETITOR_A` / `GTM_REPORT_COMPETITOR_B` | Optional but **recommended** for vertical batches. Set **both** to the same two names as in the static HTML brief so the email matches the CTA page. If either is unset, Claude infers competitors per lead (see [docs/VERTICAL-BRIEF-AND-EMAIL.md](docs/VERTICAL-BRIEF-AND-EMAIL.md)). |
 | **`push-instantly`** | `--file <path>` | Load a **specific** copy file instead of the latest `copy-*.json`. Bare filename → `data/<filename>`. You can also pass `data/copy-….json` or an absolute path. |
 | | `--first N` | Push only the **first N** entries from that copy file. |
 | | `--offset O` `--limit L` | Push a **slice** of the copy file (same rules as `generate-copy`). |
@@ -181,6 +182,10 @@ npm run export-copy-csv -- --out data/batch-1.csv
 ```
 
 Push logs in `data/push-log-*.json` record `copyFile` and `batch` when you use these options.
+
+### Vertical HTML briefs, CTAs, and competitor names
+
+For **industry-specific** static briefs on Vercel (e.g. `elearning-brief.html`) and **Instantly** merge tags, read **[docs/VERTICAL-BRIEF-AND-EMAIL.md](docs/VERTICAL-BRIEF-AND-EMAIL.md)**. It explains `GTM_BRIEF_*` and `GTM_REPORT_COMPETITOR_*`, one batch per `.env` setup, and what can still go wrong (merge tag typos, Claude dropping `{{companyName}}`, etc.).
 
 ### Instantly without API — CSV import (e.g. Starter plan)
 

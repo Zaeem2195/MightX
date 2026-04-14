@@ -19,6 +19,9 @@
  * CTA URL: set GTM_BRIEF_CTA_BASE_URL (host) and GTM_BRIEF_HTML_FILENAME (e.g. elearning-brief.html
  * or management-consulting-brief.html) in .env. personalization.txt uses __BRIEF_HTML_FILENAME__
  * plus https://yourdomain.com — both are substituted before the prompt is sent to Claude.
+ *
+ * Competitors vs static brief: set GTM_REPORT_COMPETITOR_A and GTM_REPORT_COMPETITOR_B to match
+ * the pair in the hosted HTML brief. See docs/VERTICAL-BRIEF-AND-EMAIL.md.
  */
 
 import 'dotenv/config';
@@ -155,12 +158,40 @@ function resolveBriefHtmlFilename() {
   return (rawBrief?.trim() || 'elearning-brief.html').replace(/^\/+/, '');
 }
 
+/** When both set, email competitor names match the static HTML brief on Vercel. */
+function resolveReportCompetitors() {
+  const a = process.env.GTM_REPORT_COMPETITOR_A?.trim();
+  const b = process.env.GTM_REPORT_COMPETITOR_B?.trim();
+  if (a && b) return { locked: true, a, b };
+  return { locked: false, a: null, b: null };
+}
+
 // ── Load prompt template ──────────────────────────────────────────────────────
 function loadPrompt() {
   let text = fs.readFileSync(
     path.join(ROOT, 'prompts', 'personalization.txt'),
     'utf8'
   );
+
+  const rc = resolveReportCompetitors();
+  const injected = rc.locked
+    ? [
+        'REPORT-LOCKED (use only these two names everywhere the email names competitors; they must match the static HTML brief at the CTA URL):',
+        `- ${rc.a}`,
+        `- ${rc.b}`,
+      ].join('\n')
+    : "NO LOCK: Infer exactly two real competitors from the lead's industry, company size, and product space (see LEAD DATA). Use their real names in the baseline-capture sentence. Never invent company names.";
+  text = text.replace('{{INJECTED_CAMPAIGN_CONTEXT}}', injected);
+
+  text = text.replace(
+    /__COMPETITOR_A__/g,
+    rc.locked ? rc.a : '[Competitor 1]',
+  );
+  text = text.replace(
+    /__COMPETITOR_B__/g,
+    rc.locked ? rc.b : '[Competitor 2]',
+  );
+
   text = text.replace(/__BRIEF_HTML_FILENAME__/g, resolveBriefHtmlFilename());
   const base = process.env.GTM_BRIEF_CTA_BASE_URL?.trim().replace(/\/+$/, '');
   if (base) {
@@ -228,7 +259,13 @@ async function main() {
   const prompt = loadPrompt();
   const host = process.env.GTM_BRIEF_CTA_BASE_URL?.trim().replace(/\/+$/, '') || 'https://yourdomain.com';
   const briefFile = resolveBriefHtmlFilename();
+  const rc = resolveReportCompetitors();
   console.log(`\n🔗  CTA template for this run: ${host}/${briefFile}?id={{companyName}}`);
+  if (rc.locked) {
+    console.log(`\n🎯  Competitors REPORT-LOCKED for this run: ${rc.a} vs ${rc.b}`);
+  } else {
+    console.log('\n🎯  Competitors: NO LOCK (Claude infers two from each lead). Set GTM_REPORT_COMPETITOR_A/B to match a static brief.');
+  }
 
   console.log(`\n✍️   Generating copy for ${leads.length} leads via Claude (${MODEL})...\n`);
   if (batchMeta.mode !== 'all') {
@@ -287,8 +324,11 @@ async function main() {
       totalFailed:    failures.length,
       estimatedCost:  `~$${estimatedCost}`,
       enrichedSource: sourceLabel,
-      briefCtaBase:       process.env.GTM_BRIEF_CTA_BASE_URL?.trim() || null,
-      briefHtmlFilename: resolveBriefHtmlFilename(),
+      briefCtaBase:         process.env.GTM_BRIEF_CTA_BASE_URL?.trim() || null,
+      briefHtmlFilename:    resolveBriefHtmlFilename(),
+      reportCompetitorsLocked: rc.locked,
+      reportCompetitorA:      rc.locked ? rc.a : null,
+      reportCompetitorB:      rc.locked ? rc.b : null,
       batch:          batchMeta,
       reviewNote:     'REVIEW THIS FILE before running push-instantly. Spot-check at least 10% of entries.',
     },
