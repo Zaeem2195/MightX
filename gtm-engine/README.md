@@ -246,35 +246,32 @@ All output is saved to `data/` (gitignored):
 | `copy-[timestamp].json` | AI-generated subject lines and email bodies |
 | `copy-export-[timestamp].csv` | CSV from **`export-copy-csv`** for manual Instantly upload (`ai_subject`, `ai_body`, `title` columns) |
 | `push-log-[timestamp].json` | Instantly push results (success/failure per lead); includes `copyFile` / `batch` when flags were used |
-| `processed-<field>-<value>-equals|contains-batch.json` | Optional: slice produced by `scripts/process_elearning_batch.py` (override with `--batch-out`) |
+| `processed-<field>-<value>-equals|contains-batch.json` | Optional: slice produced by **`scripts/extract-enriched-batch.mjs`** (override with `--batch-out`) |
 
 Each script reads the most recently dated file from the previous step, so you can re-run individual steps without re-processing the whole pipeline. **`push-instantly --file`** is the exception: it uses the path you pass instead of the latest `copy-*.json`.
 
-### Python: extract leads by field + Instantly push
+### Extract leads by field (Node)
 
-There is **no existing Node step** that filters `enriched-*.json` by an arbitrary field, rewrites the master file, and pushes only that slice. The main path is still: enrich → **generate-copy** (all or sliced leads) → **push-instantly**. For a one-off extract + master update + API upload, use **`scripts/process_elearning_batch.py`** (generic matcher; name is historical). If **Python is not installed**, the same extract + master update (no Instantly) is available as **`scripts/extract-enriched-batch.mjs`** or **`npm run extract-batch:dry-run`** / **`npm run extract-batch`**.
+Use **`scripts/extract-enriched-batch.mjs`** (or **`npm run extract-batch:dry-run`** / **`npm run extract-batch`**) to filter `enriched-*.json` by **`--field`** / **`--equals`** or **`--contains`**, write a batch JSON, and update the master file in place. It does **not** call Instantly.
+
+**After extract:** run **`npm run generate-copy -- --file data/<your-batch>.json`**, then **`npm run push-instantly -- --file data/copy-….json`** (or export CSV).
 
 ```bash
 cd gtm-engine
-# Default: companyIndustry equals e-learning (same as before)
-python scripts/process_elearning_batch.py --dry-run
-# Node equivalent (no Python):
+# Default: companyIndustry equals e-learning
 npm run extract-batch:dry-run
 npm run extract-batch
 
-# Another industry (auto batch name: processed-company-industry-computer-software-equals-batch.json)
-python scripts/process_elearning_batch.py --equals "Computer Software" --no-instantly
+# Another industry (auto batch filename from field + value)
+node scripts/extract-enriched-batch.mjs --equals "Computer Software" --no-instantly
 
-# Substring on title, custom output file
-python scripts/process_elearning_batch.py --field title --contains "Chief Revenue" --batch-out processed-cro-title-batch.json --dry-run
-
-# Instantly v2 + optional copy merge by email
-python scripts/process_elearning_batch.py --equals "e-learning" --copy-json data/copy-2026-04-13T15-53-31.json
+# Substring on title, custom batch filename
+node scripts/extract-enriched-batch.mjs --field title --contains "Chief Revenue" --batch-out processed-cro-title-batch.json --dry-run
 ```
 
-**Flags:** `--field` (default `companyIndustry`; reads `personalization.<field>` then top-level), **`--equals`** (default `e-learning` when neither flag is passed), **`--contains`** (substring; wins over `--equals`), **`--source`**, **`--batch-out`** (default derived from field + value), **`--dry-run`**, **`--no-instantly`**, **`--copy-json`**.
+**Flags:** `--field` (default `companyIndustry`), **`--equals`** (default `e-learning` when `--contains` is not used), **`--contains`** (substring; do not pass `--equals` with it), **`--source`**, **`--batch-out`**, **`--dry-run`**, **`--no-instantly`** (required to write; omit for dry-run only).
 
-Prints **before/after counts** and aborts if `remaining + extracted ≠ original`. Stdlib only. Without `--copy-json`, Instantly rows use empty `ai_subject` / `ai_body` unless your sequence does not need them.
+Prints **before/after counts** and aborts if `remaining + extracted ≠ original`.
 
 ---
 

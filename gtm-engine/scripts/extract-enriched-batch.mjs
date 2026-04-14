@@ -1,6 +1,7 @@
 /**
- * Node fallback for process_elearning_batch.py when Python is not installed.
- * Same defaults: companyIndustry equals e-learning, update master in place.
+ * Extract leads from enriched JSON by field match, write a batch file, update
+ * the master in place. Optional Instantly push: use generate-copy + push-instantly
+ * on the batch + copy files (this script only mutates JSON).
  *
  * Usage (from gtm-engine):
  *   node scripts/extract-enriched-batch.mjs --dry-run
@@ -168,7 +169,7 @@ function main() {
 
   if (!args.noInstantly) {
     console.error(
-      "This Node helper only supports --dry-run and --no-instantly. For Instantly push, install Python and use process_elearning_batch.py or use npm run push-instantly after generating copy.",
+      "Pass --no-instantly to write files. This script does not call Instantly. After extract: npm run generate-copy -- --file <batch.json>, then npm run push-instantly -- --file <copy.json>.",
     );
     process.exit(1);
   }
