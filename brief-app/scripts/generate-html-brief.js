@@ -9,7 +9,12 @@
  *
  * Usage:
  *   node scripts/generate-html-brief.js
+ *   node scripts/generate-html-brief.js "Cybersecurity" "CrowdStrike" "SentinelOne"
  *   npm run generate-html-brief
+ *   npm run generate-html-brief -- "Cybersecurity" "CrowdStrike" "SentinelOne"
+ *
+ * Arguments (optional): <Industry vertical> <Competitor A> <Competitor B>
+ * Output: public/<slug-from-industry>-brief.html
  */
 
 const fs = require("fs");
@@ -19,11 +24,42 @@ require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
 
 const Anthropic = require("@anthropic-ai/sdk");
 
-// ── Inputs (edit these for each vertical / competitor pair) ─────────────────
-const industryName = "E-Learning";
-const competitorA = "Docebo";
-const competitorB = "Absorb LMS";
-// ─────────────────────────────────────────────────────────────────────────────
+const DEFAULT_INDUSTRY = "E-Learning";
+const DEFAULT_COMPETITOR_A = "Docebo";
+const DEFAULT_COMPETITOR_B = "Absorb LMS";
+
+/** @returns {{ industryName: string, competitorA: string, competitorB: string }} */
+function parseCliInputs() {
+  const args = process.argv.slice(2);
+  if (args.length === 0) {
+    return {
+      industryName: DEFAULT_INDUSTRY,
+      competitorA: DEFAULT_COMPETITOR_A,
+      competitorB: DEFAULT_COMPETITOR_B,
+    };
+  }
+  if (args.length === 3) {
+    const industryName = args[0].trim();
+    const competitorA = args[1].trim();
+    const competitorB = args[2].trim();
+    if (!industryName || !competitorA || !competitorB) {
+      console.error("Industry and both competitor names must be non-empty.");
+      process.exit(1);
+    }
+    return { industryName, competitorA, competitorB };
+  }
+  console.error(`
+Usage:
+  node scripts/generate-html-brief.js "<Industry>" "<Competitor A>" "<Competitor B>"
+
+Examples:
+  node scripts/generate-html-brief.js "Cybersecurity" "CrowdStrike" "SentinelOne"
+  npm run generate-html-brief -- "Cybersecurity" "CrowdStrike" "SentinelOne"
+
+Omit all three arguments to use defaults: ${DEFAULT_INDUSTRY} | ${DEFAULT_COMPETITOR_A} vs ${DEFAULT_COMPETITOR_B}
+`);
+  process.exit(1);
+}
 
 const MODEL = "claude-sonnet-4-6";
 const MAX_TOKENS = 16_384;
@@ -51,7 +87,7 @@ CONTENT:
 - The teardown must focus on the two named competitors and the given industry vertical.
 - Be specific and actionable for reps; avoid generic filler. If you must infer, label uncertainty briefly rather than inventing false facts.`;
 
-function buildUserPrompt() {
+function buildUserPrompt(industryName, competitorA, competitorB) {
   return `Generate the full HTML file now.
 
 Industry vertical: ${industryName}
@@ -88,6 +124,8 @@ async function main() {
     process.exit(1);
   }
 
+  const { industryName, competitorA, competitorB } = parseCliInputs();
+
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   console.log(`Generating HTML brief: ${industryName} | ${competitorA} vs ${competitorB}…`);
@@ -96,7 +134,7 @@ async function main() {
     model: MODEL,
     max_tokens: MAX_TOKENS,
     system: SYSTEM_PROMPT,
-    messages: [{ role: "user", content: buildUserPrompt() }],
+    messages: [{ role: "user", content: buildUserPrompt(industryName, competitorA, competitorB) }],
   });
 
   const block = message.content.find((b) => b.type === "text");

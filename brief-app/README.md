@@ -79,6 +79,21 @@ npm install
 npm run dev
 ```
 
+### Generate a vertical static HTML brief (Claude)
+
+From `brief-app`, with `ANTHROPIC_API_KEY` in `.env.local` or `.env`:
+
+```bash
+# Defaults: E-Learning, Docebo vs Absorb LMS → public/elearning-brief.html
+npm run generate-html-brief
+
+# Custom vertical + two competitors (slug = industry, e.g. cybersecurity-brief.html)
+node scripts/generate-html-brief.js "Cybersecurity" "CrowdStrike" "SentinelOne"
+npm run generate-html-brief -- "Cybersecurity" "CrowdStrike" "SentinelOne"
+```
+
+Requires **exactly three** quoted arguments for a custom run; otherwise the script prints usage and exits. From the repo root you can run: `node brief-app/scripts/generate-html-brief.js "Cybersecurity" "CrowdStrike" "SentinelOne"` (still uses `brief-app/.env` paths via `__dirname`).
+
 Open:
 
 - [http://localhost:3000/](http://localhost:3000/) — redirects to the latest `*-report-*.html` or `/brief?id=salesloft`
