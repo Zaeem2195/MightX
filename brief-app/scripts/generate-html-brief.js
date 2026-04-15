@@ -61,7 +61,7 @@ Omit all three arguments to use defaults: ${DEFAULT_INDUSTRY} | ${DEFAULT_COMPET
   process.exit(1);
 }
 
-const MODEL = "claude-sonnet-4-6";
+const MODEL = "claude-opus-4-6";
 const MAX_TOKENS = 16_384;
 
 const SYSTEM_PROMPT = `You are a Senior RevOps Analyst specializing in competitive intelligence for B2B SaaS. You produce executive-grade teardowns for sales and enablement teams.

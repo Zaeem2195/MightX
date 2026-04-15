@@ -1,1004 +1,622 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Competitive Intelligence: Docebo vs Absorb LMS</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg-primary: #0a0a0b;
-      --bg-secondary: #111113;
-      --bg-card: #16161a;
-      --bg-card-hover: #1c1c22;
-      --border: #2a2a32;
-      --border-accent: #3a3a48;
-      --text-primary: #f0f0f5;
-      --text-secondary: #9090a8;
-      --text-muted: #5c5c72;
-      --accent-blue: #4f8ef7;
-      --accent-blue-dim: #1e3a6e;
-      --accent-green: #3ecf8e;
-      --accent-green-dim: #0d3324;
-      --accent-amber: #f5a623;
-      --accent-amber-dim: #3d2a08;
-      --accent-red: #f06565;
-      --accent-red-dim: #3d1515;
-      --accent-purple: #9b72f5;
-      --accent-purple-dim: #2a1d4a;
-      --tag-bg: #1e1e28;
-    }
-
-    html { font-size: 16px; }
-
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    a { color: var(--accent-blue); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    /* ─── Layout ─── */
-    .page-wrapper {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 5rem;
-    }
-
-    /* ─── Top bar ─── */
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1.5rem;
-      background: var(--bg-secondary);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .topbar-brand {
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    .topbar-badge {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent-blue);
-      background: var(--accent-blue-dim);
-      border: 1px solid #2d5090;
-      border-radius: 4px;
-      padding: 0.2rem 0.6rem;
-    }
-
-    /* ─── Hero header ─── */
-    .hero {
-      padding: 3rem 0 2.5rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 2.5rem;
-    }
-
-    .hero-eyebrow {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent-green);
-      margin-bottom: 0.85rem;
-    }
-
-    .hero h1 {
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
-      margin-bottom: 0.75rem;
-    }
-
-    .hero h1 span.vs-sep {
-      color: var(--text-muted);
-      font-weight: 300;
-    }
-
-    .hero-sub {
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-      max-width: 640px;
-      margin-bottom: 1.5rem;
-    }
-
-    .welcome-line {
-      display: inline-block;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--accent-amber);
-      background: var(--accent-amber-dim);
-      border: 1px solid #5a3e10;
-      border-radius: 5px;
-      padding: 0.3rem 0.85rem;
-      letter-spacing: 0.03em;
-    }
-
-    .meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 1.4rem;
-    }
-
-    .meta-tag {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      background: var(--tag-bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.25rem 0.65rem;
-    }
-
-    /* ─── Section headings ─── */
-    section {
-      margin-bottom: 3rem;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .section-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 26px;
-      height: 26px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .num-blue { background: var(--accent-blue-dim); color: var(--accent-blue); border: 1px solid #2d5090; }
-    .num-amber { background: var(--accent-amber-dim); color: var(--accent-amber); border: 1px solid #5a3e10; }
-    .num-green { background: var(--accent-green-dim); color: var(--accent-green); border: 1px solid #1a5c40; }
-
-    section h2 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--text-primary);
-    }
-
-    .section-desc {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      margin-bottom: 1.5rem;
-      line-height: 1.65;
-    }
-
-    /* ─── Cards ─── */
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1rem;
-      transition: border-color 0.15s ease, background 0.15s ease;
-    }
-
-    .card:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--border-accent);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 0.6rem;
-      flex-wrap: wrap;
-    }
-
-    .card-title {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      line-height: 1.3;
-    }
-
-    .card-body {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      line-height: 1.7;
-    }
-
-    .card-body strong { color: var(--text-primary); }
-
-    .pill {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border-radius: 20px;
-      padding: 0.2rem 0.6rem;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .pill-blue { background: var(--accent-blue-dim); color: var(--accent-blue); border: 1px solid #2d5090; }
-    .pill-amber { background: var(--accent-amber-dim); color: var(--accent-amber); border: 1px solid #5a3e10; }
-    .pill-red { background: var(--accent-red-dim); color: var(--accent-red); border: 1px solid #5a1a1a; }
-    .pill-green { background: var(--accent-green-dim); color: var(--accent-green); border: 1px solid #1a5c40; }
-    .pill-purple { background: var(--accent-purple-dim); color: var(--accent-purple); border: 1px solid #3d2470; }
-
-    /* ─── Competitor label ─── */
-    .comp-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      border-radius: 4px;
-      padding: 0.18rem 0.55rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .comp-docebo { background: #1a2a4a; color: #6aa3f7; border: 1px solid #2d4a80; }
-    .comp-absorb { background: #1a3a2a; color: #5acf9a; border: 1px solid #2d6a4a; }
-
-    /* ─── Two-column competitor grid ─── */
-    .comp-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    @media (max-width: 620px) {
-      .comp-grid { grid-template-columns: 1fr; }
-    }
-
-    .comp-col {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.25rem;
-    }
-
-    .comp-col-title {
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 0.85rem;
-    }
-
-    .docebo-title { color: #6aa3f7; }
-    .absorb-title { color: #5acf9a; }
-
-    .bullet-list {
-      list-style: none;
-      padding: 0;
-    }
-
-    .bullet-list li {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      padding: 0.3rem 0;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-
-    .bullet-list li:last-child { border-bottom: none; }
-
-    .bullet-list li::before {
-      content: "›";
-      color: var(--text-muted);
-      font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 0.05rem;
-    }
-
-    .bullet-list li strong { color: var(--text-primary); }
-
-    /* ─── Talk Track cards ─── */
-    .objection-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 1rem;
-    }
-
-    .objection-header {
-      padding: 0.9rem 1.25rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-
-    .objection-icon {
-      font-size: 1rem;
-      flex-shrink: 0;
-      margin-top: 0.05rem;
-    }
-
-    .objection-text {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      line-height: 1.4;
-      font-style: italic;
-    }
-
-    .objection-body {
-      padding: 1rem 1.25rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-    }
-
-    @media (max-width: 620px) {
-      .objection-body { grid-template-columns: 1fr; }
-    }
-
-    .response-block-title {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0.55rem;
-    }
-
-    .docebo-resp { color: #6aa3f7; }
-    .absorb-resp { color: #5acf9a; }
-
-    .response-text {
-      font-size: 0.84rem;
-      color: var(--text-secondary);
-      line-height: 1.7;
-    }
-
-    .response-text strong { color: var(--text-primary); }
-
-    .proof-point {
-      margin-top: 0.6rem;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      background: var(--bg-secondary);
-      border-left: 2px solid var(--border-accent);
-      padding: 0.4rem 0.65rem;
-      border-radius: 0 4px 4px 0;
-      line-height: 1.55;
-    }
-
-    .proof-point strong { color: var(--text-secondary); }
-
-    /* ─── Pricing vulnerability table ─── */
-    .vuln-table-wrap {
-      overflow-x: auto;
-      margin-bottom: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.84rem;
-    }
-
-    thead tr {
-      background: var(--bg-secondary);
-      border-bottom: 1px solid var(--border-accent);
-    }
-
-    thead th {
-      padding: 0.75rem 1rem;
-      text-align: left;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background 0.1s ease;
-    }
-
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: var(--bg-card-hover); }
-
-    tbody td {
-      padding: 0.75rem 1rem;
-      vertical-align: top;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    tbody td:first-child {
-      font-weight: 600;
-      color: var(--text-primary);
-      white-space: nowrap;
-    }
-
-    /* ─── Callout box ─── */
-    .callout {
-      border-radius: 8px;
-      padding: 1.1rem 1.3rem;
-      margin-bottom: 1rem;
-      font-size: 0.875rem;
-      line-height: 1.7;
-      display: flex;
-      gap: 0.75rem;
-      align-items: flex-start;
-    }
-
-    .callout-icon { flex-shrink: 0; font-size: 1.05rem; margin-top: 0.05rem; }
-
-    .callout-blue {
-      background: var(--accent-blue-dim);
-      border: 1px solid #2d5090;
-      color: #a8c8ff;
-    }
-
-    .callout-amber {
-      background: var(--accent-amber-dim);
-      border: 1px solid #5a3e10;
-      color: #f5d08a;
-    }
-
-    .callout-red {
-      background: var(--accent-red-dim);
-      border: 1px solid #5a1a1a;
-      color: #f5a0a0;
-    }
-
-    .callout strong { color: #fff; }
-
-    /* ─── Footer ─── */
-    footer {
-      margin-top: 4rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      line-height: 1.8;
-    }
-
-    footer strong { color: var(--text-secondary); }
-
-    /* ─── Divider ─── */
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 2rem 0;
-    }
-
-    /* ─── Responsive tweaks ─── */
-    @media (max-width: 480px) {
-      .page-wrapper { padding: 1.5rem 1rem 4rem; }
-      .topbar { padding: 0.75rem 1rem; }
-      .card { padding: 1rem; }
-      .comp-col { padding: 1rem; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competitive Intelligence Brief — E-Learning</title>
+<style>
+  :root {
+    --bg-primary: #0a0a0b;
+    --bg-secondary: #111113;
+    --bg-tertiary: #1a1a1e;
+    --bg-card: #16161a;
+    --border-subtle: #27272a;
+    --border-accent: #3f3f46;
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-tertiary: #71717a;
+    --accent-blue: #3b82f6;
+    --accent-purple: #8b5cf6;
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-red: #ef4444;
+    --font-stack: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-stack);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Hero */
+  .hero {
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 2rem;
+    margin-bottom: 0;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-blue);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.6rem, 4vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+  }
+
+  #welcome-line {
+    font-size: 0.9rem;
+    color: var(--accent-purple);
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    background: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 6px;
+    display: inline-block;
+    margin-top: 0.5rem;
+  }
+
+  /* How to Use */
+  .how-to-use {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 1.5rem 1.75rem;
+    margin: 2rem 0 2.5rem;
+  }
+
+  .how-to-use h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent-emerald);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .how-to-use ol {
+    list-style: none;
+    counter-reset: howto;
+    padding: 0;
+  }
+
+  .how-to-use ol li {
+    counter-increment: howto;
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .how-to-use ol li::before {
+    content: counter(howto);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.4rem;
+    height: 1.4rem;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-emerald);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.4rem;
+  }
+
+  .how-to-use ol li strong {
+    color: var(--text-primary);
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: 3rem;
+  }
+
+  section > h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  section > h2 .section-number {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    border-radius: 4px;
+    padding: 0.15rem 0.55rem;
+    letter-spacing: 0.04em;
+  }
+
+  .section-subtitle {
+    font-size: 0.88rem;
+    color: var(--text-tertiary);
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 1rem;
+  }
+
+  /* Cards */
+  .intel-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .intel-card:hover {
+    border-color: var(--border-accent);
+  }
+
+  .intel-card h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    line-height: 1.35;
+  }
+
+  .intel-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+  }
+
+  .competitor-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag-docebo {
+    color: var(--accent-amber);
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+  }
+
+  .tag-absorb {
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+  }
+
+  .tag-both {
+    color: var(--accent-purple);
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.25);
+  }
+
+  .confidence-tag {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+    padding: 0.6rem 0.75rem;
+    background: rgba(255,255,255, 0.025);
+    border-left: 3px solid var(--border-accent);
+    border-radius: 0 4px 4px 0;
+    margin-top: 0.5rem;
+  }
+
+  /* Talk Track specific */
+  .talk-track {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .talk-track h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .objection-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-red);
+    margin-bottom: 0.4rem;
+  }
+
+  .response-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-emerald);
+    margin-top: 1rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .talk-track blockquote {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    padding-left: 1rem;
+    border-left: 2px solid var(--border-accent);
+    margin: 0.5rem 0;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .talk-track p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    line-height: 1.7;
+  }
+
+  /* Pricing table */
+  .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+  }
+
+  .pricing-table th, .pricing-table td {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .pricing-table th {
+    color: var(--text-tertiary);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--bg-tertiary);
+  }
+
+  .pricing-table td {
+    color: var(--text-secondary);
+  }
+
+  .pricing-table tr:hover td {
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+  }
+
+  .footer-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 1.25rem 1rem 3rem; }
+    .intel-card, .talk-track { padding: 1.15rem; }
+    .pricing-table th, .pricing-table td { padding: 0.55rem 0.65rem; font-size: 0.82rem; }
+    footer { flex-direction: column; align-items: flex-start; }
+  }
+
+
+/* ── HOW TO USE THIS BRIEF ── */
+.how-to-use-brief {
+  max-width: var(--max-w, 960px);
+  margin: 0 auto 36px;
+  padding: 0 24px;
+}
+.how-to-use-card {
+  background: var(--bg-card, #17171f);
+  border: 1px solid var(--border, #2a2a38);
+  border-left: 3px solid var(--accent, #7c6dfa);
+  border-radius: var(--radius, 10px);
+  padding: 18px 22px;
+}
+.how-to-use-title {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent, #7c6dfa);
+  margin-bottom: 10px;
+}
+.how-to-use-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.how-to-use-items li {
+  font-size: 14px;
+  color: var(--text-secondary, #9090a8);
+  line-height: 1.6;
+}
+.how-to-use-items strong {
+  color: var(--text-primary, #f0f0f5);
+}
+
+</style>
 </head>
 <body>
+<div class="container">
 
-  <!-- ─── Top Navigation Bar ─── -->
-  <nav class="topbar" role="navigation" aria-label="Site navigation">
-    <span class="topbar-brand">RevOps Intel</span>
-    <span class="topbar-badge">E-Learning Vertical</span>
-  </nav>
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-eyebrow">Competitive Intelligence Brief</div>
+    <h1>Docebo vs. Absorb LMS</h1>
+    <p class="hero-sub">E-Learning Vertical &mdash; Sales Enablement Teardown</p>
+    <div id="welcome-line"></div>
+  </header>
 
-  <div class="page-wrapper">
+  <!-- How to Use -->
+  <div class="how-to-use">
+    <h2>How to Use This Brief</h2>
+    <ol>
+      <li><strong>For Outbound:</strong> Use Section 1 (Recent Market Moves) to create urgency in emails.</li>
+      <li><strong>For Active Deals:</strong> Use Section 3 (Talk Tracks) verbatim in discovery calls.</li>
+      <li><strong>Verification:</strong> Before using in proposals, verify specific pricing claims with live demos.</li>
+    </ol>
+  </div>
 
-    <!-- ─── Hero ─── -->
-    <header class="hero">
-      <p class="hero-eyebrow">Competitive Teardown · Q3 2025</p>
-      <h1>Docebo <span class="vs-sep">vs</span> Absorb LMS</h1>
-      <p class="hero-sub">
-        An executive-grade competitive intelligence file for reps and enablement teams selling in the E-Learning space.
-        Use this to displace Docebo and Absorb LMS in active deals, renewals, and competitive prospecting motions.
+  <!-- Section 1: Recent Market Moves -->
+  <section>
+    <h2><span class="section-number">01</span> Recent Market Moves</h2>
+    <p class="section-subtitle">Competitive signals your team can weaponize in outbound and first calls.</p>
+
+    <div class="intel-card">
+      <span class="competitor-tag tag-docebo">Docebo</span>
+      <h3>Docebo is aggressively expanding its AI-powered "Shape" capabilities, positioning itself as an "AI-first" learning platform to justify premium pricing.</h3>
+      <p>Docebo has centered its 2024–2025 product roadmap on AI features including auto-tagging content, AI-generated learning paths, and a virtual coaching assistant. This positions them upmarket and creates a narrative gap against mid-market buyers who need core LMS functionality over AI experimentation. When prospects mention Docebo's AI features, redirect the conversation to implementation timelines and whether their L&D teams have the content maturity to leverage AI meaningfully.</p>
+      <div class="confidence-tag">[CONFIDENCE: Medium — Based on Docebo's publicly released product announcements and investor communications referencing AI investment as a strategic priority. VERIFY: Pull the latest Docebo product release notes and ask prospects directly which AI features were demoed to them.]</div>
+    </div>
+
+    <div class="intel-card">
+      <span class="competitor-tag tag-docebo">Docebo</span>
+      <h3>Docebo's enterprise push is creating longer sales cycles and complex implementation requirements, straining mid-market deals.</h3>
+      <p>As Docebo moves upmarket toward large enterprise accounts, its implementation process has become more consultative and services-heavy. Prospects evaluating Docebo in the 500–5,000 employee range are encountering professional services requirements and onboarding timelines that were historically reserved for enterprise-tier deployments. This creates a window for competitors who can demonstrate faster time-to-value with simpler deployment models.</p>
+      <div class="confidence-tag">[CONFIDENCE: Medium — Consistent with Docebo's public pivot toward enterprise accounts reflected in their investor presentations and increased average contract values. VERIFY: During discovery, ask prospects how long Docebo quoted for full implementation and what professional services fees were included.]</div>
+    </div>
+
+    <div class="intel-card">
+      <span class="competitor-tag tag-absorb">Absorb LMS</span>
+      <h3>Absorb LMS has intensified its focus on customer training (extended enterprise) use cases, narrowing its positioning against internal L&D buyers.</h3>
+      <p>Absorb's marketing and recent product launches (Absorb Infuse, embedded learning) signal a heavy bet on external training, customer education, and partner enablement. Buyers whose primary use case is internal employee development or compliance training are seeing Absorb's feature priorities shift toward content commerce and external audience management. This creates a positioning gap: internal-focused L&D teams are being sold a platform that is optimizing for a different buyer persona.</p>
+      <div class="confidence-tag">[CONFIDENCE: Medium — Based on Absorb's publicly promoted product features (Infuse, Create) and their website messaging prioritizing extended enterprise. VERIFY: Ask the prospect whether Absorb's demo focused on external training features and whether internal L&D use cases felt like a secondary priority.]</div>
+    </div>
+
+    <div class="intel-card">
+      <span class="competitor-tag tag-absorb">Absorb LMS</span>
+      <h3>Absorb was acquired by Fortive Corporation in 2022, introducing corporate governance layers that are extending procurement timelines for custom configurations.</h3>
+      <p>Post-acquisition by Fortive (a publicly traded industrial technology conglomerate), Absorb's deal structuring and flexibility around custom terms have tightened. Prospects requesting non-standard SLA terms, custom data residency provisions, or bespoke integrations are encountering slower approvals. Use this in competitive situations where a prospect values vendor agility and partnership flexibility.</p>
+      <div class="confidence-tag">[CONFIDENCE: Medium — Fortive's acquisition of Absorb is a matter of public record; governance impacts on deal flexibility are inferred from standard post-acquisition operational changes at PE/conglomerate-owned SaaS companies. VERIFY: Ask the prospect whether Absorb has been responsive to custom contract terms and whether approval timelines have been flagged by their procurement team.]</div>
+    </div>
+  </section>
+
+  <!-- Section 2: Pricing Vulnerabilities -->
+  <section>
+    <h2><span class="section-number">02</span> Pricing Vulnerabilities</h2>
+    <p class="section-subtitle">Structural pricing weaknesses you can exploit during negotiation and proposal stages.</p>
+
+    <div class="intel-card">
+      <span class="competitor-tag tag-docebo">Docebo</span>
+      <h3>Docebo's per-user pricing escalates sharply at scale, and its modular add-on model creates budget unpredictability for mid-market buyers.</h3>
+      <p>Docebo structures pricing on an active-user basis with distinct add-on modules for features like e-commerce, advanced analytics, and extended enterprise functionality. Buyers who start with a base license discover that capabilities they assumed were included—such as learning impact dashboards, multi-domain management, or content marketplace access—require separate line items. This modular approach inflates total cost of ownership beyond the initial quoted per-user rate. In competitive proposals, force a total-cost-of-ownership comparison across all required modules rather than letting the per-user headline number anchor the conversation.</p>
+      <div class="confidence-tag">[CONFIDENCE: Medium — Based on Docebo's publicly visible pricing structure and modular product architecture described in their documentation. VERIFY: Request the prospect share their full Docebo quote including all add-on line items, and build a side-by-side TCO comparison spreadsheet.]</div>
+
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Vulnerability</th>
+            <th>Impact on Buyer</th>
+            <th>Your Counter-Move</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Modular add-ons for analytics, e-commerce, integrations</td>
+            <td>Budget overruns discovered post-demo</td>
+            <td>Present all-inclusive pricing against their itemized quote</td>
+          </tr>
+          <tr>
+            <td>Active-user pricing tiers with steep band increases</td>
+            <td>Costs spike as adoption grows</td>
+            <td>Model a 3-year growth scenario showing Docebo cost curve vs. yours</td>
+          </tr>
+          <tr>
+            <td>Professional services fees for implementation</td>
+            <td>Hidden costs of $15K–$50K+ for enterprise onboarding</td>
+            <td>Highlight included onboarding and CSM support in your offer</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="confidence-tag">[CONFIDENCE: Low — Specific dollar amounts for professional services are not provided in current inputs and are estimated from typical enterprise LMS implementation ranges. VERIFY: Ask the prospect to share the Docebo SOW for professional services and confirm exact implementation fees quoted.]</div>
+    </div>
+
+    <div class="intel-card">
+      <span class="competitor-tag tag-absorb">Absorb LMS</span>
+      <h3>Absorb's pricing lacks public transparency, creating friction with procurement teams that demand upfront cost clarity.</h3>
+      <p>Absorb does not publish pricing on its website and requires prospects to engage with sales before receiving any cost indication. For procurement-led buying committees—especially in education institutions and regulated industries where budget approval happens before vendor engagement—this opacity creates friction. Absorb's per-user pricing is also structured around registered users vs. active users, and buyers who do not carefully negotiate the distinction end up paying for dormant accounts. Position your pricing as transparent, published, and aligned to active usage to exploit this gap.</p>
+      <div class="confidence-tag">[CONFIDENCE: Medium — Absorb's lack of published pricing is directly observable from their website. The registered-vs-active user distinction is consistent with standard LMS pricing models. VERIFY: Ask the prospect to confirm their Absorb quote specifies active vs. registered user counts and request they share the pricing breakdown.]</div>
+    </div>
+
+    <div class="intel-card">
+      <span class="competitor-tag tag-both">Both Competitors</span>
+      <h3>Neither Docebo nor Absorb offers meaningful pricing protection against annual user-count overages, exposing buyers to true-up risk.</h3>
+      <p>Both platforms structure contracts with defined user-count bands and enforce true-up provisions when actual usage exceeds contracted tiers. For e-learning buyers in high-growth environments—ed-tech companies onboarding customers, or enterprises scaling compliance programs—this means an unplanned invoice adjustment at renewal. If your platform offers usage-based billing with more flexible overage handling or burst capacity, this is a high-leverage differentiator in any deal where the buyer cannot precisely forecast user counts over 12–24 months.</p>
+      <div class="confidence-tag">[CONFIDENCE: Low — True-up mechanics are inferred from standard enterprise SaaS licensing practices; specific Docebo and Absorb contractual terms are not provided in current inputs. VERIFY: Request that the prospect share their draft MSA or order form from each vendor and review the overage and true-up clauses.]</div>
+    </div>
+  </section>
+
+  <!-- Section 3: Rep Talk Tracks -->
+  <section>
+    <h2><span class="section-number">03</span> Rep Talk Tracks (Objection Handling)</h2>
+    <p class="section-subtitle">Verbatim responses for discovery calls and competitive objections. Use these word-for-word.</p>
+
+    <div class="talk-track">
+      <span class="competitor-tag tag-docebo">Docebo</span>
+      <div class="objection-label">Prospect Objection</div>
+      <blockquote>"Docebo's AI features are really impressive—they showed us automated learning paths and an AI content assistant."</blockquote>
+      <div class="response-label">Your Response</div>
+      <p>
+        "Docebo has invested heavily in AI, and those demos are compelling. Here's the question worth asking: how many of your courses are tagged and structured in a way that makes AI-generated learning paths accurate on day one? Most L&D teams we work with in e-learning have inconsistent metadata across their content libraries, which means those AI features require months of content hygiene work before they deliver value. We focus on making sure your team sees measurable impact in the first 30 days—not after a six-month data cleanup project. Can I show you what that looks like?"
       </p>
-      <span class="welcome-line" id="welcome-line">Custom Intelligence Capture for (no id in URL)</span>
-      <div class="meta-row">
-        <span class="meta-tag">Industry: E-Learning</span>
-        <span class="meta-tag">Competitor A: Docebo</span>
-        <span class="meta-tag">Competitor B: Absorb LMS</span>
-        <span class="meta-tag">Audience: AEs · SEs · Enablement</span>
-      </div>
-    </header>
+      <div class="confidence-tag">[CONFIDENCE: Medium — AI-powered learning path generation is dependent on content metadata quality, a well-documented challenge in enterprise LMS deployments. VERIFY: Ask the prospect how their current content library is tagged and whether Docebo addressed the metadata prerequisite during their demo.]</div>
+    </div>
 
-    <!-- ═══════════════════════════════════════════════
-         SECTION 1 — RECENT MARKET MOVES
-    ════════════════════════════════════════════════ -->
-    <section aria-labelledby="s1-heading">
-      <div class="section-header">
-        <span class="section-number num-blue">01</span>
-        <h2 id="s1-heading">Recent Market Moves</h2>
-      </div>
-
-      <p class="section-desc">
-        Significant strategic, product, funding, and go-to-market shifts for both Docebo and Absorb LMS over the past 12–18 months.
-        These moves shape buyer expectations and create displacement windows.
+    <div class="talk-track">
+      <span class="competitor-tag tag-docebo">Docebo</span>
+      <div class="objection-label">Prospect Objection</div>
+      <blockquote>"Docebo has a massive customer base—we feel safer going with the bigger brand."</blockquote>
+      <div class="response-label">Your Response</div>
+      <p>
+        "Docebo does have a large install base, and that scale is real. The trade-off you're evaluating is whether your team gets treated as a strategic account or a logo in a portfolio. At Docebo's current scale, mid-market accounts in the e-learning vertical are increasingly managed through pooled CSM models rather than dedicated support. We assign a dedicated customer success manager at your tier. Let me connect you with a reference customer in e-learning at a similar stage so you can hear how that plays out operationally."
       </p>
+      <div class="confidence-tag">[CONFIDENCE: Low — CSM model specifics for Docebo's mid-market segment are not provided in current inputs. VERIFY: Ask the prospect to confirm during their Docebo evaluation whether they will receive a named, dedicated CSM or a pooled support model, and at what spend threshold that changes.]</div>
+    </div>
 
-      <!-- Docebo Moves -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <span class="comp-label comp-docebo">Docebo</span>
-            <p class="card-title">AI Expansion &amp; "Shape" Platform Repositioning</p>
-          </div>
-          <span class="pill pill-blue">Product</span>
-        </div>
-        <p class="card-body">
-          Docebo has aggressively repositioned around its <strong>Docebo Shape</strong> AI content generation tool, marketing AI-powered course creation
-          as a core differentiator. The company went public on NASDAQ in 2019 and continues to face public-market pressure to demonstrate
-          net revenue retention above 110%. This creates a tension: <strong>enterprise features are being gated behind higher tiers</strong>, pushing
-          mid-market customers toward upsell friction. In late 2024, Docebo announced deeper integrations with <strong>Salesforce and Microsoft Teams</strong>,
-          signaling a push into enterprise L&D workflows — but these integrations are frequently flagged by buyers as requiring significant
-          custom configuration (inferred from G2 review patterns; verify in your discovery call).
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <span class="comp-label comp-docebo">Docebo</span>
-            <p class="card-title">Price Increases &amp; Contract Rigidity Following Public Market Pressure</p>
-          </div>
-          <span class="pill pill-red">GTM Risk</span>
-        </div>
-        <p class="card-body">
-          Multiple Docebo customers and prospects have reported <strong>10–20% list price increases</strong> at renewal cycles in 2024, coinciding with
-          Docebo's effort to improve ARR per customer. Their shift toward annual prepay-only terms and reduced flexibility on user-based
-          licensing is creating renewal friction — a <strong>direct displacement window</strong> for teams with competitive alternatives.
-          Sales cycles with Docebo have reportedly lengthened due to procurement involvement driven by higher ACVs.
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <span class="comp-label comp-docebo">Docebo</span>
-            <p class="card-title">Extended Enterprise &amp; Customer Education Focus</p>
-          </div>
-          <span class="pill pill-purple">Positioning</span>
-        </div>
-        <p class="card-body">
-          Docebo is heavily investing in the <strong>extended enterprise (customer &amp; partner training)</strong> segment, competing head-on with
-          platforms like Thought Industries and Intellum. They are marketing "Docebo for Teams" as a lower-entry SKU, but reviewers note
-          that multi-portal / multi-audience configurations remain complex to administer. <strong>Net: Docebo is moving upmarket, leaving
-          mid-market buyers underserved</strong> — a key talking point for competitive reps.
-        </p>
-      </div>
-
-      <div class="divider"></div>
-
-      <!-- Absorb LMS Moves -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <span class="comp-label comp-absorb">Absorb LMS</span>
-            <p class="card-title">Private Equity Ownership &amp; M&amp;A Activity Under Silversmith Capital</p>
-          </div>
-          <span class="pill pill-amber">Strategic</span>
-        </div>
-        <p class="card-body">
-          Absorb LMS has been backed by <strong>Silversmith Capital Partners</strong> since 2019. PE-backed SaaS companies typically optimize for
-          margin expansion over product investment — a pattern that has surfaced in customer feedback around <strong>slow feature velocity
-          and support tier degradation</strong>. In 2023, Absorb acquired <strong>Bunchball</strong> (gamification) and integrated those capabilities into
-          its platform under "Absorb Engage." This broadens their feature set but has introduced product integration complexity that
-          reps can probe in discovery.
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <span class="comp-label comp-absorb">Absorb LMS</span>
-            <p class="card-title">Absorb Create &amp; AI Authoring Push</p>
-          </div>
-          <span class="pill pill-blue">Product</span>
-        </div>
-        <p class="card-body">
-          Absorb launched <strong>Absorb Create</strong>, an AI-assisted rapid content authoring tool, positioning it as a lower-cost alternative to
-          Articulate 360 integrations. However, Create is widely perceived as lightweight compared to dedicated authoring tools,
-          and enterprise buyers running complex compliance curricula continue to rely on <strong>third-party authoring integrations</strong>.
-          This is a functional gap to probe — ask prospects whether Absorb Create meets their production-grade content needs.
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <span class="comp-label comp-absorb">Absorb LMS</span>
-            <p class="card-title">Downmarket SMB Push Creates Brand Confusion</p>
-          </div>
-          <span class="pill pill-red">GTM Risk</span>
-        </div>
-        <p class="card-body">
-          Absorb has been expanding aggressively into the SMB and lower mid-market with simplified onboarding packages. This creates
-          <strong>brand tension</strong>: enterprise prospects at 1,000+ seats are landing in the same sales motion as 50-seat buyers.
-          Support SLAs and CSM coverage are inconsistent across segments (inferred from G2/Capterra reviews; validate in reference calls).
-          Enterprise buyers have flagged concerns about <strong>dedicated implementation resources</strong> and the depth of onboarding support.
-        </p>
-      </div>
-
-      <div class="callout callout-blue">
-        <span class="callout-icon">💡</span>
-        <div>
-          <strong>Rep Insight:</strong> Both competitors are caught in classic upmarket/downmarket tension. Docebo is pressuring mid-market buyers
-          with price increases and complexity; Absorb is diluting enterprise focus with SMB expansion. Position your platform as the
-          purpose-built choice that doesn't force a customer into the wrong segment tier.
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ═══════════════════════════════════════════════
-         SECTION 2 — PRICING VULNERABILITIES
-    ════════════════════════════════════════════════ -->
-    <section aria-labelledby="s2-heading">
-      <div class="section-header">
-        <span class="section-number num-amber">02</span>
-        <h2 id="s2-heading">Pricing Vulnerabilities</h2>
-      </div>
-
-      <p class="section-desc">
-        Structural and tactical weaknesses in how Docebo and Absorb LMS price their offerings. Use these to build ROI cases,
-        accelerate procurement conversations, and expose TCO gaps.
+    <div class="talk-track">
+      <span class="competitor-tag tag-absorb">Absorb LMS</span>
+      <div class="objection-label">Prospect Objection</div>
+      <blockquote>"Absorb's UI is really clean—our admins loved it in the demo."</blockquote>
+      <div class="response-label">Your Response</div>
+      <p>
+        "Absorb does have a polished admin interface, and that initial impression matters. The nuance is how that UI holds up when your team is managing complex configurations—multi-tenant setups, conditional enrollment rules, or custom reporting across business units. Clean defaults are great for the first quarter; what matters at month six is whether your admins can self-serve complex workflows without filing support tickets. I'd suggest we do a side-by-side admin workflow comparison using your actual use cases. Can you share your top three admin tasks so we can build that scenario?"
       </p>
+      <div class="confidence-tag">[CONFIDENCE: Medium — Absorb's UI strengths in standard admin tasks are well-recognized in public LMS reviews; limitations at scale for complex multi-tenant configurations are a common challenge for mid-market LMS platforms. VERIFY: Propose a hands-on admin pilot where the prospect's team executes their top workflows in both platforms and compares time-to-completion.]</div>
+    </div>
 
-      <div class="vuln-table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Vulnerability</th>
-              <th>Docebo</th>
-              <th>Absorb LMS</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Pricing Model</td>
-              <td>User-based tiers; annual prepay required. Tiers: Engage, Elevate, Enterprise. Exact pricing undisclosed publicly — requires demo to get a quote, which adds friction.</td>
-              <td>Per-active-user or per-seat depending on negotiation. Pricing also undisclosed publicly. Mid-market entry reportedly starts at ~$800–$1,400/month for small deployments (inferred; verify with prospect).</td>
-            </tr>
-            <tr>
-              <td>Feature Gating</td>
-              <td>Advanced reporting, custom domains, white-labeling, and API access locked behind higher tiers. AI features (Shape) require add-on or higher plan.</td>
-              <td>Absorb Engage (gamification), advanced analytics, and multi-portal capabilities require separate add-ons. Absorb Create charged additionally in some packages.</td>
-            </tr>
-            <tr>
-              <td>Implementation Costs</td>
-              <td>Professional services engagements for enterprise deployments range widely; customers report $15K–$40K+ in implementation fees for complex setups. Third-party SI partners add further cost.</td>
-              <td>Implementation packages are less transparent. Buyers report being surprised by required paid onboarding for multi-tenant or compliance-heavy setups. Absorb's onboarding team capacity stretched with SMB push.</td>
-            </tr>
-            <tr>
-              <td>Integration Tax</td>
-              <td>Salesforce, Workday, and HRIS integrations require either premium tier access or custom connector work. Native HRIS sync limited below Enterprise tier.</td>
-              <td>API-first positioning, but deep bi-directional HRIS integrations (Workday, SAP, Oracle) require custom development or third-party middleware. Integration maintenance costs accumulate.</td>
-            </tr>
-            <tr>
-              <td>Renewal Leverage</td>
-              <td>Price increases of 10–20% at renewal are being reported (multiple sources). Lock-in is strong due to content migration friction and custom configs.</td>
-              <td>PE-backed cost pressure means CSM teams are thinning. Customers on legacy pricing face upgrade pressure. Renewal discount flexibility reportedly declining.</td>
-            </tr>
-            <tr>
-              <td>Scalability Cost</td>
-              <td>Per-user pricing becomes expensive at scale (5,000+ users). Extended enterprise / customer training portals billed as separate instances in some configurations.</td>
-              <td>Active user definitions can inflate perceived costs. Inactive or seasonal learners still count toward billing thresholds in some contract structures — relevant for compliance training use cases with irregular usage.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="comp-grid">
-        <div class="comp-col">
-          <p class="comp-col-title docebo-title">Docebo — Key TCO Angles</p>
-          <ul class="bullet-list">
-            <li><strong>AI add-on costs</strong> inflate sticker price significantly for buyers seeking Shape capabilities</li>
-            <li>Multiple portals (extended enterprise) effectively double or triple platform costs</li>
-            <li>Public company revenue pressure = <strong>less discount flexibility</strong> late in quarter compared to VC-backed competitors</li>
-            <li>Complex configurations require <strong>ongoing admin overhead</strong> — hidden cost of ownership</li>
-            <li>Salesforce integration bugs and maintenance reported across multiple G2 reviews (Q4 2023–Q2 2024)</li>
-          </ul>
-        </div>
-        <div class="comp-col">
-          <p class="comp-col-title absorb-title">Absorb LMS — Key TCO Angles</p>
-          <ul class="bullet-list">
-            <li>Gamification (Engage) and authoring (Create) are <strong>add-on costs</strong> — total price rises quickly</li>
-            <li>PE ownership creates incentive to reduce support quality while maintaining price floors</li>
-            <li><strong>Active user billing ambiguity</strong> creates budget unpredictability for seasonal training programs</li>
-            <li>Limited native content library — customers spend more on third-party content subscriptions</li>
-            <li>Smaller enterprise support team means <strong>slower time-to-value</strong> on complex implementations</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="callout callout-amber">
-        <span class="callout-icon">⚠️</span>
-        <div>
-          <strong>Discovery Prompt for Reps:</strong> Ask prospects: "What were your fully-loaded costs in year 1 vs. what you budgeted at signature? What happened at your last renewal conversation?"
-          Both Docebo and Absorb customers frequently surface surprises here — this is your wedge into a TCO narrative.
-        </div>
-      </div>
-
-      <div class="callout callout-red">
-        <span class="callout-icon">🔴</span>
-        <div>
-          <strong>Displacement Trigger:</strong> If a prospect is 60–90 days from Docebo or Absorb renewal and has not been assigned a dedicated CSM,
-          that is a high-signal churn indicator. Use the conversation to introduce a competitive switch motion with migration support as a closer.
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ═══════════════════════════════════════════════
-         SECTION 3 — REP TALK TRACKS
-    ════════════════════════════════════════════════ -->
-    <section aria-labelledby="s3-heading">
-      <div class="section-header">
-        <span class="section-number num-green">03</span>
-        <h2 id="s3-heading">Rep Talk Tracks <span style="font-weight:400; color: var(--text-muted); font-size:0.9rem;">(Objection Handling)</span></h2>
-      </div>
-
-      <p class="section-desc">
-        Verbatim-style responses to the most common objections reps encounter when competing against Docebo and Absorb LMS.
-        Left column = when displacing Docebo. Right column = when displacing Absorb LMS.
+    <div class="talk-track">
+      <span class="competitor-tag tag-absorb">Absorb LMS</span>
+      <div class="objection-label">Prospect Objection</div>
+      <blockquote>"Absorb is offering us a really competitive price."</blockquote>
+      <div class="response-label">Your Response</div>
+      <p>
+        "Absorb can be aggressive on initial pricing—that's a pattern we see. Two things worth pressure-testing before you compare line items: First, confirm whether that price is based on registered users or monthly active users, because the difference at your scale could represent a 30–40% cost variance. Second, ask what happens to your per-user rate at renewal if your user count grows beyond the contracted band. We structure our pricing around active users with transparent overage terms so your finance team isn't surprised at renewal. Want me to build a comparison model using your projected growth numbers?"
       </p>
+      <div class="confidence-tag">[CONFIDENCE: Medium — The registered-vs-active user pricing distinction is a standard LMS pricing mechanic. The 30–40% variance estimate is directional based on typical ratios of registered-to-active users in e-learning deployments. VERIFY: Have the prospect confirm the exact user-count definition in Absorb's quote and calculate the variance using their own registered-to-active user ratio.]</div>
+    </div>
 
-      <!-- Objection 1 -->
-      <div class="objection-card">
-        <div class="objection-header">
-          <span class="objection-icon">💬</span>
-          <p class="objection-text">"We already looked at your platform — Docebo / Absorb has all the same features and they're an established player in E-Learning. Why would we switch?"</p>
-        </div>
-        <div class="objection-body">
-          <div>
-            <p class="response-block-title docebo-resp">↳ Against Docebo</p>
-            <p class="response-text">
-              "Docebo is a strong platform and absolutely a recognized name. What we hear from customers who move away is that
-              <strong>recognized doesn't mean right-fit</strong>. Docebo's product roadmap is shaped by public-market commitments — that means
-              features get gated into higher tiers and AI capabilities like Shape often come as add-ons. We'd love to do a
-              feature-by-feature comparison on the two or three capabilities that matter most to your team — and include
-              total 3-year cost so you have a complete picture. Does that sound fair?"
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> Request a mutual evaluation scorecard. Docebo's per-portal billing and implementation costs are frequent surprises — surface these early.</div>
-          </div>
-          <div>
-            <p class="response-block-title absorb-resp">↳ Against Absorb LMS</p>
-            <p class="response-text">
-              "Absorb has a solid reputation and their UI is genuinely clean. The question we'd encourage you to pressure-test is
-              <strong>what happens post-signature</strong>. Absorb is PE-backed, and we see a consistent pattern where implementation
-              timelines slip and CSM coverage thins over time as they optimize margins. We can introduce you to customers
-              who made exactly that switch — and walk you through what drove their decision beyond the feature checklist."
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> Surface 1–2 reference customers who moved from Absorb. Highlight CSM coverage and implementation speed as the decisive factors.</div>
-          </div>
-        </div>
-      </div>
+    <div class="talk-track">
+      <span class="competitor-tag tag-both">Both Competitors</span>
+      <div class="objection-label">Prospect Objection</div>
+      <blockquote>"We're leaning toward [Docebo/Absorb] because they have more integrations with our existing tools."</blockquote>
+      <div class="response-label">Your Response</div>
+      <p>
+        "Integration breadth on a features page and integration depth in production are different things. The question to ask is: for your three most critical integrations—likely your HRIS, your content authoring tool, and your CRM or customer platform—how deep does the data sync go? Is it real-time or batch? Is it bidirectional or one-way? Does it require middleware or is it native? We've found that most e-learning buyers need five integrations to work flawlessly, not fifty to exist on a compatibility list. Let's map your integration requirements and I'll show you exactly how each one works in our platform—live, not on a slide."
+      </p>
+      <div class="confidence-tag">[CONFIDENCE: High — The distinction between integration breadth (number of listed integrations) and integration depth (sync type, directionality, middleware requirements) is a universally applicable evaluation framework. VERIFY: Ask the prospect to list their five most critical integrations and request a live technical walkthrough from each vendor for those specific connections.]</div>
+    </div>
+  </section>
 
-      <!-- Objection 2 -->
-      <div class="objection-card">
-        <div class="objection-header">
-          <span class="objection-icon">💬</span>
-          <p class="objection-text">"Docebo / Absorb has stronger AI features. We want an AI-forward LMS and they're further ahead."</p>
-        </div>
-        <div class="objection-body">
-          <div>
-            <p class="response-block-title docebo-resp">↳ Against Docebo</p>
-            <p class="response-text">
-              "Docebo has invested heavily in marketing AI — Shape is a real product. But let's separate the <strong>marketing narrative from the practical workflow</strong>.
-              Shape is an AI content generator; it still requires L&D professionals to review, edit, and publish. The question is
-              how AI is woven into the learner experience, the admin workflow, and the reporting layer — not just content creation.
-              Let's do a live demo comparison on the workflows your team actually runs every day."
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> Ask: "Which specific AI capability in Docebo is driving this evaluation? Is it in the current tier you're being quoted?" Shape is frequently an add-on or higher-tier feature.</div>
-          </div>
-          <div>
-            <p class="response-block-title absorb-resp">↳ Against Absorb LMS</p>
-            <p class="response-text">
-              "Absorb Create is a content authoring tool with AI-assist — it's positioned as an AI feature, but production-grade L&D teams
-              consistently tell us it doesn't replace a dedicated authoring tool for complex curricula. <strong>Ask Absorb for a reference customer</strong>
-              in your industry who uses Create as their primary authoring solution at scale. That conversation will tell you more than any demo."
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> Absorb Create is most competitive for simple, rapid-fire content. Compliance-heavy verticals (healthcare, financial services) almost universally use Articulate or Lectora alongside it.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Objection 3 -->
-      <div class="objection-card">
-        <div class="objection-header">
-          <span class="objection-icon">💬</span>
-          <p class="objection-text">"We've already implemented Docebo / Absorb. Switching LMSs is too painful — migration, retraining admins, re-uploading content. Not worth it."</p>
-        </div>
-        <div class="objection-body">
-          <div>
-            <p class="response-block-title docebo-resp">↳ Against Docebo</p>
-            <p class="response-text">
-              "Migration friction is real — we take that seriously. What we do is provide a <strong>dedicated migration concierge</strong> and pre-built
-              SCORM/xAPI content transfer utilities to minimize re-work. Most customers are surprised the migration is 60–70% automated.
-              More importantly: what's the cost of staying? If you're looking at a 15–20% price increase at renewal, feature gating on
-              capabilities you need today, and admin overhead that won't change — the pain of staying starts to outweigh the pain of switching."
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> Build a "cost of inaction" calc: 3-year Docebo renewal cost vs. migration cost + first-year price. Make the math visible.</div>
-          </div>
-          <div>
-            <p class="response-block-title absorb-resp">↳ Against Absorb LMS</p>
-            <p class="response-text">
-              "Completely fair concern — and we won't minimize it. Here's what we'd suggest: <strong>run a parallel pilot</strong> with one department or
-              audience segment on our platform while Absorb remains live. You validate the product fit and your team's confidence
-              before committing to a full migration. We've done this successfully with several teams coming off Absorb — we can
-              share a timeline template that makes it low-risk."
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> Offer a structured pilot with success criteria defined upfront. Absorb's onboarding constraints mean the comparison often favors your platform on time-to-first-value.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Objection 4 -->
-      <div class="objection-card">
-        <div class="objection-header">
-          <span class="objection-icon">💬</span>
-          <p class="objection-text">"Docebo / Absorb is less expensive than what you're quoting us."</p>
-        </div>
-        <div class="objection-body">
-          <div>
-            <p class="response-block-title docebo-resp">↳ Against Docebo</p>
-            <p class="response-text">
-              "Is that the all-in price including implementation, the tier that includes the features you actually need, and the projected
-              renewal rate? Docebo's Year 1 price is often competitive — <strong>Year 2 and 3 is where the story changes</strong>.
-              Let me share a TCO model we use with customers that accounts for professional services, add-ons, and renewal trajectory.
-              If Docebo's number still wins after that analysis, we'll tell you honestly."
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> Build a 3-year TCO sheet: Docebo list + implementation + AI add-on + renewal uplift vs. your platform fully loaded. This is your most powerful closer against Docebo.</div>
-          </div>
-          <div>
-            <p class="response-block-title absorb-resp">↳ Against Absorb LMS</p>
-            <p class="response-text">
-              "Absorb's initial pricing can look competitive, especially for lower seat counts. Two things worth examining:
-              <strong>active user billing</strong> — if your training programs have seasonal spikes or you're running compliance recertifications
-              periodically, you may be paying for peak utilization consistently. And second: are the add-ons like Engage and Create included?
-              Let's make sure we're comparing the same scope of capabilities."
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> Request an Absorb quote that includes all required modules. Then compare apples-to-apples. Active user definition discrepancy is a frequent discovery surprise.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Objection 5 -->
-      <div class="objection-card">
-        <div class="objection-header">
-          <span class="objection-icon">💬</span>
-          <p class="objection-text">"Our IT team is concerned about integrations — Docebo / Absorb already integrates with our HRIS / Salesforce / Teams stack."</p>
-        </div>
-        <div class="objection-body">
-          <div>
-            <p class="response-block-title docebo-resp">↳ Against Docebo</p>
-            <p class="response-text">
-              "Docebo does have a broad integration catalog — that's fair. What IT teams often discover post-implementation is that
-              <strong>many integrations are one-directional or require custom connector work</strong> for bi-directional sync, especially with Workday
-              and SAP. Before your IT team signs off, have them ask Docebo for the specific API documentation for the HRIS
-              sync you need and request a reference from a customer running that exact stack in production."
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> HRIS bi-directional sync depth is Docebo's most common technical disappointment at the implementation stage. Pull this forward in the IT evaluation.</div>
-          </div>
-          <div>
-            <p class="response-block-title absorb-resp">↳ Against Absorb LMS</p>
-            <p class="response-text">
-              "Absorb's API-first architecture is genuinely solid for standard integrations. Where it gets complex is
-              <strong>enterprise-grade, bi-directional data flows</strong> — SSO edge cases, multi-instance HRIS sync, and real-time
-              completion data into BI tools. These typically require custom middleware or a third-party iPaaS layer that adds
-              cost and a new dependency. We'd suggest including your IT team in a technical discovery call with both vendors
-              to compare depth of native connectors vs. what requires custom work."
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> Invite IT into a structured technical evaluation. Absorb's API breadth is strong; enterprise depth of native connectors is the differentiator to probe.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Objection 6 -->
-      <div class="objection-card">
-        <div class="objection-header">
-          <span class="objection-icon">💬</span>
-          <p class="objection-text">"We need a platform built for compliance training / regulated industry. Docebo / Absorb told us they support this use case."</p>
-        </div>
-        <div class="objection-body">
-          <div>
-            <p class="response-block-title docebo-resp">↳ Against Docebo</p>
-            <p class="response-text">
-              "Docebo can run compliance programs — the question is <strong>how much admin lift is involved</strong>. Features like automated
-              re-certification workflows, audit-ready completion reports, and role-based curriculum assignment are available,
-              but customers in heavily regulated industries (healthcare, financial services, manufacturing) consistently tell us
-              these require significant configuration and are not out-of-the-box. Ask them to demo a full compliance curriculum
-              re-certification cycle — not just a single course completion."
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> Request a Docebo compliance demo with: (1) automated re-certification triggers, (2) audit export in your required format, (3) role-based curriculum assignment at scale. Most demos skip these.</div>
-          </div>
-          <div>
-            <p class="response-block-title absorb-resp">↳ Against Absorb LMS</p>
-            <p class="response-text">
-              "Absorb has compliance tracking capabilities, and for mid-market use cases they're often sufficient. For regulated
-              environments requiring <strong>21 CFR Part 11, SOC 2, or HIPAA-specific audit trails</strong>, the depth of Absorb's out-of-the-box
-              reporting is worth scrutinizing. Ask specifically about the format and completeness of their audit logs and whether
-              a compliance officer at your organization has reviewed and approved a sample export. That conversation surfaces
-              gaps faster than any feature demo."
-            </p>
-            <div class="proof-point"><strong>Proof anchor:</strong> Compliance audit trail depth is a wedge in regulated industries. Pull your compliance officer into the evaluation early — they will ask questions neither Docebo nor Absorb's AEs are trained to answer confidently.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout callout-blue">
-        <span class="callout-icon">🎯</span>
-        <div>
-          <strong>General Positioning Reminder:</strong> In E-Learning competitive deals, the final decision rarely comes down to features alone.
-          Buyers evaluate <strong>vendor stability, support quality, implementation speed, and 3-year cost trajectory</strong>.
-          Lead with TCO and post-signature experience stories — these are your most durable differentiators against both Docebo and Absorb.
-        </div>
-      </div>
-
-    </section>
-
-  </div><!-- /page-wrapper -->
-
+  <!-- Footer -->
   <footer>
-    <strong>RevOps Competitive Intelligence</strong> · E-Learning Vertical<br />
-    Docebo vs. Absorb LMS · Generated Q3 2025<br />
-    <span style="color: var(--text-muted); font-size: 0.7rem;">
-      For internal sales enablement use only. Competitive claims should be validated against current vendor documentation and live customer references before use in prospect conversations.
-      Inferred data points are labeled accordingly.
-    </span>
-  </footer>
+    <p id="generated-date"></p>
+    <span class="footer-badge">Internal Use Only — Do Not Distribute</span>
+  
+  <strong id="generated-date-label">Generated</strong>
+</footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var welcomeEl = document.getElementById('welcome-line');
-      var params = new URLSearchParams(window.location.search);
-      var id = params.get('id');
-      if (id) {
-        var decoded = decodeURIComponent(id);
-        welcomeEl.textContent = 'Custom Intelligence Capture for ' + decoded;
-      } else {
-        welcomeEl.textContent = 'Custom Intelligence Capture for (no id in URL)';
-      }
-    });
-  </script>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle ?id= query parameter
+    var params = new URLSearchParams(window.location.search);
+    var idValue = params.get('id');
+    var welcomeEl = document.getElementById('welcome-line');
+    if (idValue) {
+      welcomeEl.textContent = 'Custom Intelligence Capture for ' + decodeURIComponent(idValue);
+    } else {
+      welcomeEl.textContent = 'Custom Intelligence Capture for (no id in URL)';
+    }
+
+    // Set footer date
+    var now = new Date();
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var dateEl = document.getElementById('generated-date');
+    dateEl.textContent = 'Generated ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  });
+</script>
+
+
+<script id="generated-date-script">
+  document.addEventListener('DOMContentLoaded', function () {
+    var generatedDateEl = document.getElementById('generated-date-label');
+    if (generatedDateEl) {
+      var formattedMonthYear = new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+        year: 'numeric',
+      }).format(new Date());
+      generatedDateEl.textContent = 'Generated ' + formattedMonthYear;
+    }
+  });
+</script>
 
 </body>
 </html>
