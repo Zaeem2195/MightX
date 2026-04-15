@@ -26,7 +26,7 @@ flowchart TB
     SEQ[Merge tags e.g. companyName]
   end
   env --> LP --> CL --> CV --> SEQ
-  SEQ -->|opens CTA URL| HTML
+  SEQ -->|opens signed tracked URL| HTML
 ```
 
 You choose `GTM_REPORT_COMPETITOR_*` by reading the same HTML you deploy (titles / H1), so the email and the page stay in sync.
@@ -80,11 +80,11 @@ Output: `data/copy-<timestamp>.json`. The `meta` block records `briefHtmlFilenam
 
 ## Instantly: merge tags and `{{companyName}}`
 
-- The generated **body** must keep the literal substring **`{{companyName}}`** in the URL (Claude is instructed to do this).
-- In Instantly, define a **custom variable** (or lead field) named **`companyName`** (same spelling) and map it from each lead — e.g. a slug you also use for brief open tracking (`?id=`).
-- Your sequence should use the **same** merge syntax Instantly expects (often `{{companyName}}` or `{{custom.companyName}}` depending on setup). **If the spelling differs**, either change Instantly or post-process the copy file before upload.
+- The generated **body** must keep the literal substring **`{{trackingUrl}}`** on the CTA URL line.
+- `scripts/4-push-instantly.js` now replaces that token per-lead with a signed tracked URL that includes both `id` and `trk`.
+- Your Instantly sequence should keep rendering `{{ai_body}}` from custom variables (no extra URL merge field is needed in the sequence itself).
 
-`4-push-instantly.js` sends `ai_subject`, `ai_body`, and `title` as custom variables; the **email template** in Instantly must reference those variables so the stored body (with `{{companyName}}`) is merged at send time.
+`4-push-instantly.js` sends `ai_subject`, `ai_body`, `title`, `trackingUrl`, and `leadId` as custom variables; the **email template** in Instantly must reference `ai_subject` and `ai_body`.
 
 ---
 
@@ -96,9 +96,9 @@ Output: `data/copy-<timestamp>.json`. The `meta` block records `briefHtmlFilenam
 |-------|----------------|
 | Env matches the deployed HTML | Wrong competitor names → email disagrees with the page. |
 | Brief file exists on Vercel | Wrong `GTM_BRIEF_HTML_FILENAME` → 404 or wrong vertical. |
-| `{{companyName}}` survives Claude | Rarely the model breaks the token; spot-check copy JSON. |
-| Instantly merge name matches | Mismatch → literal `{{companyName}}` in inbox or wrong id in URL. |
-| Lead id matches your tracking convention | `?id=` should match what **brief-app** / Slack logging expect (normalized lead key). |
+| `{{trackingUrl}}` survives Claude | Rarely the model breaks the token; spot-check copy JSON. |
+| Tracking secret is shared | `TRACKING_SIGNING_SECRET` must match in gtm-engine and brief-app or Slack tracking will silently skip. |
+| Lead id normalization is acceptable | `?id=` should map to what **brief-app** expects for rendering. |
 
 So: **the pipeline is sound**, but **you** are responsible for **per-campaign** env alignment, **one batch per vertical per run** (or change `.env` between runs), and **QA** on a few rows before full push.
 

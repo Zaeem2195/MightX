@@ -260,7 +260,7 @@ async function main() {
   const host = process.env.GTM_BRIEF_CTA_BASE_URL?.trim().replace(/\/+$/, '') || 'https://yourdomain.com';
   const briefFile = resolveBriefHtmlFilename();
   const rc = resolveReportCompetitors();
-  console.log(`\n🔗  CTA template for this run: ${host}/${briefFile}?id={{companyName}}`);
+  console.log(`\n🔗  CTA template for this run: ${host}/${briefFile} (final tracked URL injected during push-instantly)`);
   if (rc.locked) {
     console.log(`\n🎯  Competitors REPORT-LOCKED for this run: ${rc.a} vs ${rc.b}`);
   } else {

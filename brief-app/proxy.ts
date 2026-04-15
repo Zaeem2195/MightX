@@ -2,6 +2,7 @@ import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 const DEDUPE_WINDOW_MS = 60_000;
 const recentOpenMap = new Map<string, number>();
+const TRACKING_SIGNING_SECRET = process.env.TRACKING_SIGNING_SECRET?.trim();
 const BOT_UA_PATTERNS = [
   /bot/i,
   /spider/i,
@@ -33,17 +34,97 @@ function isLikelyBotUserAgent(userAgent: string) {
   return BOT_UA_PATTERNS.some((pattern) => pattern.test(userAgent));
 }
 
-export function proxy(request: NextRequest, event: NextFetchEvent) {
+function toBase64(base64UrlValue: string) {
+  const base64 = base64UrlValue.replace(/-/g, "+").replace(/_/g, "/");
+  const padding = (4 - (base64.length % 4)) % 4;
+  return `${base64}${"=".repeat(padding)}`;
+}
+
+function decodeBase64Url(base64UrlValue: string) {
+  return atob(toBase64(base64UrlValue));
+}
+
+function base64UrlEncode(bytes: ArrayBuffer) {
+  const view = new Uint8Array(bytes);
+  let raw = "";
+  for (const byte of view) {
+    raw += String.fromCharCode(byte);
+  }
+  return btoa(raw).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function safeEquals(a: string, b: string) {
+  if (a.length !== b.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < a.length; i += 1) {
+    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+
+type TrackingPayload = {
+  v: number;
+  i: string;
+  e: string;
+  c?: string;
+  exp: number;
+};
+
+async function verifyTrackingToken(token: string): Promise<TrackingPayload | null> {
+  if (!TRACKING_SIGNING_SECRET) return null;
+  const [payloadB64, providedSignature] = token.split(".");
+  if (!payloadB64 || !providedSignature) return null;
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(TRACKING_SIGNING_SECRET),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+
+  const signed = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    new TextEncoder().encode(payloadB64),
+  );
+  const expectedSignature = base64UrlEncode(signed);
+  if (!safeEquals(expectedSignature, providedSignature)) {
+    return null;
+  }
+
+  try {
+    const payload = JSON.parse(decodeBase64Url(payloadB64)) as TrackingPayload;
+    if (
+      payload?.v !== 1 ||
+      !payload?.i ||
+      !payload?.e ||
+      typeof payload?.exp !== "number"
+    ) {
+      return null;
+    }
+    if (Math.floor(Date.now() / 1000) > payload.exp) {
+      return null;
+    }
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
+export async function proxy(request: NextRequest, event: NextFetchEvent) {
   if (request.method === "HEAD" || isPrefetchRequest(request)) {
     return NextResponse.next();
   }
 
+  const trackingToken = request.nextUrl.searchParams.get("trk");
   const id = request.nextUrl.searchParams.get("id");
 
-  if (id) {
+  if (trackingToken) {
     const timestamp = new Date().toISOString();
     const source = request.nextUrl.searchParams.get("utm_source") || "unknown";
-    const campaign = request.nextUrl.searchParams.get("utm_campaign") || "unknown";
+    const campaignParam =
+      request.nextUrl.searchParams.get("utm_campaign") || "unknown";
     const userAgent = request.headers.get("user-agent") || "unknown";
     const ip =
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -57,7 +138,15 @@ export function proxy(request: NextRequest, event: NextFetchEvent) {
       return NextResponse.next();
     }
 
-    const dedupeKey = `${id}::${source}::${campaign}`;
+    const verifiedPayload = await verifyTrackingToken(trackingToken);
+    if (!verifiedPayload) {
+      return NextResponse.next();
+    }
+
+    const leadId = id || verifiedPayload.i;
+    const campaign = verifiedPayload.c || campaignParam;
+    const recipientEmail = verifiedPayload.e.toLowerCase();
+    const dedupeKey = `${recipientEmail}::${leadId}::${campaign}`;
     const nowMs = Date.now();
     const lastOpenAt = recentOpenMap.get(dedupeKey) ?? 0;
 
@@ -66,11 +155,12 @@ export function proxy(request: NextRequest, event: NextFetchEvent) {
     }
 
     recentOpenMap.set(dedupeKey, nowMs);
-    const logLine = `[ASSET OPENED] Lead ID: ${id} at ${timestamp}`;
+    const logLine = `[ASSET OPENED] Lead ID: ${leadId} at ${timestamp}`;
     console.log(logLine);
     const slackMessage = [
       "*ASSET OPENED*",
-      `Lead ID: ${id}`,
+      `Lead ID: ${leadId}`,
+      `Email: ${recipientEmail}`,
       `Time (UTC): ${timestamp}`,
       `Source: ${source}`,
       `Campaign: ${campaign}`,

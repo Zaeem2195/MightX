@@ -24,11 +24,17 @@ import 'dotenv/config';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import crypto from 'crypto';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 
 const INSTANTLY_API_BASE    = 'https://api.instantly.ai/api/v2';
+const TRACKING_TOKEN_TTL_SECONDS = parseInt(
+  process.env.TRACKING_TOKEN_TTL_SECONDS || '',
+  10,
+) || 14 * 24 * 60 * 60;
+const TRACKING_SIGNING_SECRET = process.env.TRACKING_SIGNING_SECRET?.trim();
 
 function normalizeInstantlyApiKey(raw) {
   if (!raw || typeof raw !== 'string') return raw;
@@ -45,6 +51,11 @@ const BATCH_DELAY           = 500;   // ms between Instantly API calls
 if (!INSTANTLY_API_KEY || !INSTANTLY_CAMPAIGN_ID) {
   console.error('❌  INSTANTLY_API_KEY and INSTANTLY_CAMPAIGN_ID must be set in .env');
   console.error('    Use an API v2 key (Settings → API → create key with leads scope).');
+  process.exit(1);
+}
+
+if (!TRACKING_SIGNING_SECRET) {
+  console.error('❌  TRACKING_SIGNING_SECRET must be set in .env');
   process.exit(1);
 }
 
@@ -106,6 +117,64 @@ function resolveCopySlice(allEntries) {
   return { entries: allEntries, batchMeta: { mode: 'all', totalInFile: total } };
 }
 
+function resolveBriefHtmlFilename() {
+  const rawBrief = process.env.GTM_BRIEF_HTML_FILENAME;
+  return (rawBrief?.trim() || 'elearning-brief.html').replace(/^\/+/, '');
+}
+
+function resolveBriefBaseUrl() {
+  return process.env.GTM_BRIEF_CTA_BASE_URL?.trim().replace(/\/+$/, '') || null;
+}
+
+function normalizeLeadId(value) {
+  const raw = (value || '').toString().toLowerCase().trim();
+  return raw
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '') || 'unknown_lead';
+}
+
+function createTrackingToken(payload) {
+  const payloadB64 = Buffer.from(JSON.stringify(payload), 'utf8').toString('base64url');
+  const signature = crypto
+    .createHmac('sha256', TRACKING_SIGNING_SECRET)
+    .update(payloadB64)
+    .digest('base64url');
+  return `${payloadB64}.${signature}`;
+}
+
+function buildTrackingUrl(entry) {
+  const baseUrl = resolveBriefBaseUrl();
+  if (!baseUrl) {
+    throw new Error('GTM_BRIEF_CTA_BASE_URL must be set to build tracked links');
+  }
+
+  const leadId = normalizeLeadId(entry.companyName || entry.email);
+  const exp = Math.floor(Date.now() / 1000) + TRACKING_TOKEN_TTL_SECONDS;
+  const token = createTrackingToken({
+    v: 1,
+    i: leadId,
+    e: entry.email.toLowerCase().trim(),
+    c: INSTANTLY_CAMPAIGN_ID,
+    exp,
+  });
+
+  return `${baseUrl}/${resolveBriefHtmlFilename()}?id=${encodeURIComponent(leadId)}&trk=${encodeURIComponent(token)}`;
+}
+
+function buildTrackedBody(body, trackingUrl) {
+  if (!body || typeof body !== 'string') return body;
+  if (body.includes('{{trackingUrl}}')) {
+    return body.replace(/\{\{trackingUrl\}\}/g, trackingUrl);
+  }
+
+  const legacyUrlPattern = /https?:\/\/[^\s]+?\.html\?id=\{\{companyName\}\}/gi;
+  if (legacyUrlPattern.test(body)) {
+    return body.replace(legacyUrlPattern, trackingUrl);
+  }
+
+  return body;
+}
+
 /** --file <name> → data/<name> or path relative to gtm-engine root. */
 function resolveExplicitCopyPath() {
   const idx = process.argv.indexOf('--file');
@@ -158,6 +227,8 @@ function loadCopyData() {
 
 // ── Add a single lead via Instantly API v2 ───────────────────────────────────
 async function pushLead(entry) {
+  const trackingUrl = buildTrackingUrl(entry);
+  const trackedBody = buildTrackedBody(entry.body, trackingUrl);
   const body = {
     campaign: INSTANTLY_CAMPAIGN_ID,
     email: entry.email,
@@ -167,8 +238,10 @@ async function pushLead(entry) {
     skip_if_in_workspace: true,
     custom_variables: {
       ai_subject: entry.subject,
-      ai_body: entry.body,
+      ai_body: trackedBody,
       title: entry.title,
+      trackingUrl,
+      leadId: normalizeLeadId(entry.companyName || entry.email),
     },
   };
 

@@ -25,12 +25,12 @@ RULES:
    Paragraph 1:
    I went ahead and ran a baseline capture on the __COMPETITOR_A__ vs. __COMPETITOR_B__ ecosystem to extract live 'Rep Talk Tracks'.
 
-   Paragraph 2 (then URL on the next line):
+  Paragraph 2 (then URL on the next line):
    I dropped the sample HTML link below so you can see if the output is something your AEs could actually use on live calls this week:
-   https://yourdomain.com/__BRIEF_HTML_FILENAME__?id={{companyName}}
+  {{trackingUrl}}
 
    In the JSON "body" string, separate paragraphs with a blank line (use \n\n between paragraph 1 and paragraph 2). Put the URL alone on the line after the colon.
-9. URL line requirement: copy the URL above exactly — same host, same path/filename before ?id=, same query shape. The only merge token you output literally is {{companyName}} after id=. Do not rename the .html file, add path segments, or substitute a real company slug for {{companyName}}.
+9. URL line requirement: output exactly {{trackingUrl}} as the URL line. Do not add text before/after it, do not change casing, and do not include any other merge tokens.
 10. No sign-off. No "Best regards". The email ends immediately after the URL line. Nothing after the URL.
 11. Tone: casual, peer-to-peer. Not salesy. Not startup-corporate. Conversational but professional.
 12. Never lead with generic AI or automation buzzwords. The Abstracted Authority line above is allowed.
