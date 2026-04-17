@@ -1,0 +1,691 @@
+{
+  "mode": "live",
+  "hero": {
+    "industry": "Cybersecurity",
+    "competitorA": "CrowdStrike",
+    "competitorB": "SentinelOne",
+    "weekSummary": "Both vendors spent the week defending their AI narrative: CrowdStrike is being re-rated by analysts as an 'agentic AI security' winner while SentinelOne faces AI-disruption fear and a ~10% share-price drawdown. On the product side, SentinelOne is leaning into a high-profile CPU-Z supply-chain catch, while CrowdStrike pushed Falcon MCP docs and an OpenAI TAC collaboration. A reverse-engineered 0-day disabling Falcon EDR surfaced in the press — a live objection reps will hear this week."
+  },
+  "freshness": {
+    "generatedAt": "2026-04-17",
+    "signalWindowLabel": "Last 7-30 days",
+    "signalCount": 38,
+    "sourceTypeCount": 9
+  },
+  "triggerEvents": {
+    "exists": true,
+    "items": [
+      {
+        "competitor": "CrowdStrike",
+        "headline": "Researcher reverse-engineered a 0-day used to disable CrowdStrike Falcon EDR",
+        "detail": "CyberSecurityNews published a technical teardown of a 0-day that disables Falcon EDR. This is a live talk-track trigger: buyers evaluating EDR this quarter will ask how your product behaves when the agent is targeted for tamper/kill.",
+        "date": "2026-04-14",
+        "sources": [
+          {
+            "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1MX3J6MWVLcFlxZ2RPQld4YWJSV1YxSDA5X1NuUnZob0xwa3RrMnpWUUhwOWlreE5NWGYtLWdoYkEwclROak9CcWtQYU9SWEZHQkZiQTdjWjYyMXk3Ni1rT0l6aHhJcnVNOUdj",
+            "label": "CyberSecurityNews: Researcher Reverse Engineered 0-Day Used to Disable CrowdStrike EDR",
+            "date": "2026-04-14",
+            "type": "news"
+          }
+        ]
+      },
+      {
+        "competitor": "SentinelOne",
+        "headline": "SentinelOne share price down ~10.4% on AI disruption fears and insider sales",
+        "detail": "A Yahoo Finance piece tied the drawdown to Anthropic-driven 'AI is eating security' narrative plus insider selling. Expect procurement and CFO stakeholders to raise vendor-risk questions mid-cycle.",
+        "date": "2026-04-11",
+        "sources": [
+          {
+            "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPaVZQcmpSMExEOTVla0ZpRERYTlV4Rk5PREVXSGRsMW1vVm1OWlBNR2t6clE0NzhpYmRnSm9OQ2hpcjBtQTRJODN6eVFpem5sSWV1QXJ6T0g4cy1EZU5ld1I4QjRQQmpnM1hVY2MyM0VKTnhhV1lWaUFtQ3NCU1BGbF9qUVY4aTltMFo1OEJEcXpVazA",
+            "label": "Yahoo Finance: SentinelOne (S) Is Down 10.4%",
+            "date": "2026-04-11",
+            "type": "news"
+          }
+        ]
+      },
+      {
+        "competitor": "SentinelOne",
+        "headline": "CPU-Z supply-chain attack caught by SentinelOne AI EDR",
+        "detail": "SentinelOne published and the r/SentinelOneXDR community corroborated a kill-chain write-up for the April 9 CPU-Z compromise (19-hour window of malicious signed binaries with Zig-compiled CRYPTBASE.dll). High-credibility proof point for autonomous behavioral detection — expect reps to lead with it.",
+        "date": "2026-04-14",
+        "sources": [
+          {
+            "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxPbnh6TDhPS1FRVlNnUGhpWlp2bDkzSW9XMzdRN0N3cFNES21WU1NmQXI1LWJOb01xYnhfRFZSOXFCMldfUzVTM0ZvaGdNU3pJWXJ3NE1mVDFOVS1yd0ZCZGF1YlFma1NVc0NaVkNOLXZZOTlsNm5MaVptVmpCTmlILTVyNnM3T2pNUW9rVmRPcHA0czk3YUZoOWhuSDZqRjk1VWRPdWdJd3pLQW4xcHJkc0xuM2lF",
+            "label": "SentinelOne: CPU-Z Watering Hole blocked by AI EDR",
+            "date": "2026-04-14",
+            "type": "news"
+          },
+          {
+            "url": "https://www.reddit.com/r/SentinelOneXDR/comments/1smmvno/the_sentinelone_agent_observed_the_cpuz_supply/",
+            "label": "r/SentinelOneXDR kill-chain breakdown",
+            "date": "2026-04-15",
+            "type": "reddit"
+          }
+        ]
+      }
+    ]
+  },
+  "thisWeekSignals": [
+    {
+      "competitor": "CrowdStrike",
+      "headline": "Cantor Fitzgerald reiterates Overweight on CRWD; Forbes frames Falcon as 'agentic AI' security layer",
+      "date": "2026-04-16",
+      "sourceType": "news",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQZ00yQkxVNnM1b1FGUDlKVUJFNW1uNGpsNl9DSjEyTEdPTFpqdFFNa2FIU3g4YmNPdC0yVkUxeVRWMXhvU0hJU2lXeV9GQmEyWThwSDJXc0ZMUXdkTVlzTWN2ZlRrMzVNRzVWTlZGOWlGTHJJTlh4al9RdW1kUHk3dVgxUDVZMlBSQzVGdl9pTmRPbk9tYTFwVXZqX2laU2VaY0xoV05KMHd2N3Zmb091X0ZfZVVoQ0o",
+          "label": "Investing.com: Cantor reiterates CRWD Overweight",
+          "date": "2026-04-15",
+          "type": "news"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPT3JHdWNObnZIVWp5SWhiMU1pdC10ejBuWkR3X2tPUnBKeHZVbEc2ajlzM2VZTXlSak1MWHJVNW4tbU9VbkhqWkVyNjNZSUFYQ09hM0tkc3ZmUXBXUE9MZVI0Ul81U0pwMXREQlJRb2t3MDlyTTlfWThKdkk3UDlFSmMzVmM5YV9PRF85T1ZELUNCM3NUUFRBYjJpSUFuSEZZVDhzU0hDNVlzOHc5MDd2YUVTZnVxaW8",
+          "label": "Forbes: CrowdStrike's Next Act — Securing Enterprise Agentic AI",
+          "date": "2026-04-16",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitor": "CrowdStrike",
+      "headline": "Falcon MCP docs site launched; OpenAI TAC collaboration highlighted",
+      "date": "2026-04-17",
+      "sourceType": "reddit",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/crowdstrike/comments/1so5mju/falcon_mcp_docs_site_golive_modular_guides_fql/",
+          "label": "r/crowdstrike: Falcon MCP docs go-live",
+          "date": "2026-04-17",
+          "type": "reddit"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNbDRxNUdCb3h2bHFoTEhzaDdSVzFBd2dPZEJWRTBSQTcwNXUySURfenNYRnlic3BLQVVUZS1FVTh6Vm5lbG5ZZ2pEZVdlYkZDQjk3WGhTTnNfMjNvSnVrODlVXzRnWDRiWFU4b1Nzdy1Fa0VfMHpyTExXeWcxWnFYQzJENGFpYmNiSXBBVU5URlBhbkU",
+          "label": "Red Hot Cyber: Frontier AI for Defenders — CrowdStrike and OpenAI TAC",
+          "date": "2026-04-17",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitor": "SentinelOne",
+      "headline": "SentinelOne expands AI security reach via LevelBlue MSSP partnership and on-prem push",
+      "date": "2026-04-11",
+      "sourceType": "news",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNQUdGMkg5bTk5NmpzM0RULUVscjgwWVQ3c1dVZ0hnamFob1RlVjNQcFN0V2RkR0doTlVVTGxFRXdWeXVSS3J5UmFKakNsQWRpQVdYSEFFeDZZb0dZZ3VDbXN4QU1KVTdWT3ZnRUNkdWNYZVRDSS1UQzUwdjZKUzM2ZmE0dTRGVzlTOGx1REpoNkpOWmJEcEFKZmlQRDdOX0VmOEVpVw",
+          "label": "Yahoo Finance: SentinelOne Expands AI Security Reach With LevelBlue And On-Prem Push",
+          "date": "2026-04-11",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitor": "SentinelOne",
+      "headline": "Channel leadership hire: Shabeel Shah appointed Channel Director for ANZ & APJ distribution",
+      "date": "2026-04-16",
+      "sourceType": "news",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQNnhHNHNzOTNlSHdHb2dKOTBPQXVFTnV4dURVenBVU1VFdzI0SzNWd1I5YlFmYnh1N3dhMjVsMDJ5SnI5elROWWo1Q1dlUkpVNzVUVnhGbDNmb3lhZlFCem8zZlU1UzQxcHhCYnFJR3A5VklNYVZsQmpEWmFSOXI2QXpiS3FOZU9kR09lWjRGT1dzSVZIY2pPTTgtVDlqTHg4YlVkZjN3",
+          "label": "ChannelLife Australia: SentinelOne appoints Shah as ANZ & APJ Channel Director",
+          "date": "2026-04-16",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitor": "SentinelOne",
+      "headline": "8-K: Officer departure/appointment (Item 5.02) filed March 25",
+      "date": "2026-03-25",
+      "sourceType": "sec_filings",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1583708/000158370826000025/s-20260319.htm",
+          "label": "SEC EDGAR 8-K — SentinelOne Item 5.02",
+          "date": "2026-03-25",
+          "type": "sec_filings"
+        }
+      ]
+    }
+  ],
+  "pricingIntelligence": {
+    "exists": true,
+    "findings": [
+      {
+        "competitor": "CrowdStrike",
+        "summary": "No Wayback snapshots found for /pricing or /plans in the last 90 days; sitemap count stable at 8,000 URLs with zero additions/removals.",
+        "priceChanges": [
+          "No material pricing-page changes detected in the archive window."
+        ],
+        "sources": [
+          {
+            "url": "https://www.crowdstrike.com/pricing",
+            "label": "Wayback Machine — CrowdStrike /pricing (no snapshots in 90d)",
+            "date": null,
+            "type": "pricing_archive"
+          }
+        ]
+      },
+      {
+        "competitor": "SentinelOne",
+        "summary": "No Wayback snapshots found for /pricing or /plans in the last 90 days. However, the /product page changed this week (content-diff detected via collector), suggesting packaging or positioning updates worth re-checking.",
+        "priceChanges": [
+          "No material pricing-page changes detected in the archive window.",
+          "/product page diff detected — positioning or packaging copy changed"
+        ],
+        "sources": [
+          {
+            "url": "https://www.sentinelone.com/pricing",
+            "label": "Wayback Machine — SentinelOne /pricing (no snapshots in 90d)",
+            "date": null,
+            "type": "pricing_archive"
+          },
+          {
+            "url": "https://www.sentinelone.com/product",
+            "label": "SentinelOne /product — content diff detected this run",
+            "date": "2026-04-17",
+            "type": "website"
+          }
+        ]
+      }
+    ]
+  },
+  "secFilings": {
+    "exists": true,
+    "items": [
+      {
+        "competitor": "CrowdStrike",
+        "form": "8-K",
+        "filedDate": "2026-04-06",
+        "items": "Item 8.01 (Other Events); Item 9.01 (Financial Statements and Exhibits)",
+        "summary": "CrowdStrike filed an 8-K disclosing an 'Other Events' material-to-investors disclosure with accompanying exhibits. Item 8.01 is commonly used for corporate announcements outside the standard triggered items; read the exhibit before pricing or term-extension conversations.",
+        "sources": [
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000013/crwd-20260406.htm",
+            "label": "SEC EDGAR 8-K — CrowdStrike Holdings",
+            "date": "2026-04-06",
+            "type": "sec_filings"
+          }
+        ]
+      },
+      {
+        "competitor": "SentinelOne",
+        "form": "8-K",
+        "filedDate": "2026-03-25",
+        "items": "Item 5.02 (Departure / Appointment of Directors or Officers)",
+        "summary": "SentinelOne disclosed an officer/director change. Combined with new ANZ/APJ channel leadership and a Cloud Alliances Manager hire in Mountain View, expect GTM reshuffling signals through Q2.",
+        "sources": [
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1583708/000158370826000025/s-20260319.htm",
+            "label": "SEC EDGAR 8-K — SentinelOne Item 5.02",
+            "date": "2026-03-25",
+            "type": "sec_filings"
+          }
+        ]
+      }
+    ]
+  },
+  "comparisonMatrix": {
+    "rows": [
+      {
+        "axis": "Positioning this week",
+        "a": "Agentic-AI security platform (Forbes, Motley Fool)",
+        "b": "Autonomous AI EDR with supply-chain catch narrative (CPU-Z)",
+        "note": "Both compete on the AI story; CrowdStrike leans analyst/brand, SentinelOne leans proof-of-catch."
+      },
+      {
+        "axis": "Deployment options",
+        "a": "Cloud-delivered Falcon platform; MCP/AWS Bedrock/GCP dev surface",
+        "b": "Cloud + explicit on-premises push (LevelBlue partnership)",
+        "note": "Lead with on-prem / air-gapped questions — SentinelOne is actively broadening on-prem coverage."
+      },
+      {
+        "axis": "Ecosystem / AI partners",
+        "a": "OpenAI TAC collaboration; Falcon MCP docs live",
+        "b": "LevelBlue MSSP alliance; AI EDR messaging",
+        "note": "CRWD is wiring into OpenAI tooling; S is wiring into MSSP delivery."
+      },
+      {
+        "axis": "Recent product proof point",
+        "a": "0-day disable-EDR research published against Falcon",
+        "b": "CPU-Z supply-chain kill-chain blocked autonomously",
+        "note": "Expect buyers to A/B these two stories in eval conversations."
+      },
+      {
+        "axis": "Financial narrative",
+        "a": "Cantor Overweight reiterated; rich revenue multiple debated",
+        "b": "-10.4% drawdown on AI-disruption fear + insider sales",
+        "note": "CFO/procurement stakeholders will cite S volatility; have a vendor-viability answer ready."
+      },
+      {
+        "axis": "Pricing transparency (public)",
+        "a": "No public /pricing page indexed in Wayback (90d)",
+        "b": "No public /pricing page indexed in Wayback (90d)",
+        "note": "Neither publishes a list price — quote-based selling is the norm; use this to reframe 'your' price transparency if you have it."
+      },
+      {
+        "axis": "Hiring signal",
+        "a": "Next-Gen SIEM Sr. Resident Consultant; IAM Director; DevOps CI/CD",
+        "b": "Channel Sales Engineers; Cloud Alliances Mgr; Windows Identity Detection",
+        "note": "CRWD = SIEM + IAM push; S = channel + identity detection push."
+      }
+    ]
+  },
+  "marketMoves": [
+    {
+      "competitors": [
+        "CrowdStrike"
+      ],
+      "title": "CrowdStrike positioned as agentic-AI security winner",
+      "body": "Forbes, Motley Fool and Yahoo Finance all framed CrowdStrike as a primary beneficiary of the Anthropic/agentic-AI wave, and Cantor Fitzgerald reiterated an Overweight rating this week. Expect CrowdStrike reps to lead with 'secure the agents' messaging in every enterprise conversation.",
+      "confidence": "High",
+      "confidenceBasis": "Three dated articles and a reiterated analyst rating in the same week.",
+      "verify": "Ask the CrowdStrike rep for a named customer deploying Falcon specifically to secure agentic AI workloads in production.",
+      "date": "2026-04-16",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPT3JHdWNObnZIVWp5SWhiMU1pdC10ejBuWkR3X2tPUnBKeHZVbEc2ajlzM2VZTXlSak1MWHJVNW4tbU9VbkhqWkVyNjNZSUFYQ09hM0tkc3ZmUXBXUE9MZVI0Ul81U0pwMXREQlJRb2t3MDlyTTlfWThKdkk3UDlFSmMzVmM5YV9PRF85T1ZELUNCM3NUUFRBYjJpSUFuSEZZVDhzU0hDNVlzOHc5MDd2YUVTZnVxaW8",
+          "label": "Forbes: CrowdStrike's Next Act",
+          "date": "2026-04-16",
+          "type": "news"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxNVDZKeUdJQWdzcHJ5em9YVzdEbXVjV3E0TGQ5UWJSclU2THRfSnducGprSXZFQ2hPQlVPT0kyekdWZE9haUlvX2I3VXI4WUNsS3VEUHRyQ0FlbHd2cTZQRnBYVHBreF9zeDFXN3pKV0gxYko5azVxdG15LVVrc0NzakNxOS1sYTU3ZEFtVC1tbmN0cGV0",
+          "label": "Motley Fool: Anthropic Crowns CRWD and PANW",
+          "date": "2026-04-15",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "CrowdStrike"
+      ],
+      "title": "Falcon EDR tamper story is in the public record",
+      "body": "CyberSecurityNews published a reverse-engineering analysis of a 0-day used to disable CrowdStrike Falcon EDR. This is a legitimate, dated, journalistic source — not a forum rumor — and will surface in competitive bake-offs through Q2.",
+      "confidence": "High",
+      "confidenceBasis": "Dated article in a named security publication.",
+      "verify": "Search CyberSecurityNews for the April 14 article and map the technique class (tamper / driver unload) against your agent's self-protection controls.",
+      "date": "2026-04-14",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1MX3J6MWVLcFlxZ2RPQld4YWJSV1YxSDA5X1NuUnZob0xwa3RrMnpWUUhwOWlreE5NWGYtLWdoYkEwclROak9CcWtQYU9SWEZHQkZiQTdjWjYyMXk3Ni1rT0l6aHhJcnVNOUdj",
+          "label": "CyberSecurityNews: 0-Day Disables CrowdStrike EDR",
+          "date": "2026-04-14",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "SentinelOne"
+      ],
+      "title": "SentinelOne's CPU-Z catch is the week's best sales proof point",
+      "body": "SentinelOne's own blog and the r/SentinelOneXDR community documented the April 9 CPU-Z supply-chain compromise kill chain: ~19-hour window of trojanized signed binaries with a Zig-compiled CRYPTBASE.dll, blocked autonomously by the agent. Expect SentinelOne reps to open meetings with this story for the next 30-60 days.",
+      "confidence": "High",
+      "confidenceBasis": "Vendor blog plus independent community thread with technical detail.",
+      "verify": "Ask for the actual detection telemetry screenshots and the time-to-detect across the customer base, not just the kill-chain narrative.",
+      "date": "2026-04-15",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxPbnh6TDhPS1FRVlNnUGhpWlp2bDkzSW9XMzdRN0N3cFNES21WU1NmQXI1LWJOb01xYnhfRFZSOXFCMldfUzVTM0ZvaGdNU3pJWXJ3NE1mVDFOVS1yd0ZCZGF1YlFma1NVc0NaVkNOLXZZOTlsNm5MaVptVmpCTmlILTVyNnM3T2pNUW9rVmRPcHA0czk3YUZoOWhuSDZqRjk1VWRPdWdJd3pLQW4xcHJkc0xuM2lF",
+          "label": "SentinelOne blog: CPU-Z watering hole blocked",
+          "date": "2026-04-14",
+          "type": "news"
+        },
+        {
+          "url": "https://www.reddit.com/r/SentinelOneXDR/comments/1smmvno/the_sentinelone_agent_observed_the_cpuz_supply/",
+          "label": "r/SentinelOneXDR: CPU-Z kill chain",
+          "date": "2026-04-15",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "SentinelOne"
+      ],
+      "title": "Windows 11 agent performance complaints resurfacing",
+      "body": "An r/SentinelOneXDR thread documents Windows 11 UI lag with SentinelOne enabled despite no CPU or RAM spikes — suspected kernel/driver-level behavior, smooth immediately on uninstall. Low volume, but a legitimate field objection to pre-empt in endpoint evaluations.",
+      "confidence": "Medium",
+      "confidenceBasis": "Single Reddit thread (13 comments); not yet corroborated by analyst or press coverage.",
+      "verify": "Ask the prospect's endpoint team whether they've benchmarked perceived latency (input lag) in addition to CPU/RAM on Win11 fleets.",
+      "date": "2026-04-14",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/SentinelOneXDR/comments/1sla5d5/windows_11_lag_with_sentinelone_no_cpu_or_ram/",
+          "label": "r/SentinelOneXDR: Windows 11 lag with SentinelOne",
+          "date": "2026-04-14",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "CrowdStrike",
+        "SentinelOne"
+      ],
+      "title": "European buyers are explicitly shopping EU alternatives to US EDR",
+      "body": "r/cybersecurity_de is actively discussing 'where do you consciously use US software vs European alternatives', naming CrowdStrike, SentinelOne and Defender in the EDR/XDR bucket. Sovereignty and EU-data-residency objections are live in DACH deals right now.",
+      "confidence": "Medium",
+      "confidenceBasis": "Single regional thread with 25 comments — directional, not quantitative.",
+      "verify": "Ask EU prospects directly whether data residency / EU-sovereignty was raised in their last EDR RFP.",
+      "date": "2026-04-14",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/cybersecurity_de/comments/1sl50md/wo_verwendet_ihr_bewusst_amerikanische_software/",
+          "label": "r/cybersecurity_de: US vs. EU software choices",
+          "date": "2026-04-14",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "SentinelOne"
+      ],
+      "title": "Channel and cloud-alliance hiring spike at SentinelOne",
+      "body": "SentinelOne is hiring a Cloud Alliances Manager (Mountain View), Partner/Channel SEs (Bengaluru), a Commercial Channel Business Manager (Chicago), and just appointed Shabeel Shah as ANZ & APJ Channel Director. The signal points to a channel-led growth push into Q2.",
+      "confidence": "Medium",
+      "confidenceBasis": "Multiple open roles plus a dated public appointment.",
+      "verify": "Check SentinelOne's Greenhouse careers page for net-new channel roles posted this month.",
+      "date": "2026-04-16",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQNnhHNHNzOTNlSHdHb2dKOTBPQXVFTnV4dURVenBVU1VFdzI0SzNWd1I5YlFmYnh1N3dhMjVsMDJ5SnI5elROWWo1Q1dlUkpVNzVUVnhGbDNmb3lhZlFCem8zZlU1UzQxcHhCYnFJR3A5VklNYVZsQmpEWmFSOXI2QXpiS3FOZU9kR09lWjRGT1dzSVZIY2pPTTgtVDlqTHg4YlVkZjN3",
+          "label": "ChannelLife AU: ANZ/APJ channel director appointment",
+          "date": "2026-04-16",
+          "type": "news"
+        },
+        {
+          "url": "https://www.sentinelone.com/careers",
+          "label": "SentinelOne careers (channel & cloud alliances roles)",
+          "date": null,
+          "type": "jobs"
+        }
+      ]
+    }
+  ],
+  "talkTracks": [
+    {
+      "objection": "\"We're already evaluating CrowdStrike Falcon — why should we add you to the bake-off?\"",
+      "response": "Two dated items from this week are worth stress-testing before you standardize on Falcon: CyberSecurityNews (April 14) published a reverse-engineered 0-day that disables Falcon EDR, and Forbes (April 16) framed CrowdStrike's next act as 'securing agentic AI' — a roadmap bet, not shipping product. I'd ask their team for a named production customer using Falcon to secure agentic AI today, and for the CVE/technique class behind the tamper research. If you want, I'll send you both links and our side-by-side on agent self-protection in the next 10 minutes — no meeting required.",
+      "example": true,
+      "confidence": "High",
+      "confidenceBasis": "Both sources are dated articles in named publications from this week.",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1MX3J6MWVLcFlxZ2RPQld4YWJSV1YxSDA5X1NuUnZob0xwa3RrMnpWUUhwOWlreE5NWGYtLWdoYkEwclROak9CcWtQYU9SWEZHQkZiQTdjWjYyMXk3Ni1rT0l6aHhJcnVNOUdj",
+          "label": "CyberSecurityNews: 0-Day Disables Falcon EDR",
+          "date": "2026-04-14",
+          "type": "news"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPT3JHdWNObnZIVWp5SWhiMU1pdC10ejBuWkR3X2tPUnBKeHZVbEc2ajlzM2VZTXlSak1MWHJVNW4tbU9VbkhqWkVyNjNZSUFYQ09hM0tkc3ZmUXBXUE9MZVI0Ul81U0pwMXREQlJRb2t3MDlyTTlfWThKdkk3UDlFSmMzVmM5YV9PRF85T1ZELUNCM3NUUFRBYjJpSUFuSEZZVDhzU0hDNVlzOHc5MDd2YUVTZnVxaW8",
+          "label": "Forbes: CrowdStrike's Next Act",
+          "date": "2026-04-16",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "objection": "\"SentinelOne just caught the CPU-Z supply-chain attack — isn't that proof their AI EDR is ahead?\"",
+      "response": "It's a great story and the technical write-up is real, but ask [SentinelOne rep] for three things: (1) time-to-detect across the customer base during the 19-hour window, (2) how many customers were hit vs. autonomously blocked, and (3) whether the Zig/CRYPTBASE.dll behavior was blocked pre-execution or post. Then compare to [your product]'s behavior on the same sample — we can re-run the kill chain in a POC.",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Vendor blog plus community kill-chain post are dated and specific.",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/SentinelOneXDR/comments/1smmvno/the_sentinelone_agent_observed_the_cpuz_supply/",
+          "label": "r/SentinelOneXDR kill-chain post",
+          "date": "2026-04-15",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "objection": "\"Neither CrowdStrike nor SentinelOne publishes pricing — how do we know we're getting a fair deal?\"",
+      "response": "You're right — Wayback has zero snapshots of either /pricing page in the last 90 days, which means both are fully quote-based. That usually means the first quote has headroom. Ask for the per-endpoint blended rate across all modules, a 3-year TCO including data ingest, and any uplift for next-gen SIEM or identity modules. [Your product] publishes [your pricing model] so you can benchmark both quotes against a list price.",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Wayback archive shows zero snapshots for /pricing or /plans on both vendors in 90 days.",
+      "sources": [
+        {
+          "url": "https://www.crowdstrike.com/pricing",
+          "label": "Wayback — no CRWD /pricing snapshots in 90d",
+          "date": null,
+          "type": "pricing_archive"
+        },
+        {
+          "url": "https://www.sentinelone.com/pricing",
+          "label": "Wayback — no S /pricing snapshots in 90d",
+          "date": null,
+          "type": "pricing_archive"
+        }
+      ]
+    },
+    {
+      "objection": "\"SentinelOne stock dropped 10% and there's an officer change — should we be worried about vendor risk?\"",
+      "response": "Yahoo Finance (April 11) tied the ~10.4% drop to AI-disruption fear and insider sales, and EDGAR shows an Item 5.02 officer filing on March 25. Neither individually is disqualifying, but for a multi-year EDR contract you should ask [SentinelOne rep] for (a) the specific exec change and continuity plan and (b) what the LevelBlue MSSP expansion means for your direct-account coverage model.",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Dated news article plus SEC filing both in the raw data.",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPaVZQcmpSMExEOTVla0ZpRERYTlV4Rk5PREVXSGRsMW1vVm1OWlBNR2t6clE0NzhpYmRnSm9OQ2hpcjBtQTRJODN6eVFpem5sSWV1QXJ6T0g4cy1EZU5ld1I4QjRQQmpnM1hVY2MyM0VKTnhhV1lWaUFtQ3NCU1BGbF9qUVY4aTltMFo1OEJEcXpVazA",
+          "label": "Yahoo Finance: S down 10.4%",
+          "date": "2026-04-11",
+          "type": "news"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1583708/000158370826000025/s-20260319.htm",
+          "label": "SEC 8-K Item 5.02 — SentinelOne",
+          "date": "2026-03-25",
+          "type": "sec_filings"
+        }
+      ]
+    },
+    {
+      "objection": "\"We're in DACH / EU — US EDR vendors are fine, aren't they?\"",
+      "response": "Your peers are actively asking the opposite question right now. r/cybersecurity_de had a 25-comment thread on April 14 specifically naming CrowdStrike, SentinelOne and Defender as the US dependencies customers are re-evaluating. For the RFP, ask each vendor for: EU data-residency guarantees in writing, Schrems-II stance, and what happens to cloud-delivered detection if US-EU transfer rules tighten. [Your product] addresses this with [your EU data-residency answer].",
+      "example": false,
+      "confidence": "Medium",
+      "confidenceBasis": "Single regional subreddit discussion — directional signal, not quantified.",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/cybersecurity_de/comments/1sl50md/wo_verwendet_ihr_bewusst_amerikanische_software/",
+          "label": "r/cybersecurity_de sovereignty thread",
+          "date": "2026-04-14",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "objection": "\"CrowdStrike just shipped Falcon MCP and an OpenAI TAC integration — they're clearly ahead on AI.\"",
+      "response": "The Falcon MCP docs site went live April 17 and Red Hot Cyber covered the OpenAI TAC collaboration the same day — but that's dev-surface and research partnership, not shipping customer outcomes. Ask [CrowdStrike rep] for a production reference using Falcon MCP in a regulated environment today, and for the SLA on OpenAI-involved detection paths. Until that lands, [your product]'s [your AI capability] is already in production at [your reference customer].",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Both sources are dated April 17 public posts.",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/crowdstrike/comments/1so5mju/falcon_mcp_docs_site_golive_modular_guides_fql/",
+          "label": "r/crowdstrike: Falcon MCP docs go-live",
+          "date": "2026-04-17",
+          "type": "reddit"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNbDRxNUdCb3h2bHFoTEhzaDdSVzFBd2dPZEJWRTBSQTcwNXUySURfenNYRnlic3BLQVVUZS1FVTh6Vm5lbG5ZZ2pEZVdlYkZDQjk3WGhTTnNfMjNvSnVrODlVXzRnWDRiWFU4b1Nzdy1Fa0VfMHpyTExXeWcxWnFYQzJENGFpYmNiSXBBVU5URlBhbkU",
+          "label": "Red Hot Cyber: CrowdStrike × OpenAI TAC",
+          "date": "2026-04-17",
+          "type": "news"
+        }
+      ]
+    }
+  ],
+  "watchNextWeek": [
+    {
+      "text": "Re-run Wayback snapshot checks on both /pricing pages and SentinelOne /product (which diffed this week).",
+      "trigger": "Pricing snapshot recheck",
+      "expectedBy": "2026-04-24"
+    },
+    {
+      "text": "Watch for CrowdStrike to promote the OpenAI TAC / Falcon MCP launch at RSA-season keynotes and expand positioning to 'agentic AI security platform'.",
+      "trigger": "Conference / keynote cycle",
+      "expectedBy": "2026-05-15"
+    },
+    {
+      "text": "Track SentinelOne Q1 earnings commentary on LevelBlue MSSP ramp and on-prem deal mix after the ~10% drawdown.",
+      "trigger": "Earnings call",
+      "expectedBy": "2026-06-15"
+    },
+    {
+      "text": "Monitor CyberSecurityNews / HN for follow-up CVE or patch notes tied to the Falcon EDR-disable 0-day research.",
+      "trigger": "CVE publication or Falcon release notes",
+      "expectedBy": "2026-05-01"
+    },
+    {
+      "text": "Watch SentinelOne Greenhouse for new GTM leadership roles following the March 25 Item 5.02 filing.",
+      "trigger": "Careers-page diff",
+      "expectedBy": "2026-05-08"
+    }
+  ],
+  "evidenceIndex": [
+    {
+      "competitor": "CrowdStrike",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1MX3J6MWVLcFlxZ2RPQld4YWJSV1YxSDA5X1NuUnZob0xwa3RrMnpWUUhwOWlreE5NWGYtLWdoYkEwclROak9CcWtQYU9SWEZHQkZiQTdjWjYyMXk3Ni1rT0l6aHhJcnVNOUdj",
+          "label": "CyberSecurityNews: 0-Day Disables Falcon EDR",
+          "type": "news",
+          "date": "2026-04-14"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPT3JHdWNObnZIVWp5SWhiMU1pdC10ejBuWkR3X2tPUnBKeHZVbEc2ajlzM2VZTXlSak1MWHJVNW4tbU9VbkhqWkVyNjNZSUFYQ09hM0tkc3ZmUXBXUE9MZVI0Ul81U0pwMXREQlJRb2t3MDlyTTlfWThKdkk3UDlFSmMzVmM5YV9PRF85T1ZELUNCM3NUUFRBYjJpSUFuSEZZVDhzU0hDNVlzOHc5MDd2YUVTZnVxaW8",
+          "label": "Forbes: CrowdStrike's Next Act — Agentic AI Security",
+          "type": "news",
+          "date": "2026-04-16"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxNVDZKeUdJQWdzcHJ5em9YVzdEbXVjV3E0TGQ5UWJSclU2THRfSnducGprSXZFQ2hPQlVPT0kyekdWZE9haUlvX2I3VXI4WUNsS3VEUHRyQ0FlbHd2cTZQRnBYVHBreF9zeDFXN3pKV0gxYko5azVxdG15LVVrc0NzakNxOS1sYTU3ZEFtVC1tbmN0cGV0",
+          "label": "Motley Fool: CRWD and PANW as AI Cyber Winners",
+          "type": "news",
+          "date": "2026-04-15"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQZ00yQkxVNnM1b1FGUDlKVUJFNW1uNGpsNl9DSjEyTEdPTFpqdFFNa2FIU3g4YmNPdC0yVkUxeVRWMXhvU0hJU2lXeV9GQmEyWThwSDJXc0ZMUXdkTVlzTWN2ZlRrMzVNRzVWTlZGOWlGTHJJTlh4al9RdW1kUHk3dVgxUDVZMlBSQzVGdl9pTmRPbk9tYTFwVXZqX2laU2VaY0xoV05KMHd2N3Zmb091X0ZfZVVoQ0o",
+          "label": "Investing.com: Cantor reiterates CRWD Overweight",
+          "type": "news",
+          "date": "2026-04-15"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNbDRxNUdCb3h2bHFoTEhzaDdSVzFBd2dPZEJWRTBSQTcwNXUySURfenNYRnlic3BLQVVUZS1FVTh6Vm5lbG5ZZ2pEZVdlYkZDQjk3WGhTTnNfMjNvSnVrODlVXzRnWDRiWFU4b1Nzdy1Fa0VfMHpyTExXeWcxWnFYQzJENGFpYmNiSXBBVU5URlBhbkU",
+          "label": "Red Hot Cyber: CrowdStrike × OpenAI TAC",
+          "type": "news",
+          "date": "2026-04-17"
+        },
+        {
+          "url": "https://www.reddit.com/r/crowdstrike/comments/1so5mju/falcon_mcp_docs_site_golive_modular_guides_fql/",
+          "label": "r/crowdstrike: Falcon MCP docs go-live",
+          "type": "reddit",
+          "date": "2026-04-17"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1535527/000153552726000013/crwd-20260406.htm",
+          "label": "SEC EDGAR 8-K — CrowdStrike Holdings",
+          "type": "sec_filings",
+          "date": "2026-04-06"
+        },
+        {
+          "url": "https://www.crowdstrike.com/pricing",
+          "label": "Wayback — no CRWD /pricing snapshots in 90d",
+          "type": "pricing_archive",
+          "date": null
+        },
+        {
+          "url": "https://www.crowdstrike.com/careers",
+          "label": "CrowdStrike careers page",
+          "type": "jobs",
+          "date": null
+        }
+      ]
+    },
+    {
+      "competitor": "SentinelOne",
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxPbnh6TDhPS1FRVlNnUGhpWlp2bDkzSW9XMzdRN0N3cFNES21WU1NmQXI1LWJOb01xYnhfRFZSOXFCMldfUzVTM0ZvaGdNU3pJWXJ3NE1mVDFOVS1yd0ZCZGF1YlFma1NVc0NaVkNOLXZZOTlsNm5MaVptVmpCTmlILTVyNnM3T2pNUW9rVmRPcHA0czk3YUZoOWhuSDZqRjk1VWRPdWdJd3pLQW4xcHJkc0xuM2lF",
+          "label": "SentinelOne: CPU-Z watering-hole blocked by AI EDR",
+          "type": "news",
+          "date": "2026-04-14"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPaVZQcmpSMExEOTVla0ZpRERYTlV4Rk5PREVXSGRsMW1vVm1OWlBNR2t6clE0NzhpYmRnSm9OQ2hpcjBtQTRJODN6eVFpem5sSWV1QXJ6T0g4cy1EZU5ld1I4QjRQQmpnM1hVY2MyM0VKTnhhV1lWaUFtQ3NCU1BGbF9qUVY4aTltMFo1OEJEcXpVazA",
+          "label": "Yahoo Finance: S down 10.4% on AI disruption fears",
+          "type": "news",
+          "date": "2026-04-11"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNQUdGMkg5bTk5NmpzM0RULUVscjgwWVQ3c1dVZ0hnamFob1RlVjNQcFN0V2RkR0doTlVVTGxFRXdWeXVSS3J5UmFKakNsQWRpQVdYSEFFeDZZb0dZZ3VDbXN4QU1KVTdWT3ZnRUNkdWNYZVRDSS1UQzUwdjZKUzM2ZmE0dTRGVzlTOGx1REpoNkpOWmJEcEFKZmlQRDdOX0VmOEVpVw",
+          "label": "Yahoo Finance: SentinelOne × LevelBlue + on-prem push",
+          "type": "news",
+          "date": "2026-04-11"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQNnhHNHNzOTNlSHdHb2dKOTBPQXVFTnV4dURVenBVU1VFdzI0SzNWd1I5YlFmYnh1N3dhMjVsMDJ5SnI5elROWWo1Q1dlUkpVNzVUVnhGbDNmb3lhZlFCem8zZlU1UzQxcHhCYnFJR3A5VklNYVZsQmpEWmFSOXI2QXpiS3FOZU9kR09lWjRGT1dzSVZIY2pPTTgtVDlqTHg4YlVkZjN3",
+          "label": "ChannelLife AU: Shabeel Shah appointed ANZ/APJ Channel Director",
+          "type": "news",
+          "date": "2026-04-16"
+        },
+        {
+          "url": "https://www.reddit.com/r/SentinelOneXDR/comments/1smmvno/the_sentinelone_agent_observed_the_cpuz_supply/",
+          "label": "r/SentinelOneXDR: CPU-Z kill chain",
+          "type": "reddit",
+          "date": "2026-04-15"
+        },
+        {
+          "url": "https://www.reddit.com/r/SentinelOneXDR/comments/1sla5d5/windows_11_lag_with_sentinelone_no_cpu_or_ram/",
+          "label": "r/SentinelOneXDR: Windows 11 lag complaint",
+          "type": "reddit",
+          "date": "2026-04-14"
+        },
+        {
+          "url": "https://www.reddit.com/r/cybersecurity_de/comments/1sl50md/wo_verwendet_ihr_bewusst_amerikanische_software/",
+          "label": "r/cybersecurity_de: EU vs US software thread",
+          "type": "reddit",
+          "date": "2026-04-14"
+        },
+        {
+          "url": "https://news.ycombinator.com/item?id=47609025",
+          "label": "HN: SentinelOne implementation-blind-spot post",
+          "type": "hackernews",
+          "date": "2026-04-02"
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1583708/000158370826000025/s-20260319.htm",
+          "label": "SEC EDGAR 8-K — SentinelOne Item 5.02",
+          "type": "sec_filings",
+          "date": "2026-03-25"
+        },
+        {
+          "url": "https://www.sentinelone.com/product",
+          "label": "SentinelOne /product — content diff detected this run",
+          "type": "website",
+          "date": "2026-04-17"
+        },
+        {
+          "url": "https://www.sentinelone.com/pricing",
+          "label": "Wayback — no S /pricing snapshots in 90d",
+          "type": "pricing_archive",
+          "date": null
+        },
+        {
+          "url": "https://www.sentinelone.com/careers",
+          "label": "SentinelOne careers (channel & cloud alliances roles)",
+          "type": "jobs",
+          "date": null
+        }
+      ]
+    }
+  ]
+}

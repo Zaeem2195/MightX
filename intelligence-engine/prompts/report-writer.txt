@@ -12,6 +12,15 @@ CLIENT CONTEXT:
 PIPELINE / COVERAGE META (computed — use for honesty, not excuses):
 {{PIPELINE_META}}
 
+PRIOR WEEK REPORT (compact — what you told this client last Monday, for continuity only):
+{{PRIOR_WEEK_REPORT}}
+
+ROLLING 30-DAY HISTORY (compact digest of the last 4-8 weekly reports — for momentum & pattern detection only; do NOT rehash stale findings):
+{{ROLLING_HISTORY}}
+
+SIGNAL RICHNESS (computed — be honest in coverageSummary if this is a quiet week):
+{{RICHNESS_SUMMARY}}
+
 ANALYSED SIGNALS (all competitors, all signal types):
 {{ALL_ANALYSES}}
 
@@ -28,6 +37,17 @@ Writing rules:
 - Assume the reader may forward this to managers or enablement immediately after reading it.
 - When analyses include evidenceBasis and sourceConfidence, respect them: do not state low-confidence RSS or search snippets as hard facts; phrase as "signals suggest" or "worth verifying".
 - If pipelineFallbackCount > 0, mention briefly in coverageSummary and add a data gap (which competitor/signal types need a human skim of raw data).
+- When PRIOR WEEK REPORT is present, produce a short "What Changed Since Last Week" section that explicitly names:
+  - items you flagged last week that progressed, reversed, or resolved (reference the competitor by name)
+  - items you flagged last week where there is still no new signal (so the reader knows you're tracking, not repeating)
+  - genuinely new developments that were not on last week's radar
+  Never fabricate continuity — if the prior report is empty or marked "no prior report", set changesSinceLastWeek.exists to false and omit the section.
+- When ROLLING 30-DAY HISTORY contains at least 2 prior weeks, produce a "30-Day Momentum" block (rollingHistory.exists = true) that ONLY calls out:
+  - Recurring themes: topics that appeared 2+ times in the last 4-8 weeks (e.g. "Competitor X has mentioned pricing flexibility 3 weeks running — pattern, not noise").
+  - Momentum shifts: signals that are genuinely accelerating or decelerating across weeks (e.g. "jobs for Enterprise AE roles went 4 → 9 → 14 in the last three weeks").
+  - Quiet competitors: competitors who were loud but have gone silent for 2+ weeks — worth noting as a potential read-through.
+  Do NOT dump the full history back at the reader. Do not repeat findings the reader already saw. Every bullet should reveal something that is only visible by looking across weeks.
+  If the rolling history is empty or only has one prior week, set rollingHistory.exists = false.
 
 OUTPUT: Return a single JSON object with the report content broken into sections.
 All section content should be plain text or simple HTML (no markdown). Ready to inject into an HTML email template.
@@ -39,6 +59,30 @@ OUTPUT FORMAT (JSON only):
     "One bullet per gap — e.g. LinkedIn blocked, G2 direct scrape unavailable, pipeline fallback on jobs for X, etc."
   ],
   "weekSummary": "2-3 sentence executive summary of the most important things that happened this week across all competitors.",
+  "changesSinceLastWeek": {
+    "exists": true or false,
+    "progressed": [
+      "One short bullet per item from last week that moved forward or resolved — name the competitor and what changed."
+    ],
+    "stillWatching": [
+      "One short bullet per item from last week that is still unresolved with no new signal — so the reader sees continuity."
+    ],
+    "newThisWeek": [
+      "One short bullet per genuinely new development that was NOT on last week's radar."
+    ]
+  },
+  "rollingHistory": {
+    "exists": true or false,
+    "recurringThemes": [
+      "One short bullet per recurring theme across 2+ of the last 4-8 weeks — name the competitor and the theme."
+    ],
+    "momentumShifts": [
+      "One short bullet per genuine acceleration or deceleration. Include the shape when possible ('4 → 9 → 14 last three weeks')."
+    ],
+    "quietCompetitors": [
+      "One short bullet per competitor who was loud and has now been silent 2+ weeks — worth surfacing as a read-through."
+    ]
+  },
   "topAlert": {
     "exists": true or false,
     "headline": "If a trigger event exists, a bold alert headline. Otherwise null.",

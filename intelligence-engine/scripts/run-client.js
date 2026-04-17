@@ -20,10 +20,18 @@ import { collectLinkedIn }   from './collectors/linkedin-monitor.js';
 import { collectGlassdoor }  from './collectors/glassdoor-monitor.js';
 import { collectGitHub }     from './collectors/github-monitor.js';
 import { collectCrunchbase } from './collectors/crunchbase-monitor.js';
+import { collectPricingArchive } from './collectors/pricing-archive-monitor.js';
+import { collectSECFilings }    from './collectors/sec-filings-monitor.js';
+import { collectReddit }        from './collectors/reddit-monitor.js';
+import { collectHackerNews }    from './collectors/hackernews-monitor.js';
+import { collectSitemap }       from './collectors/sitemap-monitor.js';
+import { scoreSignalRichness }  from './signal-richness.js';
+import { selectArtifactType }   from './artifact-selector.js';
 import { runAnalysis }       from './analyse.js';
 import { generateReport }    from './generate-report.js';
 import { generateClientDashboard } from './generate-dashboard.js';
 import { deliverReport }     from './deliver.js';
+import { validateReport, notifyValidationFailure } from './validate-report.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -63,6 +71,26 @@ async function collectAllSignals(clientId, competitors, additionalCollectors = {
 
     if (additionalCollectors.crunchbase && competitor.crunchbaseSlug) {
       parallelCollectors.push(collectCrunchbase(competitor));
+    }
+
+    if (additionalCollectors.pricingArchive !== false && competitor.website) {
+      parallelCollectors.push(collectPricingArchive(clientId, competitor));
+    }
+
+    if (additionalCollectors.secFilings && (competitor.secCik || competitor.secTicker)) {
+      parallelCollectors.push(collectSECFilings(clientId, competitor));
+    }
+
+    // Silent-week signal sources: default ON (all free, no API keys). These
+    // are what make "quiet" Mondays still produce something worth paying for.
+    if (additionalCollectors.sitemap !== false && competitor.website) {
+      parallelCollectors.push(collectSitemap(clientId, competitor));
+    }
+    if (additionalCollectors.hackernews !== false) {
+      parallelCollectors.push(collectHackerNews(competitor));
+    }
+    if (additionalCollectors.reddit !== false) {
+      parallelCollectors.push(collectReddit(competitor));
     }
 
     const parallelResults = await Promise.all(parallelCollectors);
@@ -145,12 +173,29 @@ async function main() {
   }
 
   // Step 2 — Analyse
-  console.log('\n── Step 2/3: Analysing signals ─────────────────────────────────');
+  console.log('\n── Step 2/4: Analysing signals ─────────────────────────────────');
   const { analyses } = await runAnalysis(clientId, signals, clientConfig);
 
-  // Step 3 — Generate report
-  console.log('\n── Step 3/3: Generating & delivering report ────────────────────');
-  const { html, reportContent, htmlPath } = await generateReport(clientId, analyses, clientConfig);
+  // Step 3 — Score signal richness and pick artifact type
+  console.log('\n── Step 3/4: Scoring signal richness & selecting artifact ──────');
+  const richness = scoreSignalRichness(analyses, {
+    thresholds: clientConfig.reportPreferences?.richnessThresholds,
+  });
+  const dataDir  = path.join(ROOT, 'data', clientId);
+  const artifact = selectArtifactType({ clientId, dataDir, richness, clientConfig });
+  console.log(`   Richness tier: ${richness.tier} (score ${richness.score}) — ${artifact.reason}`);
+  for (const r of richness.reasons) console.log(`     • ${r}`);
+  if (artifact.artifactType === 'deep-dive') {
+    console.log(`   Deep-dive topic selected: ${artifact.deepDiveTopic}`);
+  }
+
+  // Step 4 — Generate report (branches on artifactType)
+  console.log('\n── Step 4/4: Generating & delivering report ────────────────────');
+  const { html, reportContent, htmlPath } = await generateReport(clientId, analyses, clientConfig, {
+    artifactType:  artifact.artifactType,
+    deepDiveTopic: artifact.deepDiveTopic,
+    richness,
+  });
 
   if (clientConfig.reportPreferences?.includeDashboard !== false) {
     const dash = generateClientDashboard(clientId);
@@ -159,6 +204,23 @@ async function main() {
     } else if (!dash.ok) {
       console.log(`⚠️   Dashboard: ${dash.message || 'skipped'}`);
     }
+  }
+
+  const validation = validateReport({ reportContent, html, analyses, clientConfig });
+  console.log(`\n🔎  Pre-send validation: ${validation.ok ? 'passed' : 'FAILED'} — ${validation.checks.length} checks run.`);
+  for (const check of validation.checks) {
+    if (!check.ok) {
+      const prefix = check.level === 'error' ? '❌' : '⚠️ ';
+      console.log(`   ${prefix} ${check.id}: ${check.message}`);
+    }
+  }
+
+  if (!validation.ok) {
+    console.error(`\n🛑  Delivery BLOCKED by validation gate. Report saved locally at: ${htmlPath}`);
+    console.error(`    Fix the issues above, then re-run manually or call deliver.js directly once validated.`);
+    const opsPing = await notifyValidationFailure(clientConfig, validation, { htmlPath });
+    if (opsPing.sent) console.error(`    Ops Slack notified.`);
+    process.exit(1);
   }
 
   if (!noEmail) {

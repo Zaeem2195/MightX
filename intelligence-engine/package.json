@@ -11,9 +11,11 @@
     "analyse": "node scripts/analyse.js",
     "report": "node scripts/generate-report.js",
     "deliver": "node scripts/deliver.js",
+    "validate": "node scripts/validate-report.js",
     "onboard": "node scripts/onboard-client.js",
     "dashboard": "node scripts/generate-dashboard.js",
-    "quarterly": "node scripts/generate-quarterly-summary.js"
+    "quarterly": "node scripts/generate-quarterly-summary.js",
+    "collect-for-brief": "node scripts/collect-for-brief.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",

@@ -3,625 +3,571 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Competitive Intelligence Brief — Cybersecurity</title>
+<title>The Briefing · CrowdStrike vs SentinelOne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg-primary: #0a0a0b;
-    --bg-secondary: #111113;
-    --bg-tertiary: #1a1a1f;
-    --bg-card: #16161a;
-    --border-subtle: #27272a;
-    --border-accent: #3f3f46;
-    --text-primary: #fafafa;
-    --text-secondary: #a1a1aa;
-    --text-tertiary: #71717a;
-    --accent-blue: #3b82f6;
-    --accent-emerald: #10b981;
-    --accent-amber: #f59e0b;
-    --accent-red: #ef4444;
-    --accent-purple: #a78bfa;
-    --font-stack: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-
-  body {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: var(--font-stack);
-    font-size: 15px;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  .container {
-    max-width: 880px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-
-  /* Hero */
-  .hero {
-    padding: 64px 0 40px;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .hero-eyebrow {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--accent-blue);
-    margin-bottom: 12px;
-  }
-
-  .hero h1 {
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--text-primary);
-    margin-bottom: 8px;
-  }
-
-  .hero-id-line {
-    font-size: 16px;
-    color: var(--accent-emerald);
-    font-weight: 500;
-    margin-bottom: 16px;
-  }
-
-  .hero-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin-top: 20px;
-  }
-
-  .hero-meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .hero-meta-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-  }
-
-  .hero-meta-value {
-    font-size: 14px;
-    color: var(--text-secondary);
-    font-weight: 500;
-  }
-
-  /* How to Use */
-  .how-to-use {
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-subtle);
-    border-radius: 10px;
-    padding: 28px 32px;
-    margin: 32px 0 0;
-  }
-
-  .how-to-use h2 {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .how-to-use h2::before {
-    content: '';
-    display: inline-block;
-    width: 4px;
-    height: 18px;
-    background: var(--accent-blue);
-    border-radius: 2px;
-  }
-
-  .how-to-use ol {
-    list-style: none;
-    counter-reset: how-to;
-  }
-
-  .how-to-use ol li {
-    counter-increment: how-to;
-    position: relative;
-    padding-left: 32px;
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.65;
-  }
-
-  .how-to-use ol li:last-child { margin-bottom: 0; }
-
-  .how-to-use ol li::before {
-    content: counter(how-to);
-    position: absolute;
-    left: 0;
-    top: 1px;
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--accent-blue);
-    text-align: center;
-    line-height: 22px;
-  }
-
-  .how-to-use ol li strong {
-    color: var(--text-primary);
-    font-weight: 600;
-  }
-
-  /* Sections */
-  section.intel-section {
-    padding: 48px 0;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  section.intel-section:last-of-type {
-    border-bottom: none;
-  }
-
-  .section-number {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--accent-purple);
-    margin-bottom: 8px;
-  }
-
-  section.intel-section h2 {
-    font-size: clamp(22px, 3vw, 28px);
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 28px;
-    line-height: 1.25;
-  }
-
-  .intel-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: 10px;
-    padding: 24px 28px;
-    margin-bottom: 20px;
-    transition: border-color 0.2s;
-  }
-
-  .intel-card:hover {
-    border-color: var(--border-accent);
-  }
-
-  .intel-card h3 {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 12px;
-    line-height: 1.35;
-  }
-
-  .intel-card p {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: 12px;
-    line-height: 1.7;
-  }
-
-  .intel-card p:last-child { margin-bottom: 0; }
-
-  .confidence-tag {
-    display: inline;
-    font-size: 12.5px;
-    line-height: 1.55;
-    color: var(--text-tertiary);
-    font-style: italic;
-  }
-
-  .competitor-label {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 5px;
-    margin-bottom: 12px;
-  }
-
-  .label-crowdstrike {
-    background: rgba(239, 68, 68, 0.12);
-    color: var(--accent-red);
-    border: 1px solid rgba(239, 68, 68, 0.2);
-  }
-
-  .label-sentinelone {
-    background: rgba(168, 139, 250, 0.12);
-    color: var(--accent-purple);
-    border: 1px solid rgba(168, 139, 250, 0.2);
-  }
-
-  .label-both {
-    background: rgba(59, 130, 246, 0.12);
-    color: var(--accent-blue);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-  }
-
-  /* Talk Track Cards */
-  .talk-track {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: 10px;
-    padding: 24px 28px;
-    margin-bottom: 20px;
-  }
-
-  .talk-track .objection {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--accent-amber);
-    margin-bottom: 12px;
-  }
-
-  .talk-track .response-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--accent-emerald);
-    margin-bottom: 6px;
-  }
-
-  .talk-track .response-text {
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    margin-bottom: 12px;
-    padding-left: 16px;
-    border-left: 2px solid var(--accent-emerald);
-  }
-
-  .talk-track .response-text:last-child { margin-bottom: 0; }
-
-  /* Pricing Table */
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-
-  @media (max-width: 600px) {
-    .pricing-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .pricing-cell {
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-subtle);
-    border-radius: 8px;
-    padding: 20px;
-  }
-
-  .pricing-cell h4 {
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  .pricing-cell.cs h4 { color: var(--accent-red); }
-  .pricing-cell.s1 h4 { color: var(--accent-purple); }
-
-  .pricing-cell p {
-    font-size: 13.5px;
-    color: var(--text-secondary);
-    line-height: 1.65;
-    margin-bottom: 8px;
-  }
-
-  .pricing-cell p:last-child { margin-bottom: 0; }
-
-  /* Footer */
-  footer {
-    padding: 40px 0;
-    border-top: 1px solid var(--border-subtle);
-    text-align: center;
-  }
-
-  footer p {
-    font-size: 13px;
-    color: var(--text-tertiary);
-  }
-
-  footer .gen-date {
-    font-weight: 600;
-    color: var(--text-secondary);
-  }
-
-  /* Responsive */
-  @media (max-width: 640px) {
-    .hero { padding: 40px 0 28px; }
-    .how-to-use { padding: 20px 20px; }
-    .intel-card, .talk-track { padding: 20px 20px; }
-    .container { padding: 0 16px; }
-  }
-
-
-/* ── HOW TO USE THIS BRIEF ── */
-.how-to-use-brief {
-  max-width: var(--max-w, 960px);
-  margin: 0 auto 36px;
-  padding: 0 24px;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-primary:#0b0c10; --bg-secondary:#111216; --bg-tertiary:#161820; --bg-card:#141620;
+  --border-subtle:#262830; --border-accent:#3a3d48;
+  --text-primary:#f2efe8; --text-secondary:#a8a49a; --text-tertiary:#6f6b60;
+  --accent:#c48a47;          /* burnt amber — the single editorial accent */
+  --accent-tint:rgba(196,138,71,0.08);
+  --accent-line:rgba(196,138,71,0.35);
+  --positive:#7fb896;        /* muted sage, not neon green */
+  --warning:#d4a44e;
+  --alert:#c35555;            /* oxblood, not bright red */
+  --rule:#2a2c36;
+  --font-serif:'Fraunces','Iowan Old Style',Georgia,'Times New Roman',serif;
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,'Cascadia Code','Segoe UI Mono','SF Mono',Menlo,Consolas,monospace;
+  --max-width:880px;
 }
-.how-to-use-card {
-  background: var(--bg-card, #17171f);
-  border: 1px solid var(--border, #2a2a38);
-  border-left: 3px solid var(--accent, #7c6dfa);
-  border-radius: var(--radius, 10px);
-  padding: 18px 22px;
-}
-.how-to-use-title {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent, #7c6dfa);
-  margin-bottom: 10px;
-}
-.how-to-use-items {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.how-to-use-items li {
-  font-size: 14px;
-  color: var(--text-secondary, #9090a8);
-  line-height: 1.6;
-}
-.how-to-use-items strong {
-  color: var(--text-primary, #f0f0f5);
-}
+html{scroll-behavior:smooth}
+body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-sans);font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:"kern" 1,"liga" 1,"cv11" 1}
+.container{max-width:var(--max-width);margin:0 auto;padding:0 28px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 0.15s ease}
+a:hover{border-bottom-color:var(--accent-line);text-decoration:none}
 
+/* ── Masthead ────────────────────────────────────────────────────────────── */
+header{border-bottom:2px solid var(--rule);padding:64px 0 40px;position:relative}
+header::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:var(--max-width);height:1px;background:var(--rule);padding:0 28px}
+.tag-line{display:block;font-family:var(--font-sans);font-size:10.5px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--accent);margin-bottom:28px;padding:0;background:transparent;border:none;border-radius:0}
+.tag-line::before{content:"§ ";font-family:var(--font-serif);font-style:italic}
+header h1{font-family:var(--font-serif);font-size:clamp(34px,5vw,52px);font-weight:600;line-height:1.12;letter-spacing:-0.02em;color:var(--text-primary);margin-bottom:16px}
+header h1 span.vs{color:var(--text-tertiary);font-style:italic;font-weight:400;font-size:0.68em;padding:0 4px;vertical-align:0.08em}
+.vertical-badge{display:inline-block;font-family:var(--font-sans);font-size:10px;font-weight:600;color:var(--text-secondary);background:transparent;border:1px solid var(--rule);padding:4px 12px;border-radius:0;margin-top:8px;letter-spacing:0.2em;text-transform:uppercase}
+.custom-id{font-family:var(--font-sans);font-size:12.5px;color:var(--text-tertiary);margin-top:20px;font-weight:500;letter-spacing:0.06em;text-transform:none}
+.custom-id::before{content:"";display:inline-block;width:24px;height:1px;background:var(--accent);vertical-align:middle;margin-right:10px}
+.week-summary{font-family:var(--font-serif);font-size:20px;font-weight:400;line-height:1.6;color:var(--text-primary);letter-spacing:-0.01em;margin-top:32px;padding:0 0 0 24px;background:transparent;border-left:2px solid var(--accent);border-radius:0}
+
+/* ── Freshness strip ─────────────────────────────────────────────────────── */
+.freshness{display:flex;align-items:center;gap:12px;margin:24px 0 0;padding:12px 16px;border-radius:0;font-family:var(--font-sans);font-size:13px;letter-spacing:0.02em;color:var(--text-secondary);border:1px solid var(--rule);background:var(--bg-secondary);text-transform:none}
+.freshness.live{border-color:rgba(127,184,150,0.3)}
+.freshness.sample{border-color:rgba(212,164,78,0.3)}
+.freshness-dot{width:6px;height:6px;border-radius:50%;background:var(--positive);box-shadow:0 0 0 4px rgba(127,184,150,0.1)}
+.freshness.sample .freshness-dot{background:var(--warning);box-shadow:0 0 0 4px rgba(212,164,78,0.1)}
+.freshness strong{color:var(--text-primary);font-weight:600}
+
+/* ── Confidence legend ───────────────────────────────────────────────────── */
+.conf-legend{display:flex;flex-direction:column;gap:10px;font-family:var(--font-sans);font-size:14px;line-height:1.5;color:var(--text-secondary);margin:20px 0 0;padding:16px 18px;background:var(--bg-secondary);border:1px solid var(--rule);border-radius:0}
+.conf-legend-intro{margin-bottom:2px}
+.conf-legend strong{font-family:var(--font-sans);color:var(--text-primary);font-weight:600;text-transform:none;letter-spacing:0;font-size:14px}
+.conf-legend-row{display:block;padding-left:0}
+.conf-pill{display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:3px 10px;border-radius:4px;font-size:12.5px;font-weight:600;font-family:var(--font-sans);margin-right:8px;vertical-align:middle;border:1px solid;white-space:nowrap;letter-spacing:0.01em}
+.conf-high{background:rgba(127,184,150,0.12);color:var(--positive);border-color:rgba(127,184,150,0.45)}
+.conf-med{background:var(--accent-tint);color:var(--accent);border-color:var(--accent-line)}
+.conf-low{background:transparent;color:var(--text-tertiary);border-color:var(--rule)}
+
+/* ── How to use (now framed as editor's note) ────────────────────────────── */
+.how-to-use{background:transparent;border:none;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);border-radius:0;padding:24px 0;margin:28px 0 0}
+.how-to-use h2{font-family:var(--font-sans);font-size:10.5px;font-weight:700;color:var(--accent);margin-bottom:16px;letter-spacing:0.24em;text-transform:uppercase}
+.how-to-use h2::before{content:"Editor's note · "}
+.how-to-use ol{list-style:none;counter-reset:steps}
+.how-to-use ol li{counter-increment:steps;position:relative;padding-left:36px;margin-bottom:10px;font-size:14.5px;color:var(--text-secondary);line-height:1.65}
+.how-to-use ol li::before{content:counter(steps,upper-roman);position:absolute;left:0;top:0;font-family:var(--font-serif);font-style:italic;font-size:14px;color:var(--accent);letter-spacing:0.02em}
+.how-to-use ol li strong{color:var(--text-primary);font-weight:600}
+
+/* ── Sections (numbered editorial chapters) ──────────────────────────────── */
+section{padding:56px 0;border-bottom:1px solid var(--rule);position:relative}
+section:last-of-type{border-bottom:none}
+.section-label{display:block;font-family:var(--font-sans);font-size:10.5px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:14px}
+.section-label::before{content:"— "}
+section h2{font-family:var(--font-serif);font-size:clamp(26px,3.8vw,36px);font-weight:600;letter-spacing:-0.015em;line-height:1.22;margin-bottom:10px;color:var(--text-primary)}
+section p.muted{color:var(--text-secondary);font-size:14.5px;margin-bottom:24px;font-family:var(--font-serif);font-style:italic;line-height:1.6;max-width:640px}
+.badge-src{display:inline-block;font-family:var(--font-sans);font-size:10px;font-weight:600;color:var(--accent);background:transparent;border:1px solid var(--accent-line);padding:3px 10px;border-radius:0;margin-left:10px;vertical-align:middle;letter-spacing:0.18em;text-transform:uppercase}
+
+/* ── Trigger banner ──────────────────────────────────────────────────────── */
+.trigger-banner{margin:20px 0 0;padding:22px 26px;border-radius:0;border:1px solid var(--rule);background:var(--bg-secondary)}
+.trigger-banner.none{background:transparent;color:var(--text-tertiary);font-family:var(--font-serif);font-style:italic;font-size:15px;padding:18px 0;border:none;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.trigger-banner.has{background:transparent;border-color:rgba(195,85,85,0.3);border-left:3px solid var(--alert)}
+.trigger-label{font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--alert);margin-bottom:18px}
+.trigger-card{padding:14px 0 4px;border-top:1px solid var(--rule)}
+.trigger-card:first-of-type{border-top:none;padding-top:0}
+.trigger-head{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;margin-bottom:8px}
+.trigger-head strong{font-family:var(--font-serif);color:var(--text-primary);font-size:19px;font-weight:400;line-height:1.3}
+.te-date,.sig-date,.mm-date,.w-when{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);letter-spacing:0.04em;text-transform:uppercase}
+.trigger-detail{font-size:14.5px;color:var(--text-secondary);line-height:1.7}
+
+/* ── Signal grid ─────────────────────────────────────────────────────────── */
+.signal-grid{display:grid;grid-template-columns:1fr;gap:0;margin-top:8px}
+@media(min-width:720px){.signal-grid{grid-template-columns:1fr 1fr;gap:0 36px}}
+.signal-card{background:transparent;border:none;border-top:1px solid var(--rule);border-radius:0;padding:18px 0 16px}
+.sig-head{margin-top:8px;display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
+.sig-head strong{font-family:var(--font-serif);font-size:17px;font-weight:400;color:var(--text-primary);line-height:1.3}
+.sig-type{font-size:10.5px;font-family:var(--font-mono);color:var(--text-tertiary);margin-top:6px;text-transform:uppercase;letter-spacing:0.14em}
+
+/* ── Insight cards (pricing, SEC, market moves) ──────────────────────────── */
+.insight-card{background:transparent;border:none;border-top:1px solid var(--rule);border-radius:0;padding:24px 0 20px;margin-bottom:0;transition:none}
+.insight-card:hover{border-color:var(--rule)}
+.insight-card .card-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
+.insight-card h3{font-family:var(--font-serif);font-size:21px;font-weight:400;color:var(--text-primary);margin-bottom:10px;letter-spacing:-0.01em;line-height:1.3}
+.insight-card p{font-size:14.5px;color:var(--text-secondary);line-height:1.75;margin-bottom:10px}
+.insight-card p:last-of-type{margin-bottom:0}
+.price-bullets{margin:10px 0 14px 0;list-style:none}
+.price-bullets li{font-size:14px;color:var(--text-secondary);margin-bottom:6px;padding-left:20px;position:relative;line-height:1.6}
+.price-bullets li::before{content:"→";position:absolute;left:0;top:0;color:var(--accent);font-family:var(--font-serif)}
+.sec-items{font-family:var(--font-mono);font-size:11.5px;color:var(--text-tertiary) !important;background:transparent;padding:6px 10px;border-radius:0;border:1px solid var(--rule);display:inline-block;letter-spacing:0.02em}
+
+/* ── Competitor tags (restrained, not neon) ──────────────────────────────── */
+.competitor-tag{display:inline-block;font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:3px 10px;border-radius:0;margin-right:6px;border:1px solid}
+.tag-a{color:var(--accent);background:transparent;border-color:var(--accent-line)}
+.tag-b{color:var(--positive);background:transparent;border-color:rgba(127,184,150,0.35)}
+.tag-neutral{color:var(--text-tertiary);background:transparent;border-color:var(--rule)}
+
+/* ── Sources (editorial footnote style) ──────────────────────────────────── */
+.sources{list-style:none;margin:14px 0 0;padding:10px 0 0;background:transparent;border:none;border-top:1px dashed var(--rule);border-radius:0;font-family:var(--font-mono);font-size:11.5px;line-height:1.7}
+.sources li{padding:3px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;letter-spacing:0.01em}
+.sources li::before{content:"·";color:var(--text-tertiary);margin-right:2px}
+.sources a{color:var(--accent);word-break:break-all;border-bottom:1px dotted var(--accent-line)}
+.sources .src-nolink{color:var(--text-secondary)}
+.sources .src-type{font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.16em;background:transparent;padding:1px 0;border-radius:0;border:none}
+.sources .src-type::before{content:"["}
+.sources .src-type::after{content:"]"}
+.sources .src-date{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary)}
+
+/* ── Verify details ──────────────────────────────────────────────────────── */
+details.verify{margin-top:12px;font-size:13px;color:var(--text-tertiary)}
+details.verify summary{cursor:pointer;color:var(--accent);user-select:none;font-family:var(--font-sans);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;padding:4px 0}
+details.verify summary:hover{color:var(--text-primary)}
+details.verify p{font-size:13.5px;color:var(--text-secondary);margin-top:8px;margin-bottom:0;line-height:1.7}
+details.verify .verify-basis{font-family:var(--font-serif);font-style:italic;color:var(--text-tertiary);font-size:13px}
+
+/* ── Matrix ──────────────────────────────────────────────────────────────── */
+.matrix-wrap{overflow-x:auto;margin-top:12px;border:1px solid var(--rule)}
+table.matrix{width:100%;border-collapse:collapse;font-size:14.5px}
+table.matrix th,table.matrix td{text-align:left;padding:16px 18px;border-bottom:1px solid var(--rule);vertical-align:top}
+table.matrix tr:last-child th,table.matrix tr:last-child td{border-bottom:none}
+table.matrix th{color:var(--text-tertiary);font-weight:700;font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;font-family:var(--font-sans)}
+table.matrix tr:first-child th{font-family:var(--font-serif);font-size:17px;color:var(--text-primary);text-transform:none;letter-spacing:-0.005em;font-weight:400;background:var(--bg-secondary)}
+table.matrix th.axis{color:var(--text-primary);font-weight:600;text-transform:none;letter-spacing:0;font-size:14.5px;width:32%;font-family:var(--font-sans)}
+table.matrix td{color:var(--text-secondary);line-height:1.65}
+.matrix-note{font-family:var(--font-serif);font-size:13px;color:var(--text-tertiary);font-style:italic;font-weight:400;margin-top:6px}
+
+/* ── Talk tracks (objection + response, editorial dialogue) ─────────────── */
+.talk-track{background:transparent;border:none;border-top:1px solid var(--rule);border-radius:0;padding:28px 0 24px;margin-bottom:0}
+.talk-track:first-of-type{border-top:none;padding-top:8px}
+.tt-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:12px}
+.objection-label{font-family:var(--font-sans);font-size:10.5px;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:var(--alert)}
+.response-label{font-family:var(--font-sans);font-size:10.5px;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:var(--positive);margin:18px 0 10px}
+.objection{font-family:var(--font-serif);font-size:22px;font-weight:400;color:var(--text-primary);font-style:italic;margin-bottom:12px;line-height:1.4;letter-spacing:-0.01em;padding-left:16px;border-left:2px solid var(--rule)}
+.objection::before{content:"\201C";color:var(--text-tertiary);font-size:1.2em;margin-right:2px}
+.objection::after{content:"\201D";color:var(--text-tertiary);font-size:1.2em;margin-left:2px}
+.response{font-size:15px;color:var(--text-secondary);line-height:1.8}
+.tt-badge{font-family:var(--font-sans);font-size:9.5px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;padding:3px 10px;border-radius:0;border:1px solid}
+.tt-example{color:var(--positive);background:transparent;border-color:rgba(127,184,150,0.35)}
+.tt-template{color:var(--text-tertiary);background:transparent;border-color:var(--rule)}
+
+/* ── Watch list ──────────────────────────────────────────────────────────── */
+.watch-list{list-style:none;padding:0;margin:12px 0 0}
+.watch-list li{padding:16px 0;border:none;border-bottom:1px solid var(--rule);border-radius:0;margin-bottom:0;display:flex;flex-wrap:wrap;gap:14px;align-items:baseline;background:transparent}
+.watch-list li:last-child{border-bottom:none}
+.w-trigger{font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);background:transparent;border:1px solid var(--accent-line);padding:3px 10px;border-radius:0}
+.w-text{font-family:var(--font-serif);font-size:16px;color:var(--text-secondary);flex:1 1 60%;line-height:1.5;font-weight:400}
+
+/* ── Evidence index (appendix) ───────────────────────────────────────────── */
+.ev-block{margin-bottom:4px;padding:14px 0;background:transparent;border:none;border-bottom:1px solid var(--rule);border-radius:0}
+.ev-block summary{cursor:pointer;font-family:var(--font-sans);font-size:13px;color:var(--text-primary);font-weight:600;letter-spacing:0.02em;user-select:none;padding:4px 0}
+.ev-block summary:hover{color:var(--accent)}
+
+/* ── CTA (tasteful, single confident button) ─────────────────────────────── */
+#cta{border-bottom:none;padding-bottom:72px}
+.cta-card{background:transparent;border:1px solid var(--rule);border-radius:0;padding:48px 36px;text-align:center;position:relative}
+.cta-card::before{content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:80px;height:2px;background:var(--accent)}
+.cta-card h2{font-family:var(--font-serif);font-size:clamp(28px,4vw,36px);font-weight:400;letter-spacing:-0.015em;margin-bottom:16px;color:var(--text-primary);line-height:1.2}
+.cta-card p{font-family:var(--font-serif);color:var(--text-secondary);font-size:17px;line-height:1.6;max-width:560px;margin:0 auto 28px;font-weight:400}
+.cta-btn{display:inline-block;background:var(--accent);color:var(--bg-primary);padding:14px 36px;border-radius:0;font-family:var(--font-sans);font-weight:600;font-size:13.5px;letter-spacing:0.14em;text-transform:uppercase;border:none;transition:background 0.15s ease;border-bottom:none}
+.cta-btn:hover{background:#d79b55;text-decoration:none;border-bottom:none}
+.cta-micro{font-family:var(--font-mono);color:var(--text-tertiary);font-size:11px;margin-top:20px;letter-spacing:0.04em;text-transform:uppercase}
+
+/* ── Footer colophon ─────────────────────────────────────────────────────── */
+footer{border-top:2px solid var(--rule);padding:32px 0 48px;text-align:center;position:relative}
+footer::before{content:"§";display:block;font-family:var(--font-serif);font-style:italic;font-size:20px;color:var(--accent);margin-bottom:14px}
+footer p{font-family:var(--font-sans);font-size:13px;color:var(--text-tertiary);letter-spacing:0.02em;line-height:1.75}
+footer p.colophon{font-family:var(--font-serif);font-style:italic;font-size:14px;color:var(--text-secondary);letter-spacing:0;margin-bottom:8px}
+footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-secondary);text-transform:none;letter-spacing:0.04em;font-size:12px}
+
+/* ── Table of contents (skim path above the fold) ────────────────────────── */
+.toc{margin-top:32px;padding:18px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;flex-wrap:wrap;align-items:baseline;gap:18px}
+.toc-label{font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--text-tertiary);white-space:nowrap}
+.toc-label::before{content:"§ "}
+.toc-links{display:flex;flex-wrap:wrap;gap:0 20px;flex:1 1 auto}
+.toc-links a{font-family:var(--font-sans);font-size:12px;font-weight:500;letter-spacing:0.04em;color:var(--text-secondary);border-bottom:none;padding:2px 0;position:relative;transition:color 0.15s ease}
+.toc-links a:hover{color:var(--accent);border-bottom:none}
+.toc-links a + a::before{content:"";position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:2px;height:2px;background:var(--text-tertiary);border-radius:50%}
+
+/* ── Analyst byline (trust lever directly above the CTA) ─────────────────── */
+.byline{padding:32px 0 24px;border-top:1px solid var(--rule)}
+.byline-id{display:flex;gap:20px;align-items:flex-start;max-width:560px;margin:0 auto;text-align:left}
+.byline-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid var(--rule);flex-shrink:0}
+.byline-monogram{width:56px;height:56px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:22px;font-weight:400;color:var(--accent);background:transparent;border:1px solid var(--accent-line);flex-shrink:0;letter-spacing:0.02em}
+.byline-text{flex:1 1 auto;min-width:0}
+.byline-eyebrow{display:block;font-family:var(--font-sans);font-size:10px;font-weight:600;letter-spacing:0.24em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px}
+.byline-name{font-family:var(--font-serif);font-size:22px;font-weight:400;letter-spacing:-0.01em;color:var(--text-primary);line-height:1.25;margin-bottom:6px}
+.byline-title{font-family:var(--font-sans);font-size:13px;font-weight:500;color:var(--text-secondary);letter-spacing:0;text-transform:none}
+.byline-sep{color:var(--text-tertiary);font-weight:400;margin:0 2px}
+.byline-credential{font-family:var(--font-serif);font-style:italic;font-size:15px;line-height:1.55;color:var(--text-secondary);margin-bottom:10px;letter-spacing:-0.002em}
+.byline-link{font-family:var(--font-sans);font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--accent-line);padding-bottom:1px}
+.byline-link:hover{border-bottom-color:var(--accent)}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media(max-width:600px){
+  .container{padding:0 20px}
+  header{padding:44px 0 32px}
+  header h1{font-size:32px}
+  .week-summary{font-size:17px;padding-left:18px}
+  section{padding:40px 0}
+  section h2{font-size:26px}
+  .insight-card,.talk-track,.signal-card{padding:20px 0}
+  table.matrix th,table.matrix td{padding:12px 12px;font-size:13.5px}
+  .objection{font-size:18px}
+  .cta-card{padding:36px 22px}
+  .cta-card h2{font-size:26px}
+  .cta-card p{font-size:15.5px}
+  .toc{padding:14px 0;gap:12px}
+  .toc-links{gap:0 14px}
+  .toc-links a{font-size:11.5px}
+  .byline-id{gap:16px}
+  .byline-name{font-size:19px}
+  .byline-avatar,.byline-monogram{width:48px;height:48px;font-size:19px}
+}
 </style>
 </head>
 <body>
-
 <div class="container">
-
-  <!-- Hero -->
-  <header class="hero">
-    <div class="hero-eyebrow">Competitive Intelligence Brief</div>
-    <h1>CrowdStrike vs. SentinelOne</h1>
-    <div class="hero-id-line" id="hero-id-line"></div>
-    <p style="color: var(--text-secondary); font-size: 15px;">Tactical analysis for sales teams competing in the endpoint security and extended detection &amp; response (XDR) market.</p>
-    <div class="hero-meta">
-      <div class="hero-meta-item">
-        <span class="hero-meta-label">Vertical</span>
-        <span class="hero-meta-value">Cybersecurity</span>
-      </div>
-      <div class="hero-meta-item">
-        <span class="hero-meta-label">Competitor A</span>
-        <span class="hero-meta-value">CrowdStrike</span>
-      </div>
-      <div class="hero-meta-item">
-        <span class="hero-meta-label">Competitor B</span>
-        <span class="hero-meta-value">SentinelOne</span>
-      </div>
-    </div>
-
-    <!-- How to Use This Brief -->
-    <div class="how-to-use">
-      <h2>How to Use This Brief</h2>
-      <ol>
-        <li><strong>For Outbound:</strong> Use Section 1 (Recent Market Moves) to create urgency in emails.</li>
-        <li><strong>For Active Deals:</strong> Use Section 3 (Talk Tracks) verbatim in discovery calls.</li>
-        <li><strong>Verification:</strong> Before using in proposals, verify specific pricing claims with live demos.</li>
-      </ol>
-    </div>
+  <header>
+    <div class="tag-line">The Briefing · Competitive Intelligence</div>
+    <h1>CrowdStrike <span class="vs">versus</span> SentinelOne</h1>
+    <div class="vertical-badge">Cybersecurity &middot; Vertical Sample</div>
+    <p class="custom-id" id="custom-id-line"></p>
+    <div class="week-summary">Both vendors spent the week defending their AI narrative: CrowdStrike is being re-rated by analysts as an &#39;agentic AI security&#39; winner while SentinelOne faces AI-disruption fear and a ~10% share-price drawdown. On the product side, SentinelOne is leaning into a high-profile CPU-Z supply-chain catch, while CrowdStrike pushed Falcon MCP docs and an OpenAI TAC collaboration. A reverse-engineered 0-day disabling Falcon EDR surfaced in the press — a live objection reps will hear this week.</div>
+    <nav class="toc" aria-label="Sections">
+    <span class="toc-label">Sections</span>
+    <div class="toc-links"><a href="#this-week">Trigger Events</a><a href="#pricing-intel">Pricing</a><a href="#sec-filings">SEC 8-K</a><a href="#matrix">Comparison</a><a href="#moves">Market Moves</a><a href="#talk-tracks">Talk Tracks</a><a href="#watch">Watch Next Week</a></div>
+  </nav>
   </header>
 
-  <!-- Section 1: Recent Market Moves -->
-  <section class="intel-section">
-    <div class="section-number">Section 1</div>
-    <h2>Recent Market Moves</h2>
-
-    <div class="intel-card">
-      <span class="competitor-label label-crowdstrike">CrowdStrike</span>
-      <h3>CrowdStrike is aggressively consolidating its platform under "Falcon Flex" licensing to lock customers into multi-year, multi-module commitments.</h3>
-      <p>CrowdStrike has been pushing Falcon Flex, a consumption-based licensing model that lets customers rotate through any Falcon module under a single committed spend. The strategic intent is clear: increase switching costs by embedding CrowdStrike across endpoint, cloud, identity, and SIEM workloads simultaneously. Deals structured under Falcon Flex create deep contractual lock-in that makes displacement significantly harder once the first year is live. <span class="confidence-tag">[CONFIDENCE: High — Based on CrowdStrike's publicly announced Falcon Flex program and earnings call commentary from CEO George Kurtz describing the model's adoption trajectory. VERIFY: Request a current Falcon Flex deal structure from a CrowdStrike prospect or partner to confirm active terms and minimum commitment thresholds.]</span></p>
+  <div class="freshness live">
+      <span class="freshness-dot"></span>
+      <span><strong>Live signals</strong> &middot; 38 from 9 source type(s) &middot; Last 7-30 days</span>
     </div>
-
-    <div class="intel-card">
-      <span class="competitor-label label-crowdstrike">CrowdStrike</span>
-      <h3>The July 2024 global outage caused by a faulty CrowdStrike Falcon sensor update remains an active liability in enterprise evaluations.</h3>
-      <p>CrowdStrike's defective content update on July 19, 2024 crashed approximately 8.5 million Windows devices globally, disrupting airlines, hospitals, banks, and government agencies. The incident exposed the risk of kernel-level agent architecture with aggressive auto-update policies. Enterprise security buyers — particularly in regulated verticals — are now requiring detailed change-management and rollback documentation from CrowdStrike before signing. This is a time-limited but currently potent vulnerability in competitive deals. <span class="confidence-tag">[CONFIDENCE: High — Based on widely reported public incident, CrowdStrike's own post-incident review, and Microsoft's published device-impact estimate. VERIFY: Ask prospects directly whether the July 2024 incident influenced their vendor evaluation criteria to gauge current salience.]</span></p>
+<div class="conf-legend">
+    <span class="conf-legend-intro"><strong>Confidence:</strong> each insight uses a label for how strongly the claim is supported.</span>
+    <span class="conf-legend-row"><span class="conf-pill conf-high" title="High confidence">High confidence</span> — directly evidenced by a dated source</span>
+    <span class="conf-legend-row"><span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span> — pattern consistent with multiple signals</span>
+    <span class="conf-legend-row"><span class="conf-pill conf-low" title="Low confidence">Low confidence</span> — market reasoning, not pinned to this week</span>
+  </div>
+<div class="how-to-use">
+    <h2>How to read this brief</h2>
+    <ol>
+      <li>Start with <strong>This Week's Signals</strong> and <strong>Trigger Events</strong>. These are today's talking points.</li>
+      <li>The <strong>Talk Track</strong> tagged "Fully-worked example" is ready to paste into your next discovery call as-is.</li>
+      <li>Every claim carries a source. Click through before citing a specific number in a proposal.</li>
+    </ol>
+  </div>
+<div class="trigger-banner has">
+    <div class="trigger-label">3 trigger events this week</div>
+    <div class="trigger-card">
+      <div class="trigger-head"><span class="competitor-tag tag-a">CrowdStrike</span><strong>Researcher reverse-engineered a 0-day used to disable CrowdStrike Falcon EDR</strong><span class="te-date">2026-04-14</span></div>
+      <p class="trigger-detail">CyberSecurityNews published a technical teardown of a 0-day that disables Falcon EDR. This is a live talk-track trigger: buyers evaluating EDR this quarter will ask how your product behaves when the agent is targeted for tamper/kill.</p>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE1MX3J6MWVLcFlxZ2RPQld4YWJSV1YxSDA5X1NuUnZob0xwa3RrMnpWUUhwOWlreE5NWGYtLWdoYkEwclROak9CcWtQYU9SWEZHQkZiQTdjWjYyMXk3Ni1rT0l6aHhJcnVNOUdj" target="_blank" rel="noopener noreferrer">CyberSecurityNews: Researcher Reverse Engineered 0-Day Used to Disable CrowdStrike EDR</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li></ul>
+    </div><div class="trigger-card">
+      <div class="trigger-head"><span class="competitor-tag tag-b">SentinelOne</span><strong>SentinelOne share price down ~10.4% on AI disruption fears and insider sales</strong><span class="te-date">2026-04-11</span></div>
+      <p class="trigger-detail">A Yahoo Finance piece tied the drawdown to Anthropic-driven &#39;AI is eating security&#39; narrative plus insider selling. Expect procurement and CFO stakeholders to raise vendor-risk questions mid-cycle.</p>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxPaVZQcmpSMExEOTVla0ZpRERYTlV4Rk5PREVXSGRsMW1vVm1OWlBNR2t6clE0NzhpYmRnSm9OQ2hpcjBtQTRJODN6eVFpem5sSWV1QXJ6T0g4cy1EZU5ld1I4QjRQQmpnM1hVY2MyM0VKTnhhV1lWaUFtQ3NCU1BGbF9qUVY4aTltMFo1OEJEcXpVazA" target="_blank" rel="noopener noreferrer">Yahoo Finance: SentinelOne (S) Is Down 10.4%</a><span class="src-type">news</span><span class="src-date">2026-04-11</span></li></ul>
+    </div><div class="trigger-card">
+      <div class="trigger-head"><span class="competitor-tag tag-b">SentinelOne</span><strong>CPU-Z supply-chain attack caught by SentinelOne AI EDR</strong><span class="te-date">2026-04-14</span></div>
+      <p class="trigger-detail">SentinelOne published and the r/SentinelOneXDR community corroborated a kill-chain write-up for the April 9 CPU-Z compromise (19-hour window of malicious signed binaries with Zig-compiled CRYPTBASE.dll). High-credibility proof point for autonomous behavioral detection — expect reps to lead with it.</p>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMi5AFBVV95cUxPbnh6TDhPS1FRVlNnUGhpWlp2bDkzSW9XMzdRN0N3cFNES21WU1NmQXI1LWJOb01xYnhfRFZSOXFCMldfUzVTM0ZvaGdNU3pJWXJ3NE1mVDFOVS1yd0ZCZGF1YlFma1NVc0NaVkNOLXZZOTlsNm5MaVptVmpCTmlILTVyNnM3T2pNUW9rVmRPcHA0czk3YUZoOWhuSDZqRjk1VWRPdWdJd3pLQW4xcHJkc0xuM2lF" target="_blank" rel="noopener noreferrer">SentinelOne: CPU-Z Watering Hole blocked by AI EDR</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li><li><a href="https://www.reddit.com/r/SentinelOneXDR/comments/1smmvno/the_sentinelone_agent_observed_the_cpuz_supply/" target="_blank" rel="noopener noreferrer">r/SentinelOneXDR kill-chain breakdown</a><span class="src-type">reddit</span><span class="src-date">2026-04-15</span></li></ul>
     </div>
-
-    <div class="intel-card">
-      <span class="competitor-label label-sentinelone">SentinelOne</span>
-      <h3>SentinelOne is repositioning around its Purple AI assistant and AI-native data lake to differentiate on autonomous investigation speed.</h3>
-      <p>SentinelOne has launched Purple AI, a generative-AI-powered security analyst embedded in its Singularity platform. The positioning targets SOC efficiency: natural-language threat hunting, automated investigation summaries, and reduced mean-time-to-respond. SentinelOne is using Purple AI as the centerpiece differentiator in competitive bake-offs, arguing that its data lake architecture (built on the Scalyr acquisition) gives it a structural advantage in AI-driven analysis. <span class="confidence-tag">[CONFIDENCE: High — Based on SentinelOne's public product announcements, RSA Conference 2024 keynote, and published Purple AI availability. VERIFY: Request a live Purple AI demo from a SentinelOne SE to assess actual query depth and speed versus marketing claims.]</span></p>
-    </div>
-
-    <div class="intel-card">
-      <span class="competitor-label label-sentinelone">SentinelOne</span>
-      <h3>SentinelOne continues to operate at a net loss and is under investor pressure to demonstrate a path to sustained profitability.</h3>
-      <p>SentinelOne's most recent public filings show the company is still operating at a net loss, despite improving gross margins. CrowdStrike frequently weaponizes this in enterprise deals, questioning SentinelOne's long-term viability and ability to fund R&amp;D at competitive scale. SentinelOne's ARR growth rate has decelerated, and enterprise buyers with 5+ year planning horizons treat financial stability as a selection factor. <span class="confidence-tag">[CONFIDENCE: High — Based on SentinelOne's SEC filings and publicly reported financials through FY2025. VERIFY: Pull SentinelOne's latest 10-Q to confirm current net income trajectory and cash reserves before citing in executive-level conversations.]</span></p>
-    </div>
-
-    <div class="intel-card">
-      <span class="competitor-label label-both">Both Competitors</span>
-      <h3>Both vendors are racing to own the SIEM replacement narrative, positioning XDR + log analytics as a substitute for legacy SIEM tools.</h3>
-      <p>CrowdStrike launched LogScale (formerly Humio) as its SIEM alternative and has been bundling it into Falcon platform deals. SentinelOne counters with its Singularity Data Lake, positioning it as a cost-effective replacement for Splunk and other legacy SIEMs. The strategic implication for competitors: deals that start as EDR evaluations are increasingly expanding into SIEM/log-management displacement conversations, raising the total contract value and complexity of competitive engagements. <span class="confidence-tag">[CONFIDENCE: Medium — Based on public product positioning from both vendors and analyst commentary on the SIEM-displacement trend. VERIFY: During discovery, ask prospects whether they are evaluating SIEM consolidation alongside endpoint to determine deal scope expansion risk.]</span></p>
+  </div>
+<section id="this-week">
+    <span class="section-label">Section 1</span>
+    <h2>This Week's Signals</h2>
+    <div class="signal-grid"><div class="signal-card">
+      <span class="competitor-tag tag-a">CrowdStrike</span>
+      <div class="sig-head"><strong>Cantor Fitzgerald reiterates Overweight on CRWD; Forbes frames Falcon as &#39;agentic AI&#39; security layer</strong><span class="sig-date">2026-04-16</span></div>
+      <div class="sig-type">news</div>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxQZ00yQkxVNnM1b1FGUDlKVUJFNW1uNGpsNl9DSjEyTEdPTFpqdFFNa2FIU3g4YmNPdC0yVkUxeVRWMXhvU0hJU2lXeV9GQmEyWThwSDJXc0ZMUXdkTVlzTWN2ZlRrMzVNRzVWTlZGOWlGTHJJTlh4al9RdW1kUHk3dVgxUDVZMlBSQzVGdl9pTmRPbk9tYTFwVXZqX2laU2VaY0xoV05KMHd2N3Zmb091X0ZfZVVoQ0o" target="_blank" rel="noopener noreferrer">Investing.com: Cantor reiterates CRWD Overweight</a><span class="src-type">news</span><span class="src-date">2026-04-15</span></li><li><a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxPT3JHdWNObnZIVWp5SWhiMU1pdC10ejBuWkR3X2tPUnBKeHZVbEc2ajlzM2VZTXlSak1MWHJVNW4tbU9VbkhqWkVyNjNZSUFYQ09hM0tkc3ZmUXBXUE9MZVI0Ul81U0pwMXREQlJRb2t3MDlyTTlfWThKdkk3UDlFSmMzVmM5YV9PRF85T1ZELUNCM3NUUFRBYjJpSUFuSEZZVDhzU0hDNVlzOHc5MDd2YUVTZnVxaW8" target="_blank" rel="noopener noreferrer">Forbes: CrowdStrike&#39;s Next Act — Securing Enterprise Agentic AI</a><span class="src-type">news</span><span class="src-date">2026-04-16</span></li></ul>
+    </div><div class="signal-card">
+      <span class="competitor-tag tag-a">CrowdStrike</span>
+      <div class="sig-head"><strong>Falcon MCP docs site launched; OpenAI TAC collaboration highlighted</strong><span class="sig-date">2026-04-17</span></div>
+      <div class="sig-type">reddit</div>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/crowdstrike/comments/1so5mju/falcon_mcp_docs_site_golive_modular_guides_fql/" target="_blank" rel="noopener noreferrer">r/crowdstrike: Falcon MCP docs go-live</a><span class="src-type">reddit</span><span class="src-date">2026-04-17</span></li><li><a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxNbDRxNUdCb3h2bHFoTEhzaDdSVzFBd2dPZEJWRTBSQTcwNXUySURfenNYRnlic3BLQVVUZS1FVTh6Vm5lbG5ZZ2pEZVdlYkZDQjk3WGhTTnNfMjNvSnVrODlVXzRnWDRiWFU4b1Nzdy1Fa0VfMHpyTExXeWcxWnFYQzJENGFpYmNiSXBBVU5URlBhbkU" target="_blank" rel="noopener noreferrer">Red Hot Cyber: Frontier AI for Defenders — CrowdStrike and OpenAI TAC</a><span class="src-type">news</span><span class="src-date">2026-04-17</span></li></ul>
+    </div><div class="signal-card">
+      <span class="competitor-tag tag-b">SentinelOne</span>
+      <div class="sig-head"><strong>SentinelOne expands AI security reach via LevelBlue MSSP partnership and on-prem push</strong><span class="sig-date">2026-04-11</span></div>
+      <div class="sig-type">news</div>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMipAFBVV95cUxNQUdGMkg5bTk5NmpzM0RULUVscjgwWVQ3c1dVZ0hnamFob1RlVjNQcFN0V2RkR0doTlVVTGxFRXdWeXVSS3J5UmFKakNsQWRpQVdYSEFFeDZZb0dZZ3VDbXN4QU1KVTdWT3ZnRUNkdWNYZVRDSS1UQzUwdjZKUzM2ZmE0dTRGVzlTOGx1REpoNkpOWmJEcEFKZmlQRDdOX0VmOEVpVw" target="_blank" rel="noopener noreferrer">Yahoo Finance: SentinelOne Expands AI Security Reach With LevelBlue And On-Prem Push</a><span class="src-type">news</span><span class="src-date">2026-04-11</span></li></ul>
+    </div><div class="signal-card">
+      <span class="competitor-tag tag-b">SentinelOne</span>
+      <div class="sig-head"><strong>Channel leadership hire: Shabeel Shah appointed Channel Director for ANZ &amp; APJ distribution</strong><span class="sig-date">2026-04-16</span></div>
+      <div class="sig-type">news</div>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxQNnhHNHNzOTNlSHdHb2dKOTBPQXVFTnV4dURVenBVU1VFdzI0SzNWd1I5YlFmYnh1N3dhMjVsMDJ5SnI5elROWWo1Q1dlUkpVNzVUVnhGbDNmb3lhZlFCem8zZlU1UzQxcHhCYnFJR3A5VklNYVZsQmpEWmFSOXI2QXpiS3FOZU9kR09lWjRGT1dzSVZIY2pPTTgtVDlqTHg4YlVkZjN3" target="_blank" rel="noopener noreferrer">ChannelLife Australia: SentinelOne appoints Shah as ANZ &amp; APJ Channel Director</a><span class="src-type">news</span><span class="src-date">2026-04-16</span></li></ul>
+    </div><div class="signal-card">
+      <span class="competitor-tag tag-b">SentinelOne</span>
+      <div class="sig-head"><strong>8-K: Officer departure/appointment (Item 5.02) filed March 25</strong><span class="sig-date">2026-03-25</span></div>
+      <div class="sig-type">sec_filings</div>
+      <ul class="sources"><li><a href="https://www.sec.gov/Archives/edgar/data/1583708/000158370826000025/s-20260319.htm" target="_blank" rel="noopener noreferrer">SEC EDGAR 8-K — SentinelOne Item 5.02</a><span class="src-type">sec_filings</span><span class="src-date">2026-03-25</span></li></ul>
+    </div></div>
+  </section>
+<section id="pricing-intel">
+    <span class="section-label">Section 2</span>
+    <h2>Pricing Intelligence <span class="badge-src">Wayback Machine</span></h2>
+    <p class="muted">Pricing-page changes detected by diffing archived snapshots. Most prospects cannot replicate this with ChatGPT.</p>
+    <div class="insight-card">
+      <span class="competitor-tag tag-a">CrowdStrike</span>
+      <h3>No Wayback snapshots found for /pricing or /plans in the last 90 days; sitemap count stable at 8,000 URLs with zero additions/removals.</h3>
+      <ul class="price-bullets"><li>No material pricing-page changes detected in the archive window.</li></ul>
+      <ul class="sources"><li><a href="https://www.crowdstrike.com/pricing" target="_blank" rel="noopener noreferrer">Wayback Machine — CrowdStrike /pricing (no snapshots in 90d)</a><span class="src-type">pricing_archive</span></li></ul>
+    </div><div class="insight-card">
+      <span class="competitor-tag tag-b">SentinelOne</span>
+      <h3>No Wayback snapshots found for /pricing or /plans in the last 90 days. However, the /product page changed this week (content-diff detected via collector), suggesting packaging or positioning updates worth re-checking.</h3>
+      <ul class="price-bullets"><li>No material pricing-page changes detected in the archive window.</li><li>/product page diff detected — positioning or packaging copy changed</li></ul>
+      <ul class="sources"><li><a href="https://www.sentinelone.com/pricing" target="_blank" rel="noopener noreferrer">Wayback Machine — SentinelOne /pricing (no snapshots in 90d)</a><span class="src-type">pricing_archive</span></li><li><a href="https://www.sentinelone.com/product" target="_blank" rel="noopener noreferrer">SentinelOne /product — content diff detected this run</a><span class="src-type">website</span><span class="src-date">2026-04-17</span></li></ul>
     </div>
   </section>
-
-  <!-- Section 2: Pricing Vulnerabilities -->
-  <section class="intel-section">
-    <div class="section-number">Section 2</div>
-    <h2>Pricing Vulnerabilities</h2>
-
-    <div class="pricing-grid">
-      <div class="pricing-cell cs">
-        <h4>CrowdStrike</h4>
-        <p>CrowdStrike commands the highest per-endpoint pricing in the EDR/XDR market. Their modular SKU structure (Falcon Pro, Enterprise, Elite, Complete) creates incremental cost escalation as customers add capabilities like identity protection, cloud workload protection, or managed threat hunting.</p>
-        <p>The Falcon Flex model smooths this into a single spend commitment but does not reduce total cost — it restructures it into a higher-floor, multi-year obligation.</p>
-      </div>
-      <div class="pricing-cell s1">
-        <h4>SentinelOne</h4>
-        <p>SentinelOne consistently prices below CrowdStrike per endpoint across comparable tier comparisons (Singularity Core vs. Falcon Pro, Singularity Complete vs. Falcon Enterprise). SentinelOne's sales teams use aggressive initial discounting to win displacement deals, particularly at the 5,000–50,000 endpoint range.</p>
-        <p>However, SentinelOne's add-on pricing for Vigilance MDR and Singularity Data Lake can close the gap significantly when the full stack is quoted.</p>
-      </div>
-    </div>
-
-    <div class="intel-card">
-      <h3>CrowdStrike Vulnerability: Premium pricing is defensible only when prospects value brand trust — the July 2024 outage has weakened that lever.</h3>
-      <p>CrowdStrike's pricing power has historically been anchored to its market-leader reputation and high independent-test scores. The July 2024 outage created a crack in this narrative. Procurement teams now have a concrete reference point to push back on CrowdStrike's premium, arguing that the price-to-risk ratio no longer justifies a 30–60% premium over SentinelOne for comparable EDR functionality. This is the most actionable pricing vulnerability CrowdStrike has faced in the last three years. <span class="confidence-tag">[CONFIDENCE: Medium — Based on the logical impact of the outage on brand-driven pricing power and public reports of enterprise re-evaluations. VERIFY: Test this directly with 3–5 prospects currently in CrowdStrike renewal cycles to assess whether pricing concessions are being offered post-outage.]</span></p>
-    </div>
-
-    <div class="intel-card">
-      <h3>SentinelOne Vulnerability: Low initial per-endpoint pricing obscures total-cost escalation when MDR and data lake modules are included.</h3>
-      <p>SentinelOne's sales motion leads with a per-endpoint price that undercuts CrowdStrike. Prospects who benchmark on base-tier pricing alone will see a favorable comparison. However, the Vigilance Respond (MDR) and Singularity Data Lake add-ons carry meaningful incremental cost. When SentinelOne is quoted as a full-stack platform (endpoint + MDR + data lake + cloud workload protection), the total deal value approaches CrowdStrike's pricing in enterprise configurations. <span class="confidence-tag">[CONFIDENCE: Medium — Based on published SentinelOne SKU tiers and general pricing-architecture analysis. VERIFY: Obtain a full-stack SentinelOne quote for a 10,000-endpoint enterprise to validate total cost against CrowdStrike Falcon Flex equivalent.]</span></p>
-    </div>
-
-    <div class="intel-card">
-      <h3>CrowdStrike Vulnerability: Falcon Complete (managed service) pricing is significantly higher than third-party MDR alternatives layered on top of competing EDR.</h3>
-      <p>Falcon Complete is CrowdStrike's fully managed detection and response tier. It carries a substantial per-endpoint premium. Buyers who need MDR but are cost-sensitive can achieve comparable outcomes by pairing SentinelOne (or another EDR) with a third-party MDR provider at a lower combined cost. CrowdStrike's counter-argument — tighter integration between the EDR and the managed team — is valid but difficult to quantify in procurement-driven evaluations. <span class="confidence-tag">[CONFIDENCE: Low — Evidence not provided in current inputs for specific Falcon Complete pricing. VERIFY: Request a Falcon Complete quote for a 5,000-endpoint scenario and compare against SentinelOne Vigilance Respond plus a third-party MDR provider quote.]</span></p>
-    </div>
-
-    <div class="intel-card">
-      <h3>SentinelOne Vulnerability: Multi-year deals with deep initial discounts create renewal-price risk that prospects underestimate.</h3>
-      <p>SentinelOne's initial deal pricing is often heavily discounted to displace incumbents. Renewal pricing has less flexibility. Prospects who sign 3-year SentinelOne agreements at a steep initial discount should model Year 4+ renewal pricing explicitly, as the discount compression at renewal can create budget shock. This creates an opening for competitors to present transparent, predictable multi-year pricing as a differentiator. <span class="confidence-tag">[CONFIDENCE: Low — Evidence not provided in current inputs for specific SentinelOne renewal-price escalation data. VERIFY: Interview 2–3 SentinelOne customers who have completed at least one renewal cycle to document actual price change at renewal.]</span></p>
+<section id="sec-filings">
+    <span class="section-label">Section 3</span>
+    <h2>SEC 8-K Filings <span class="badge-src">EDGAR</span></h2>
+    <p class="muted">Material events a public competitor is legally required to disclose within 4 business days. Unimpeachable, zero-cost signal source.</p>
+    <div class="insight-card">
+      <span class="competitor-tag tag-a">CrowdStrike</span>
+      <h3>8-K &middot; filed 2026-04-06</h3>
+      <p class="sec-items">Item 8.01 (Other Events); Item 9.01 (Financial Statements and Exhibits)</p>
+      <p>CrowdStrike filed an 8-K disclosing an &#39;Other Events&#39; material-to-investors disclosure with accompanying exhibits. Item 8.01 is commonly used for corporate announcements outside the standard triggered items; read the exhibit before pricing or term-extension conversations.</p>
+      <ul class="sources"><li><a href="https://www.sec.gov/Archives/edgar/data/1535527/000153552726000013/crwd-20260406.htm" target="_blank" rel="noopener noreferrer">SEC EDGAR 8-K — CrowdStrike Holdings</a><span class="src-type">sec_filings</span><span class="src-date">2026-04-06</span></li></ul>
+    </div><div class="insight-card">
+      <span class="competitor-tag tag-b">SentinelOne</span>
+      <h3>8-K &middot; filed 2026-03-25</h3>
+      <p class="sec-items">Item 5.02 (Departure / Appointment of Directors or Officers)</p>
+      <p>SentinelOne disclosed an officer/director change. Combined with new ANZ/APJ channel leadership and a Cloud Alliances Manager hire in Mountain View, expect GTM reshuffling signals through Q2.</p>
+      <ul class="sources"><li><a href="https://www.sec.gov/Archives/edgar/data/1583708/000158370826000025/s-20260319.htm" target="_blank" rel="noopener noreferrer">SEC EDGAR 8-K — SentinelOne Item 5.02</a><span class="src-type">sec_filings</span><span class="src-date">2026-03-25</span></li></ul>
     </div>
   </section>
-
-  <!-- Section 3: Rep Talk Tracks (Objection Handling) -->
-  <section class="intel-section">
-    <div class="section-number">Section 3</div>
-    <h2>Rep Talk Tracks (Objection Handling)</h2>
-
-    <div class="talk-track">
-      <div class="objection">"We're already standardized on CrowdStrike and don't want to rip and replace."</div>
-      <div class="response-label">Recommended Response</div>
-      <div class="response-text">
-        "That makes sense — CrowdStrike has strong market presence. Two things worth considering: First, after July 2024, are you confident your change-management and rollback controls around Falcon updates are where they need to be? Second, CrowdStrike's Falcon Flex model is designed to deepen lock-in across modules. If you're evaluating cloud workload protection or SIEM alternatives, now is the moment to benchmark before the switching cost becomes prohibitive. We're not asking you to rip and replace — we're asking you to validate that you're getting competitive pricing and resilience guarantees."
+<section id="matrix">
+    <span class="section-label">At a glance</span>
+    <h2>Competitor Comparison</h2>
+    <div class="matrix-wrap"><table class="matrix"><tr><th>&nbsp;</th><th>CrowdStrike</th><th>SentinelOne</th></tr><tr>
+      <th class="axis">Positioning this week<div class="matrix-note">Both compete on the AI story; CrowdStrike leans analyst/brand, SentinelOne leans proof-of-catch.</div></th>
+      <td>Agentic-AI security platform (Forbes, Motley Fool)</td>
+      <td>Autonomous AI EDR with supply-chain catch narrative (CPU-Z)</td>
+    </tr><tr>
+      <th class="axis">Deployment options<div class="matrix-note">Lead with on-prem / air-gapped questions — SentinelOne is actively broadening on-prem coverage.</div></th>
+      <td>Cloud-delivered Falcon platform; MCP/AWS Bedrock/GCP dev surface</td>
+      <td>Cloud + explicit on-premises push (LevelBlue partnership)</td>
+    </tr><tr>
+      <th class="axis">Ecosystem / AI partners<div class="matrix-note">CRWD is wiring into OpenAI tooling; S is wiring into MSSP delivery.</div></th>
+      <td>OpenAI TAC collaboration; Falcon MCP docs live</td>
+      <td>LevelBlue MSSP alliance; AI EDR messaging</td>
+    </tr><tr>
+      <th class="axis">Recent product proof point<div class="matrix-note">Expect buyers to A/B these two stories in eval conversations.</div></th>
+      <td>0-day disable-EDR research published against Falcon</td>
+      <td>CPU-Z supply-chain kill-chain blocked autonomously</td>
+    </tr><tr>
+      <th class="axis">Financial narrative<div class="matrix-note">CFO/procurement stakeholders will cite S volatility; have a vendor-viability answer ready.</div></th>
+      <td>Cantor Overweight reiterated; rich revenue multiple debated</td>
+      <td>-10.4% drawdown on AI-disruption fear + insider sales</td>
+    </tr><tr>
+      <th class="axis">Pricing transparency (public)<div class="matrix-note">Neither publishes a list price — quote-based selling is the norm; use this to reframe &#39;your&#39; price transparency if you have it.</div></th>
+      <td>No public /pricing page indexed in Wayback (90d)</td>
+      <td>No public /pricing page indexed in Wayback (90d)</td>
+    </tr><tr>
+      <th class="axis">Hiring signal<div class="matrix-note">CRWD = SIEM + IAM push; S = channel + identity detection push.</div></th>
+      <td>Next-Gen SIEM Sr. Resident Consultant; IAM Director; DevOps CI/CD</td>
+      <td>Channel Sales Engineers; Cloud Alliances Mgr; Windows Identity Detection</td>
+    </tr></table></div>
+  </section>
+<section id="moves">
+    <span class="section-label">Recent market moves</span>
+    <h2>What Each Competitor Is Doing</h2>
+    <div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-a">CrowdStrike</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="mm-date">2026-04-16</span>
       </div>
-      <p><span class="confidence-tag">[CONFIDENCE: High — Talk track grounded in publicly documented CrowdStrike outage and confirmed Falcon Flex lock-in dynamics. VERIFY: Confirm the prospect's specific CrowdStrike contract structure and renewal timeline before deploying this track.]</span></p>
-    </div>
-
-    <div class="talk-track">
-      <div class="objection">"SentinelOne is offering us a much lower price per endpoint — why shouldn't we go with them?"</div>
-      <div class="response-label">Recommended Response</div>
-      <div class="response-text">
-        "SentinelOne's base-tier pricing is competitive — no argument there. The question is what's included at that price point. Their Singularity Core tier is a basic EDR. To reach parity with a full XDR stack — managed detection and response, cloud workload protection, data lake for log retention — you'll add Vigilance Respond, Singularity Cloud, and Singularity Data Lake as separate line items. Ask them to quote the full stack and compare that number, not the entry point. Also ask about renewal pricing: initial deals are often heavily discounted, and the Year 4 renewal number tells the real story."
+      <h3>CrowdStrike positioned as agentic-AI security winner</h3>
+      <p>Forbes, Motley Fool and Yahoo Finance all framed CrowdStrike as a primary beneficiary of the Anthropic/agentic-AI wave, and Cantor Fitzgerald reiterated an Overweight rating this week. Expect CrowdStrike reps to lead with &#39;secure the agents&#39; messaging in every enterprise conversation.</p>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxPT3JHdWNObnZIVWp5SWhiMU1pdC10ejBuWkR3X2tPUnBKeHZVbEc2ajlzM2VZTXlSak1MWHJVNW4tbU9VbkhqWkVyNjNZSUFYQ09hM0tkc3ZmUXBXUE9MZVI0Ul81U0pwMXREQlJRb2t3MDlyTTlfWThKdkk3UDlFSmMzVmM5YV9PRF85T1ZELUNCM3NUUFRBYjJpSUFuSEZZVDhzU0hDNVlzOHc5MDd2YUVTZnVxaW8" target="_blank" rel="noopener noreferrer">Forbes: CrowdStrike&#39;s Next Act</a><span class="src-type">news</span><span class="src-date">2026-04-16</span></li><li><a href="https://news.google.com/rss/articles/CBMilAFBVV95cUxNVDZKeUdJQWdzcHJ5em9YVzdEbXVjV3E0TGQ5UWJSclU2THRfSnducGprSXZFQ2hPQlVPT0kyekdWZE9haUlvX2I3VXI4WUNsS3VEUHRyQ0FlbHd2cTZQRnBYVHBreF9zeDFXN3pKV0gxYko5azVxdG15LVVrc0NzakNxOS1sYTU3ZEFtVC1tbmN0cGV0" target="_blank" rel="noopener noreferrer">Motley Fool: Anthropic Crowns CRWD and PANW</a><span class="src-type">news</span><span class="src-date">2026-04-15</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>Ask the CrowdStrike rep for a named customer deploying Falcon specifically to secure agentic AI workloads in production.</p><p class="verify-basis"><em>Confidence basis:</em> Three dated articles and a reiterated analyst rating in the same week.</p></details>
+    </div><div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-a">CrowdStrike</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="mm-date">2026-04-14</span>
       </div>
-      <p><span class="confidence-tag">[CONFIDENCE: Medium — Based on SentinelOne's publicly documented modular SKU architecture. VERIFY: Request a fully loaded SentinelOne quote from the prospect to confirm module-level pricing for the specific deal.]</span></p>
-    </div>
-
-    <div class="talk-track">
-      <div class="objection">"CrowdStrike has the best detection rates — we've seen their MITRE ATT&CK results."</div>
-      <div class="response-label">Recommended Response</div>
-      <div class="response-text">
-        "MITRE ATT&CK evaluations are valuable, but they test in a controlled lab environment with every detection dial turned to maximum — no concern for false-positive rates or performance impact. Both CrowdStrike and SentinelOne score well in MITRE evaluations. The real differentiator is operational performance: false-positive volume in your production environment, agent resource consumption on your endpoint fleet, and mean time to investigate an actual alert. We recommend a head-to-head proof-of-concept in your environment — not a lab — with your SOC team running the evaluation. That's where the real separation shows up."
+      <h3>Falcon EDR tamper story is in the public record</h3>
+      <p>CyberSecurityNews published a reverse-engineering analysis of a 0-day used to disable CrowdStrike Falcon EDR. This is a legitimate, dated, journalistic source — not a forum rumor — and will surface in competitive bake-offs through Q2.</p>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE1MX3J6MWVLcFlxZ2RPQld4YWJSV1YxSDA5X1NuUnZob0xwa3RrMnpWUUhwOWlreE5NWGYtLWdoYkEwclROak9CcWtQYU9SWEZHQkZiQTdjWjYyMXk3Ni1rT0l6aHhJcnVNOUdj" target="_blank" rel="noopener noreferrer">CyberSecurityNews: 0-Day Disables CrowdStrike EDR</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>Search CyberSecurityNews for the April 14 article and map the technique class (tamper / driver unload) against your agent&#39;s self-protection controls.</p><p class="verify-basis"><em>Confidence basis:</em> Dated article in a named security publication.</p></details>
+    </div><div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-b">SentinelOne</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="mm-date">2026-04-15</span>
       </div>
-      <p><span class="confidence-tag">[CONFIDENCE: High — MITRE ATT&CK evaluation methodology is publicly documented, and both CrowdStrike and SentinelOne have published strong results in recent rounds. VERIFY: Pull the most recent MITRE ATT&CK Evaluation results for both vendors to confirm current detection and visibility metrics before the conversation.]</span></p>
-    </div>
-
-    <div class="talk-track">
-      <div class="objection">"We're concerned about SentinelOne's financial viability compared to CrowdStrike."</div>
-      <div class="response-label">Recommended Response</div>
-      <div class="response-text">
-        "Financial stability matters — it's a legitimate evaluation criterion. SentinelOne is a publicly traded company with substantial cash reserves and growing ARR. They're not yet profitable on a net-income basis, which is worth tracking. The practical question is: does their financial position create risk for your 3–5 year deployment? Look at their cash runway, gross margin trajectory, and customer retention rate. If those metrics are trending positively, the profitability gap is a growth-stage characteristic, not a viability risk. That said, build contractual protections — source-code escrow and SLA-backed commitments — into any agreement regardless of vendor."
+      <h3>SentinelOne&#39;s CPU-Z catch is the week&#39;s best sales proof point</h3>
+      <p>SentinelOne&#39;s own blog and the r/SentinelOneXDR community documented the April 9 CPU-Z supply-chain compromise kill chain: ~19-hour window of trojanized signed binaries with a Zig-compiled CRYPTBASE.dll, blocked autonomously by the agent. Expect SentinelOne reps to open meetings with this story for the next 30-60 days.</p>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMi5AFBVV95cUxPbnh6TDhPS1FRVlNnUGhpWlp2bDkzSW9XMzdRN0N3cFNES21WU1NmQXI1LWJOb01xYnhfRFZSOXFCMldfUzVTM0ZvaGdNU3pJWXJ3NE1mVDFOVS1yd0ZCZGF1YlFma1NVc0NaVkNOLXZZOTlsNm5MaVptVmpCTmlILTVyNnM3T2pNUW9rVmRPcHA0czk3YUZoOWhuSDZqRjk1VWRPdWdJd3pLQW4xcHJkc0xuM2lF" target="_blank" rel="noopener noreferrer">SentinelOne blog: CPU-Z watering hole blocked</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li><li><a href="https://www.reddit.com/r/SentinelOneXDR/comments/1smmvno/the_sentinelone_agent_observed_the_cpuz_supply/" target="_blank" rel="noopener noreferrer">r/SentinelOneXDR: CPU-Z kill chain</a><span class="src-type">reddit</span><span class="src-date">2026-04-15</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>Ask for the actual detection telemetry screenshots and the time-to-detect across the customer base, not just the kill-chain narrative.</p><p class="verify-basis"><em>Confidence basis:</em> Vendor blog plus independent community thread with technical detail.</p></details>
+    </div><div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-b">SentinelOne</span>
+        <span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span>
+        <span class="mm-date">2026-04-14</span>
       </div>
-      <p><span class="confidence-tag">[CONFIDENCE: High — Based on SentinelOne's public financial filings showing net losses alongside improving gross margins and growing ARR. VERIFY: Review SentinelOne's most recent quarterly earnings report to confirm cash position and margin trajectory are still trending favorably before using this response.]</span></p>
-    </div>
-
-    <div class="talk-track">
-      <div class="objection">"CrowdStrike's July 2024 outage was a one-time event — it won't happen again."</div>
-      <div class="response-label">Recommended Response</div>
-      <div class="response-text">
-        "CrowdStrike has taken remediation steps — phased rollouts, additional content validation, customer-controlled update policies. Those are positive changes. The structural question remains: any vendor that deploys a kernel-level agent with auto-updating content definitions to millions of endpoints carries inherent concentration risk. The right response isn't to dismiss the incident — it's to require specific contractual and architectural safeguards: staged deployment rings, customer-side rollback controls, and SLA penalties for unplanned downtime caused by vendor updates. If CrowdStrike can deliver those guarantees in writing, that's a strong signal. If they deflect, that's a data point."
+      <h3>Windows 11 agent performance complaints resurfacing</h3>
+      <p>An r/SentinelOneXDR thread documents Windows 11 UI lag with SentinelOne enabled despite no CPU or RAM spikes — suspected kernel/driver-level behavior, smooth immediately on uninstall. Low volume, but a legitimate field objection to pre-empt in endpoint evaluations.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/SentinelOneXDR/comments/1sla5d5/windows_11_lag_with_sentinelone_no_cpu_or_ram/" target="_blank" rel="noopener noreferrer">r/SentinelOneXDR: Windows 11 lag with SentinelOne</a><span class="src-type">reddit</span><span class="src-date">2026-04-14</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>Ask the prospect&#39;s endpoint team whether they&#39;ve benchmarked perceived latency (input lag) in addition to CPU/RAM on Win11 fleets.</p><p class="verify-basis"><em>Confidence basis:</em> Single Reddit thread (13 comments); not yet corroborated by analyst or press coverage.</p></details>
+    </div><div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-a">CrowdStrike</span><span class="competitor-tag tag-b">SentinelOne</span>
+        <span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span>
+        <span class="mm-date">2026-04-14</span>
       </div>
-      <p><span class="confidence-tag">[CONFIDENCE: High — Based on CrowdStrike's published post-incident remediation commitments and the factual record of the July 2024 outage. VERIFY: Request CrowdStrike's current content-update deployment policy documentation and SLA terms to confirm remediation measures are contractually binding.]</span></p>
-    </div>
-
-    <div class="talk-track">
-      <div class="objection">"SentinelOne's Purple AI sounds impressive, but is it actually production-ready?"</div>
-      <div class="response-label">Recommended Response</div>
-      <div class="response-text">
-        "Purple AI is generally available and SentinelOne is pushing it hard in competitive deals. The right way to evaluate it: run a structured POC where your SOC analysts use Purple AI for real threat-hunting queries and incident investigations over a 2-week period. Measure three things — query accuracy, time-to-insight versus your current workflow, and false-lead rate. Generative AI in security is early-stage across all vendors, including CrowdStrike's Charlotte AI. The winner will be determined by which AI tool actually reduces analyst workload in your environment, not by demo polish."
+      <h3>European buyers are explicitly shopping EU alternatives to US EDR</h3>
+      <p>r/cybersecurity_de is actively discussing &#39;where do you consciously use US software vs European alternatives&#39;, naming CrowdStrike, SentinelOne and Defender in the EDR/XDR bucket. Sovereignty and EU-data-residency objections are live in DACH deals right now.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/cybersecurity_de/comments/1sl50md/wo_verwendet_ihr_bewusst_amerikanische_software/" target="_blank" rel="noopener noreferrer">r/cybersecurity_de: US vs. EU software choices</a><span class="src-type">reddit</span><span class="src-date">2026-04-14</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>Ask EU prospects directly whether data residency / EU-sovereignty was raised in their last EDR RFP.</p><p class="verify-basis"><em>Confidence basis:</em> Single regional thread with 25 comments — directional, not quantitative.</p></details>
+    </div><div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-b">SentinelOne</span>
+        <span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span>
+        <span class="mm-date">2026-04-16</span>
       </div>
-      <p><span class="confidence-tag">[CONFIDENCE: Medium — Based on SentinelOne's public GA announcement for Purple AI and CrowdStrike's parallel Charlotte AI launch. VERIFY: Schedule a live Purple AI evaluation with SentinelOne and a Charlotte AI evaluation with CrowdStrike using identical threat-hunting scenarios to produce a direct comparison.]</span></p>
+      <h3>Channel and cloud-alliance hiring spike at SentinelOne</h3>
+      <p>SentinelOne is hiring a Cloud Alliances Manager (Mountain View), Partner/Channel SEs (Bengaluru), a Commercial Channel Business Manager (Chicago), and just appointed Shabeel Shah as ANZ &amp; APJ Channel Director. The signal points to a channel-led growth push into Q2.</p>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxQNnhHNHNzOTNlSHdHb2dKOTBPQXVFTnV4dURVenBVU1VFdzI0SzNWd1I5YlFmYnh1N3dhMjVsMDJ5SnI5elROWWo1Q1dlUkpVNzVUVnhGbDNmb3lhZlFCem8zZlU1UzQxcHhCYnFJR3A5VklNYVZsQmpEWmFSOXI2QXpiS3FOZU9kR09lWjRGT1dzSVZIY2pPTTgtVDlqTHg4YlVkZjN3" target="_blank" rel="noopener noreferrer">ChannelLife AU: ANZ/APJ channel director appointment</a><span class="src-type">news</span><span class="src-date">2026-04-16</span></li><li><a href="https://www.sentinelone.com/careers" target="_blank" rel="noopener noreferrer">SentinelOne careers (channel &amp; cloud alliances roles)</a><span class="src-type">jobs</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>Check SentinelOne&#39;s Greenhouse careers page for net-new channel roles posted this month.</p><p class="verify-basis"><em>Confidence basis:</em> Multiple open roles plus a dated public appointment.</p></details>
     </div>
   </section>
-
+<section id="talk-tracks">
+    <span class="section-label">Rep talk tracks</span>
+    <h2>Objection Handling</h2>
+    <div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="tt-badge tt-example">Fully-worked example</span>
+      </div>
+      <p class="objection">&quot;We&#39;re already evaluating CrowdStrike Falcon — why should we add you to the bake-off?&quot;</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">Two dated items from this week are worth stress-testing before you standardize on Falcon: CyberSecurityNews (April 14) published a reverse-engineered 0-day that disables Falcon EDR, and Forbes (April 16) framed CrowdStrike&#39;s next act as &#39;securing agentic AI&#39; — a roadmap bet, not shipping product. I&#39;d ask their team for a named production customer using Falcon to secure agentic AI today, and for the CVE/technique class behind the tamper research. If you want, I&#39;ll send you both links and our side-by-side on agent self-protection in the next 10 minutes — no meeting required.</p>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE1MX3J6MWVLcFlxZ2RPQld4YWJSV1YxSDA5X1NuUnZob0xwa3RrMnpWUUhwOWlreE5NWGYtLWdoYkEwclROak9CcWtQYU9SWEZHQkZiQTdjWjYyMXk3Ni1rT0l6aHhJcnVNOUdj" target="_blank" rel="noopener noreferrer">CyberSecurityNews: 0-Day Disables Falcon EDR</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li><li><a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxPT3JHdWNObnZIVWp5SWhiMU1pdC10ejBuWkR3X2tPUnBKeHZVbEc2ajlzM2VZTXlSak1MWHJVNW4tbU9VbkhqWkVyNjNZSUFYQ09hM0tkc3ZmUXBXUE9MZVI0Ul81U0pwMXREQlJRb2t3MDlyTTlfWThKdkk3UDlFSmMzVmM5YV9PRF85T1ZELUNCM3NUUFRBYjJpSUFuSEZZVDhzU0hDNVlzOHc5MDd2YUVTZnVxaW8" target="_blank" rel="noopener noreferrer">Forbes: CrowdStrike&#39;s Next Act</a><span class="src-type">news</span><span class="src-date">2026-04-16</span></li></ul>
+    </div><div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="tt-badge tt-template">Template &mdash; customize</span>
+      </div>
+      <p class="objection">&quot;SentinelOne just caught the CPU-Z supply-chain attack — isn&#39;t that proof their AI EDR is ahead?&quot;</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">It&#39;s a great story and the technical write-up is real, but ask [SentinelOne rep] for three things: (1) time-to-detect across the customer base during the 19-hour window, (2) how many customers were hit vs. autonomously blocked, and (3) whether the Zig/CRYPTBASE.dll behavior was blocked pre-execution or post. Then compare to [your product]&#39;s behavior on the same sample — we can re-run the kill chain in a POC.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/SentinelOneXDR/comments/1smmvno/the_sentinelone_agent_observed_the_cpuz_supply/" target="_blank" rel="noopener noreferrer">r/SentinelOneXDR kill-chain post</a><span class="src-type">reddit</span><span class="src-date">2026-04-15</span></li></ul>
+    </div><div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="tt-badge tt-template">Template &mdash; customize</span>
+      </div>
+      <p class="objection">&quot;Neither CrowdStrike nor SentinelOne publishes pricing — how do we know we&#39;re getting a fair deal?&quot;</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">You&#39;re right — Wayback has zero snapshots of either /pricing page in the last 90 days, which means both are fully quote-based. That usually means the first quote has headroom. Ask for the per-endpoint blended rate across all modules, a 3-year TCO including data ingest, and any uplift for next-gen SIEM or identity modules. [Your product] publishes [your pricing model] so you can benchmark both quotes against a list price.</p>
+      <ul class="sources"><li><a href="https://www.crowdstrike.com/pricing" target="_blank" rel="noopener noreferrer">Wayback — no CRWD /pricing snapshots in 90d</a><span class="src-type">pricing_archive</span></li><li><a href="https://www.sentinelone.com/pricing" target="_blank" rel="noopener noreferrer">Wayback — no S /pricing snapshots in 90d</a><span class="src-type">pricing_archive</span></li></ul>
+    </div><div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="tt-badge tt-template">Template &mdash; customize</span>
+      </div>
+      <p class="objection">&quot;SentinelOne stock dropped 10% and there&#39;s an officer change — should we be worried about vendor risk?&quot;</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">Yahoo Finance (April 11) tied the ~10.4% drop to AI-disruption fear and insider sales, and EDGAR shows an Item 5.02 officer filing on March 25. Neither individually is disqualifying, but for a multi-year EDR contract you should ask [SentinelOne rep] for (a) the specific exec change and continuity plan and (b) what the LevelBlue MSSP expansion means for your direct-account coverage model.</p>
+      <ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxPaVZQcmpSMExEOTVla0ZpRERYTlV4Rk5PREVXSGRsMW1vVm1OWlBNR2t6clE0NzhpYmRnSm9OQ2hpcjBtQTRJODN6eVFpem5sSWV1QXJ6T0g4cy1EZU5ld1I4QjRQQmpnM1hVY2MyM0VKTnhhV1lWaUFtQ3NCU1BGbF9qUVY4aTltMFo1OEJEcXpVazA" target="_blank" rel="noopener noreferrer">Yahoo Finance: S down 10.4%</a><span class="src-type">news</span><span class="src-date">2026-04-11</span></li><li><a href="https://www.sec.gov/Archives/edgar/data/1583708/000158370826000025/s-20260319.htm" target="_blank" rel="noopener noreferrer">SEC 8-K Item 5.02 — SentinelOne</a><span class="src-type">sec_filings</span><span class="src-date">2026-03-25</span></li></ul>
+    </div><div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span>
+        <span class="tt-badge tt-template">Template &mdash; customize</span>
+      </div>
+      <p class="objection">&quot;We&#39;re in DACH / EU — US EDR vendors are fine, aren&#39;t they?&quot;</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">Your peers are actively asking the opposite question right now. r/cybersecurity_de had a 25-comment thread on April 14 specifically naming CrowdStrike, SentinelOne and Defender as the US dependencies customers are re-evaluating. For the RFP, ask each vendor for: EU data-residency guarantees in writing, Schrems-II stance, and what happens to cloud-delivered detection if US-EU transfer rules tighten. [Your product] addresses this with [your EU data-residency answer].</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/cybersecurity_de/comments/1sl50md/wo_verwendet_ihr_bewusst_amerikanische_software/" target="_blank" rel="noopener noreferrer">r/cybersecurity_de sovereignty thread</a><span class="src-type">reddit</span><span class="src-date">2026-04-14</span></li></ul>
+    </div><div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="tt-badge tt-template">Template &mdash; customize</span>
+      </div>
+      <p class="objection">&quot;CrowdStrike just shipped Falcon MCP and an OpenAI TAC integration — they&#39;re clearly ahead on AI.&quot;</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">The Falcon MCP docs site went live April 17 and Red Hot Cyber covered the OpenAI TAC collaboration the same day — but that&#39;s dev-surface and research partnership, not shipping customer outcomes. Ask [CrowdStrike rep] for a production reference using Falcon MCP in a regulated environment today, and for the SLA on OpenAI-involved detection paths. Until that lands, [your product]&#39;s [your AI capability] is already in production at [your reference customer].</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/crowdstrike/comments/1so5mju/falcon_mcp_docs_site_golive_modular_guides_fql/" target="_blank" rel="noopener noreferrer">r/crowdstrike: Falcon MCP docs go-live</a><span class="src-type">reddit</span><span class="src-date">2026-04-17</span></li><li><a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxNbDRxNUdCb3h2bHFoTEhzaDdSVzFBd2dPZEJWRTBSQTcwNXUySURfenNYRnlic3BLQVVUZS1FVTh6Vm5lbG5ZZ2pEZVdlYkZDQjk3WGhTTnNfMjNvSnVrODlVXzRnWDRiWFU4b1Nzdy1Fa0VfMHpyTExXeWcxWnFYQzJENGFpYmNiSXBBVU5URlBhbkU" target="_blank" rel="noopener noreferrer">Red Hot Cyber: CrowdStrike × OpenAI TAC</a><span class="src-type">news</span><span class="src-date">2026-04-17</span></li></ul>
+    </div>
+  </section>
+<section id="watch">
+    <span class="section-label">Forward look</span>
+    <h2>Watch Next Week</h2>
+    <ul class="watch-list"><li><span class="w-trigger">Pricing snapshot recheck</span><span class="w-text">Re-run Wayback snapshot checks on both /pricing pages and SentinelOne /product (which diffed this week).</span><span class="w-when">2026-04-24</span></li><li><span class="w-trigger">Conference / keynote cycle</span><span class="w-text">Watch for CrowdStrike to promote the OpenAI TAC / Falcon MCP launch at RSA-season keynotes and expand positioning to &#39;agentic AI security platform&#39;.</span><span class="w-when">2026-05-15</span></li><li><span class="w-trigger">Earnings call</span><span class="w-text">Track SentinelOne Q1 earnings commentary on LevelBlue MSSP ramp and on-prem deal mix after the ~10% drawdown.</span><span class="w-when">2026-06-15</span></li><li><span class="w-trigger">CVE publication or Falcon release notes</span><span class="w-text">Monitor CyberSecurityNews / HN for follow-up CVE or patch notes tied to the Falcon EDR-disable 0-day research.</span><span class="w-when">2026-05-01</span></li><li><span class="w-trigger">Careers-page diff</span><span class="w-text">Watch SentinelOne Greenhouse for new GTM leadership roles following the March 25 Item 5.02 filing.</span><span class="w-when">2026-05-08</span></li></ul>
+  </section>
+<section id="evidence">
+    <span class="section-label">Appendix</span>
+    <h2>Evidence Index</h2>
+    <p class="muted">Every source URL consulted for this brief, grouped by competitor.</p>
+    <details class="ev-block"><summary>CrowdStrike &middot; 9 source(s)</summary><ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE1MX3J6MWVLcFlxZ2RPQld4YWJSV1YxSDA5X1NuUnZob0xwa3RrMnpWUUhwOWlreE5NWGYtLWdoYkEwclROak9CcWtQYU9SWEZHQkZiQTdjWjYyMXk3Ni1rT0l6aHhJcnVNOUdj" target="_blank" rel="noopener noreferrer">CyberSecurityNews: 0-Day Disables Falcon EDR</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li><li><a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxPT3JHdWNObnZIVWp5SWhiMU1pdC10ejBuWkR3X2tPUnBKeHZVbEc2ajlzM2VZTXlSak1MWHJVNW4tbU9VbkhqWkVyNjNZSUFYQ09hM0tkc3ZmUXBXUE9MZVI0Ul81U0pwMXREQlJRb2t3MDlyTTlfWThKdkk3UDlFSmMzVmM5YV9PRF85T1ZELUNCM3NUUFRBYjJpSUFuSEZZVDhzU0hDNVlzOHc5MDd2YUVTZnVxaW8" target="_blank" rel="noopener noreferrer">Forbes: CrowdStrike&#39;s Next Act — Agentic AI Security</a><span class="src-type">news</span><span class="src-date">2026-04-16</span></li><li><a href="https://news.google.com/rss/articles/CBMilAFBVV95cUxNVDZKeUdJQWdzcHJ5em9YVzdEbXVjV3E0TGQ5UWJSclU2THRfSnducGprSXZFQ2hPQlVPT0kyekdWZE9haUlvX2I3VXI4WUNsS3VEUHRyQ0FlbHd2cTZQRnBYVHBreF9zeDFXN3pKV0gxYko5azVxdG15LVVrc0NzakNxOS1sYTU3ZEFtVC1tbmN0cGV0" target="_blank" rel="noopener noreferrer">Motley Fool: CRWD and PANW as AI Cyber Winners</a><span class="src-type">news</span><span class="src-date">2026-04-15</span></li><li><a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxQZ00yQkxVNnM1b1FGUDlKVUJFNW1uNGpsNl9DSjEyTEdPTFpqdFFNa2FIU3g4YmNPdC0yVkUxeVRWMXhvU0hJU2lXeV9GQmEyWThwSDJXc0ZMUXdkTVlzTWN2ZlRrMzVNRzVWTlZGOWlGTHJJTlh4al9RdW1kUHk3dVgxUDVZMlBSQzVGdl9pTmRPbk9tYTFwVXZqX2laU2VaY0xoV05KMHd2N3Zmb091X0ZfZVVoQ0o" target="_blank" rel="noopener noreferrer">Investing.com: Cantor reiterates CRWD Overweight</a><span class="src-type">news</span><span class="src-date">2026-04-15</span></li><li><a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxNbDRxNUdCb3h2bHFoTEhzaDdSVzFBd2dPZEJWRTBSQTcwNXUySURfenNYRnlic3BLQVVUZS1FVTh6Vm5lbG5ZZ2pEZVdlYkZDQjk3WGhTTnNfMjNvSnVrODlVXzRnWDRiWFU4b1Nzdy1Fa0VfMHpyTExXeWcxWnFYQzJENGFpYmNiSXBBVU5URlBhbkU" target="_blank" rel="noopener noreferrer">Red Hot Cyber: CrowdStrike × OpenAI TAC</a><span class="src-type">news</span><span class="src-date">2026-04-17</span></li><li><a href="https://www.reddit.com/r/crowdstrike/comments/1so5mju/falcon_mcp_docs_site_golive_modular_guides_fql/" target="_blank" rel="noopener noreferrer">r/crowdstrike: Falcon MCP docs go-live</a><span class="src-type">reddit</span><span class="src-date">2026-04-17</span></li><li><a href="https://www.sec.gov/Archives/edgar/data/1535527/000153552726000013/crwd-20260406.htm" target="_blank" rel="noopener noreferrer">SEC EDGAR 8-K — CrowdStrike Holdings</a><span class="src-type">sec_filings</span><span class="src-date">2026-04-06</span></li><li><a href="https://www.crowdstrike.com/pricing" target="_blank" rel="noopener noreferrer">Wayback — no CRWD /pricing snapshots in 90d</a><span class="src-type">pricing_archive</span></li><li><a href="https://www.crowdstrike.com/careers" target="_blank" rel="noopener noreferrer">CrowdStrike careers page</a><span class="src-type">jobs</span></li></ul></details><details class="ev-block"><summary>SentinelOne &middot; 12 source(s)</summary><ul class="sources"><li><a href="https://news.google.com/rss/articles/CBMi5AFBVV95cUxPbnh6TDhPS1FRVlNnUGhpWlp2bDkzSW9XMzdRN0N3cFNES21WU1NmQXI1LWJOb01xYnhfRFZSOXFCMldfUzVTM0ZvaGdNU3pJWXJ3NE1mVDFOVS1yd0ZCZGF1YlFma1NVc0NaVkNOLXZZOTlsNm5MaVptVmpCTmlILTVyNnM3T2pNUW9rVmRPcHA0czk3YUZoOWhuSDZqRjk1VWRPdWdJd3pLQW4xcHJkc0xuM2lF" target="_blank" rel="noopener noreferrer">SentinelOne: CPU-Z watering-hole blocked by AI EDR</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li><li><a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxPaVZQcmpSMExEOTVla0ZpRERYTlV4Rk5PREVXSGRsMW1vVm1OWlBNR2t6clE0NzhpYmRnSm9OQ2hpcjBtQTRJODN6eVFpem5sSWV1QXJ6T0g4cy1EZU5ld1I4QjRQQmpnM1hVY2MyM0VKTnhhV1lWaUFtQ3NCU1BGbF9qUVY4aTltMFo1OEJEcXpVazA" target="_blank" rel="noopener noreferrer">Yahoo Finance: S down 10.4% on AI disruption fears</a><span class="src-type">news</span><span class="src-date">2026-04-11</span></li><li><a href="https://news.google.com/rss/articles/CBMipAFBVV95cUxNQUdGMkg5bTk5NmpzM0RULUVscjgwWVQ3c1dVZ0hnamFob1RlVjNQcFN0V2RkR0doTlVVTGxFRXdWeXVSS3J5UmFKakNsQWRpQVdYSEFFeDZZb0dZZ3VDbXN4QU1KVTdWT3ZnRUNkdWNYZVRDSS1UQzUwdjZKUzM2ZmE0dTRGVzlTOGx1REpoNkpOWmJEcEFKZmlQRDdOX0VmOEVpVw" target="_blank" rel="noopener noreferrer">Yahoo Finance: SentinelOne × LevelBlue + on-prem push</a><span class="src-type">news</span><span class="src-date">2026-04-11</span></li><li><a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxQNnhHNHNzOTNlSHdHb2dKOTBPQXVFTnV4dURVenBVU1VFdzI0SzNWd1I5YlFmYnh1N3dhMjVsMDJ5SnI5elROWWo1Q1dlUkpVNzVUVnhGbDNmb3lhZlFCem8zZlU1UzQxcHhCYnFJR3A5VklNYVZsQmpEWmFSOXI2QXpiS3FOZU9kR09lWjRGT1dzSVZIY2pPTTgtVDlqTHg4YlVkZjN3" target="_blank" rel="noopener noreferrer">ChannelLife AU: Shabeel Shah appointed ANZ/APJ Channel Director</a><span class="src-type">news</span><span class="src-date">2026-04-16</span></li><li><a href="https://www.reddit.com/r/SentinelOneXDR/comments/1smmvno/the_sentinelone_agent_observed_the_cpuz_supply/" target="_blank" rel="noopener noreferrer">r/SentinelOneXDR: CPU-Z kill chain</a><span class="src-type">reddit</span><span class="src-date">2026-04-15</span></li><li><a href="https://www.reddit.com/r/SentinelOneXDR/comments/1sla5d5/windows_11_lag_with_sentinelone_no_cpu_or_ram/" target="_blank" rel="noopener noreferrer">r/SentinelOneXDR: Windows 11 lag complaint</a><span class="src-type">reddit</span><span class="src-date">2026-04-14</span></li><li><a href="https://www.reddit.com/r/cybersecurity_de/comments/1sl50md/wo_verwendet_ihr_bewusst_amerikanische_software/" target="_blank" rel="noopener noreferrer">r/cybersecurity_de: EU vs US software thread</a><span class="src-type">reddit</span><span class="src-date">2026-04-14</span></li><li><a href="https://news.ycombinator.com/item?id=47609025" target="_blank" rel="noopener noreferrer">HN: SentinelOne implementation-blind-spot post</a><span class="src-type">hackernews</span><span class="src-date">2026-04-02</span></li><li><a href="https://www.sec.gov/Archives/edgar/data/1583708/000158370826000025/s-20260319.htm" target="_blank" rel="noopener noreferrer">SEC EDGAR 8-K — SentinelOne Item 5.02</a><span class="src-type">sec_filings</span><span class="src-date">2026-03-25</span></li><li><a href="https://www.sentinelone.com/product" target="_blank" rel="noopener noreferrer">SentinelOne /product — content diff detected this run</a><span class="src-type">website</span><span class="src-date">2026-04-17</span></li><li><a href="https://www.sentinelone.com/pricing" target="_blank" rel="noopener noreferrer">Wayback — no S /pricing snapshots in 90d</a><span class="src-type">pricing_archive</span></li><li><a href="https://www.sentinelone.com/careers" target="_blank" rel="noopener noreferrer">SentinelOne careers (channel &amp; cloud alliances roles)</a><span class="src-type">jobs</span></li></ul></details>
+  </section>
+<aside class="byline" aria-label="Analyst">
+    <div class="byline-id">
+      <span class="byline-monogram" aria-hidden="true">ZM</span>
+      <div class="byline-text">
+        <span class="byline-eyebrow">Prepared by</span>
+        <p class="byline-name">Zaeem Malik <span class="byline-sep">·</span> <span class="byline-title">Founder · MightX</span></p>
+        
+        
+      </div>
+    </div>
+  </aside>
 </div>
 
-<!-- Footer -->
 <footer>
   <div class="container">
-    <p><span class="gen-date" id="gen-date"></span></p>
-    <p style="margin-top: 6px;">Competitive Intelligence Brief — CrowdStrike vs. SentinelOne — Cybersecurity Vertical</p>
+    <p class="colophon">Prepared by the MightX Competitive Intelligence analyst desk.</p>
+    <p><span class="gen-date" id="generated-date-label">Generated April 2026</span> &middot; Cybersecurity vertical &middot; CrowdStrike vs SentinelOne</p>
   </div>
-
-  <strong id="generated-date-label">Generated</strong>
 </footer>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  // ID parameter injection
+  // Personalize the hero line from ?id=
   var params = new URLSearchParams(window.location.search);
-  var idValue = params.get('id');
-  var heroLine = document.getElementById('hero-id-line');
-  if (idValue) {
-    heroLine.textContent = 'Custom Intelligence Capture for ' + decodeURIComponent(idValue);
-  } else {
-    heroLine.textContent = 'Custom Intelligence Capture for (no id in URL)';
+  var idRaw = params.get('id');
+  var displayId = idRaw ? decodeURIComponent(idRaw) : '(no id in URL)';
+  var el = document.getElementById('custom-id-line');
+  if (el) el.textContent = 'Prepared for ' + displayId;
+
+  // Preserve ?id= through the CTA click so open-tracking can bind the lead
+  var cta = document.getElementById('cta-link');
+  if (cta && idRaw) {
+    try {
+      var url = new URL(cta.href);
+      url.searchParams.set('ref_id', idRaw);
+      cta.href = url.toString();
+    } catch (_) { /* leave href unchanged */ }
   }
 
-  // Footer date
-  var now = new Date();
-  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  var genDate = document.getElementById('gen-date');
-  genDate.textContent = 'Generated ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  // Dynamic Month Year if the server-side label wasn't filled in
+  var dateEl = document.getElementById('generated-date-label');
+  if (dateEl && dateEl.textContent.trim() === 'Generated') {
+    var d = new Date();
+    var fmt = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(d);
+    dateEl.textContent = 'Generated ' + fmt;
+  }
 });
 </script>
-
-
-
-<script id="generated-date-script">
-  document.addEventListener('DOMContentLoaded', function () {
-    var generatedDateEl = document.getElementById('generated-date-label');
-    if (generatedDateEl) {
-      var formattedMonthYear = new Intl.DateTimeFormat('en-US', {
-        month: 'long',
-        year: 'numeric',
-      }).format(new Date());
-      generatedDateEl.textContent = 'Generated ' + formattedMonthYear;
-    }
-  });
-</script>
-
 </body>
 </html>

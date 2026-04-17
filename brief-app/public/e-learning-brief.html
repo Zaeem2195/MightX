@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Briefing Â· Docebo vs Absorb LMS</title>
+<title>The Briefing · Docebo vs Absorb LMS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
   --bg-primary:#0b0c10; --bg-secondary:#111216; --bg-tertiary:#161820; --bg-card:#141620;
   --border-subtle:#262830; --border-accent:#3a3d48;
   --text-primary:#f2efe8; --text-secondary:#a8a49a; --text-tertiary:#6f6b60;
-  --accent:#c48a47;          /* burnt amber â€” the single editorial accent */
+  --accent:#c48a47;          /* burnt amber — the single editorial accent */
   --accent-tint:rgba(196,138,71,0.08);
   --accent-line:rgba(196,138,71,0.35);
   --positive:#7fb896;        /* muted sage, not neon green */
@@ -31,11 +31,11 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--fo
 a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 0.15s ease}
 a:hover{border-bottom-color:var(--accent-line);text-decoration:none}
 
-/* â”€â”€ Masthead â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Masthead ────────────────────────────────────────────────────────────── */
 header{border-bottom:2px solid var(--rule);padding:64px 0 40px;position:relative}
 header::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:var(--max-width);height:1px;background:var(--rule);padding:0 28px}
 .tag-line{display:block;font-family:var(--font-sans);font-size:10.5px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--accent);margin-bottom:28px;padding:0;background:transparent;border:none;border-radius:0}
-.tag-line::before{content:"Â§ ";font-family:var(--font-serif);font-style:italic}
+.tag-line::before{content:"§ ";font-family:var(--font-serif);font-style:italic}
 header h1{font-family:var(--font-serif);font-size:clamp(34px,5vw,52px);font-weight:600;line-height:1.12;letter-spacing:-0.02em;color:var(--text-primary);margin-bottom:16px}
 header h1 span.vs{color:var(--text-tertiary);font-style:italic;font-weight:400;font-size:0.68em;padding:0 4px;vertical-align:0.08em}
 .vertical-badge{display:inline-block;font-family:var(--font-sans);font-size:10px;font-weight:600;color:var(--text-secondary);background:transparent;border:1px solid var(--rule);padding:4px 12px;border-radius:0;margin-top:8px;letter-spacing:0.2em;text-transform:uppercase}
@@ -43,7 +43,7 @@ header h1 span.vs{color:var(--text-tertiary);font-style:italic;font-weight:400;f
 .custom-id::before{content:"";display:inline-block;width:24px;height:1px;background:var(--accent);vertical-align:middle;margin-right:10px}
 .week-summary{font-family:var(--font-serif);font-size:20px;font-weight:400;line-height:1.6;color:var(--text-primary);letter-spacing:-0.01em;margin-top:32px;padding:0 0 0 24px;background:transparent;border-left:2px solid var(--accent);border-radius:0}
 
-/* â”€â”€ Freshness strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Freshness strip ─────────────────────────────────────────────────────── */
 .freshness{display:flex;align-items:center;gap:12px;margin:24px 0 0;padding:12px 16px;border-radius:0;font-family:var(--font-sans);font-size:13px;letter-spacing:0.02em;color:var(--text-secondary);border:1px solid var(--rule);background:var(--bg-secondary);text-transform:none}
 .freshness.live{border-color:rgba(127,184,150,0.3)}
 .freshness.sample{border-color:rgba(212,164,78,0.3)}
@@ -51,7 +51,7 @@ header h1 span.vs{color:var(--text-tertiary);font-style:italic;font-weight:400;f
 .freshness.sample .freshness-dot{background:var(--warning);box-shadow:0 0 0 4px rgba(212,164,78,0.1)}
 .freshness strong{color:var(--text-primary);font-weight:600}
 
-/* â”€â”€ Confidence legend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Confidence legend ───────────────────────────────────────────────────── */
 .conf-legend{display:flex;flex-direction:column;gap:10px;font-family:var(--font-sans);font-size:14px;line-height:1.5;color:var(--text-secondary);margin:20px 0 0;padding:16px 18px;background:var(--bg-secondary);border:1px solid var(--rule);border-radius:0}
 .conf-legend-intro{margin-bottom:2px}
 .conf-legend strong{font-family:var(--font-sans);color:var(--text-primary);font-weight:600;text-transform:none;letter-spacing:0;font-size:14px}
@@ -61,25 +61,25 @@ header h1 span.vs{color:var(--text-tertiary);font-style:italic;font-weight:400;f
 .conf-med{background:var(--accent-tint);color:var(--accent);border-color:var(--accent-line)}
 .conf-low{background:transparent;color:var(--text-tertiary);border-color:var(--rule)}
 
-/* â”€â”€ How to use (now framed as editor's note) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── How to use (now framed as editor's note) ────────────────────────────── */
 .how-to-use{background:transparent;border:none;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);border-radius:0;padding:24px 0;margin:28px 0 0}
 .how-to-use h2{font-family:var(--font-sans);font-size:10.5px;font-weight:700;color:var(--accent);margin-bottom:16px;letter-spacing:0.24em;text-transform:uppercase}
-.how-to-use h2::before{content:"Editor's note Â· "}
+.how-to-use h2::before{content:"Editor's note · "}
 .how-to-use ol{list-style:none;counter-reset:steps}
 .how-to-use ol li{counter-increment:steps;position:relative;padding-left:36px;margin-bottom:10px;font-size:14.5px;color:var(--text-secondary);line-height:1.65}
 .how-to-use ol li::before{content:counter(steps,upper-roman);position:absolute;left:0;top:0;font-family:var(--font-serif);font-style:italic;font-size:14px;color:var(--accent);letter-spacing:0.02em}
 .how-to-use ol li strong{color:var(--text-primary);font-weight:600}
 
-/* â”€â”€ Sections (numbered editorial chapters) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Sections (numbered editorial chapters) ──────────────────────────────── */
 section{padding:56px 0;border-bottom:1px solid var(--rule);position:relative}
 section:last-of-type{border-bottom:none}
 .section-label{display:block;font-family:var(--font-sans);font-size:10.5px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:14px}
-.section-label::before{content:"â€” "}
+.section-label::before{content:"— "}
 section h2{font-family:var(--font-serif);font-size:clamp(26px,3.8vw,36px);font-weight:600;letter-spacing:-0.015em;line-height:1.22;margin-bottom:10px;color:var(--text-primary)}
 section p.muted{color:var(--text-secondary);font-size:14.5px;margin-bottom:24px;font-family:var(--font-serif);font-style:italic;line-height:1.6;max-width:640px}
 .badge-src{display:inline-block;font-family:var(--font-sans);font-size:10px;font-weight:600;color:var(--accent);background:transparent;border:1px solid var(--accent-line);padding:3px 10px;border-radius:0;margin-left:10px;vertical-align:middle;letter-spacing:0.18em;text-transform:uppercase}
 
-/* â”€â”€ Trigger banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Trigger banner ──────────────────────────────────────────────────────── */
 .trigger-banner{margin:20px 0 0;padding:22px 26px;border-radius:0;border:1px solid var(--rule);background:var(--bg-secondary)}
 .trigger-banner.none{background:transparent;color:var(--text-tertiary);font-family:var(--font-serif);font-style:italic;font-size:15px;padding:18px 0;border:none;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .trigger-banner.has{background:transparent;border-color:rgba(195,85,85,0.3);border-left:3px solid var(--alert)}
@@ -91,7 +91,7 @@ section p.muted{color:var(--text-secondary);font-size:14.5px;margin-bottom:24px;
 .te-date,.sig-date,.mm-date,.w-when{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);letter-spacing:0.04em;text-transform:uppercase}
 .trigger-detail{font-size:14.5px;color:var(--text-secondary);line-height:1.7}
 
-/* â”€â”€ Signal grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Signal grid ─────────────────────────────────────────────────────────── */
 .signal-grid{display:grid;grid-template-columns:1fr;gap:0;margin-top:8px}
 @media(min-width:720px){.signal-grid{grid-template-columns:1fr 1fr;gap:0 36px}}
 .signal-card{background:transparent;border:none;border-top:1px solid var(--rule);border-radius:0;padding:18px 0 16px}
@@ -99,7 +99,7 @@ section p.muted{color:var(--text-secondary);font-size:14.5px;margin-bottom:24px;
 .sig-head strong{font-family:var(--font-serif);font-size:17px;font-weight:400;color:var(--text-primary);line-height:1.3}
 .sig-type{font-size:10.5px;font-family:var(--font-mono);color:var(--text-tertiary);margin-top:6px;text-transform:uppercase;letter-spacing:0.14em}
 
-/* â”€â”€ Insight cards (pricing, SEC, market moves) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Insight cards (pricing, SEC, market moves) ──────────────────────────── */
 .insight-card{background:transparent;border:none;border-top:1px solid var(--rule);border-radius:0;padding:24px 0 20px;margin-bottom:0;transition:none}
 .insight-card:hover{border-color:var(--rule)}
 .insight-card .card-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
@@ -108,19 +108,19 @@ section p.muted{color:var(--text-secondary);font-size:14.5px;margin-bottom:24px;
 .insight-card p:last-of-type{margin-bottom:0}
 .price-bullets{margin:10px 0 14px 0;list-style:none}
 .price-bullets li{font-size:14px;color:var(--text-secondary);margin-bottom:6px;padding-left:20px;position:relative;line-height:1.6}
-.price-bullets li::before{content:"â†’";position:absolute;left:0;top:0;color:var(--accent);font-family:var(--font-serif)}
+.price-bullets li::before{content:"→";position:absolute;left:0;top:0;color:var(--accent);font-family:var(--font-serif)}
 .sec-items{font-family:var(--font-mono);font-size:11.5px;color:var(--text-tertiary) !important;background:transparent;padding:6px 10px;border-radius:0;border:1px solid var(--rule);display:inline-block;letter-spacing:0.02em}
 
-/* â”€â”€ Competitor tags (restrained, not neon) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Competitor tags (restrained, not neon) ──────────────────────────────── */
 .competitor-tag{display:inline-block;font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:3px 10px;border-radius:0;margin-right:6px;border:1px solid}
 .tag-a{color:var(--accent);background:transparent;border-color:var(--accent-line)}
 .tag-b{color:var(--positive);background:transparent;border-color:rgba(127,184,150,0.35)}
 .tag-neutral{color:var(--text-tertiary);background:transparent;border-color:var(--rule)}
 
-/* â”€â”€ Sources (editorial footnote style) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Sources (editorial footnote style) ──────────────────────────────────── */
 .sources{list-style:none;margin:14px 0 0;padding:10px 0 0;background:transparent;border:none;border-top:1px dashed var(--rule);border-radius:0;font-family:var(--font-mono);font-size:11.5px;line-height:1.7}
 .sources li{padding:3px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;letter-spacing:0.01em}
-.sources li::before{content:"Â·";color:var(--text-tertiary);margin-right:2px}
+.sources li::before{content:"·";color:var(--text-tertiary);margin-right:2px}
 .sources a{color:var(--accent);word-break:break-all;border-bottom:1px dotted var(--accent-line)}
 .sources .src-nolink{color:var(--text-secondary)}
 .sources .src-type{font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.16em;background:transparent;padding:1px 0;border-radius:0;border:none}
@@ -128,14 +128,14 @@ section p.muted{color:var(--text-secondary);font-size:14.5px;margin-bottom:24px;
 .sources .src-type::after{content:"]"}
 .sources .src-date{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary)}
 
-/* â”€â”€ Verify details â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Verify details ──────────────────────────────────────────────────────── */
 details.verify{margin-top:12px;font-size:13px;color:var(--text-tertiary)}
 details.verify summary{cursor:pointer;color:var(--accent);user-select:none;font-family:var(--font-sans);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;padding:4px 0}
 details.verify summary:hover{color:var(--text-primary)}
 details.verify p{font-size:13.5px;color:var(--text-secondary);margin-top:8px;margin-bottom:0;line-height:1.7}
 details.verify .verify-basis{font-family:var(--font-serif);font-style:italic;color:var(--text-tertiary);font-size:13px}
 
-/* â”€â”€ Matrix â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Matrix ──────────────────────────────────────────────────────────────── */
 .matrix-wrap{overflow-x:auto;margin-top:12px;border:1px solid var(--rule)}
 table.matrix{width:100%;border-collapse:collapse;font-size:14.5px}
 table.matrix th,table.matrix td{text-align:left;padding:16px 18px;border-bottom:1px solid var(--rule);vertical-align:top}
@@ -146,7 +146,7 @@ table.matrix th.axis{color:var(--text-primary);font-weight:600;text-transform:no
 table.matrix td{color:var(--text-secondary);line-height:1.65}
 .matrix-note{font-family:var(--font-serif);font-size:13px;color:var(--text-tertiary);font-style:italic;font-weight:400;margin-top:6px}
 
-/* â”€â”€ Talk tracks (objection + response, editorial dialogue) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Talk tracks (objection + response, editorial dialogue) ─────────────── */
 .talk-track{background:transparent;border:none;border-top:1px solid var(--rule);border-radius:0;padding:28px 0 24px;margin-bottom:0}
 .talk-track:first-of-type{border-top:none;padding-top:8px}
 .tt-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:12px}
@@ -160,19 +160,19 @@ table.matrix td{color:var(--text-secondary);line-height:1.65}
 .tt-example{color:var(--positive);background:transparent;border-color:rgba(127,184,150,0.35)}
 .tt-template{color:var(--text-tertiary);background:transparent;border-color:var(--rule)}
 
-/* â”€â”€ Watch list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Watch list ──────────────────────────────────────────────────────────── */
 .watch-list{list-style:none;padding:0;margin:12px 0 0}
 .watch-list li{padding:16px 0;border:none;border-bottom:1px solid var(--rule);border-radius:0;margin-bottom:0;display:flex;flex-wrap:wrap;gap:14px;align-items:baseline;background:transparent}
 .watch-list li:last-child{border-bottom:none}
 .w-trigger{font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);background:transparent;border:1px solid var(--accent-line);padding:3px 10px;border-radius:0}
 .w-text{font-family:var(--font-serif);font-size:16px;color:var(--text-secondary);flex:1 1 60%;line-height:1.5;font-weight:400}
 
-/* â”€â”€ Evidence index (appendix) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Evidence index (appendix) ───────────────────────────────────────────── */
 .ev-block{margin-bottom:4px;padding:14px 0;background:transparent;border:none;border-bottom:1px solid var(--rule);border-radius:0}
 .ev-block summary{cursor:pointer;font-family:var(--font-sans);font-size:13px;color:var(--text-primary);font-weight:600;letter-spacing:0.02em;user-select:none;padding:4px 0}
 .ev-block summary:hover{color:var(--accent)}
 
-/* â”€â”€ CTA (tasteful, single confident button) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── CTA (tasteful, single confident button) ─────────────────────────────── */
 #cta{border-bottom:none;padding-bottom:72px}
 .cta-card{background:transparent;border:1px solid var(--rule);border-radius:0;padding:48px 36px;text-align:center;position:relative}
 .cta-card::before{content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:80px;height:2px;background:var(--accent)}
@@ -182,23 +182,23 @@ table.matrix td{color:var(--text-secondary);line-height:1.65}
 .cta-btn:hover{background:#d79b55;text-decoration:none;border-bottom:none}
 .cta-micro{font-family:var(--font-mono);color:var(--text-tertiary);font-size:11px;margin-top:20px;letter-spacing:0.04em;text-transform:uppercase}
 
-/* â”€â”€ Footer colophon â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Footer colophon ─────────────────────────────────────────────────────── */
 footer{border-top:2px solid var(--rule);padding:32px 0 48px;text-align:center;position:relative}
-footer::before{content:"Â§";display:block;font-family:var(--font-serif);font-style:italic;font-size:20px;color:var(--accent);margin-bottom:14px}
+footer::before{content:"§";display:block;font-family:var(--font-serif);font-style:italic;font-size:20px;color:var(--accent);margin-bottom:14px}
 footer p{font-family:var(--font-sans);font-size:13px;color:var(--text-tertiary);letter-spacing:0.02em;line-height:1.75}
 footer p.colophon{font-family:var(--font-serif);font-style:italic;font-size:14px;color:var(--text-secondary);letter-spacing:0;margin-bottom:8px}
 footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-secondary);text-transform:none;letter-spacing:0.04em;font-size:12px}
 
-/* â”€â”€ Table of contents (skim path above the fold) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Table of contents (skim path above the fold) ────────────────────────── */
 .toc{margin-top:32px;padding:18px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;flex-wrap:wrap;align-items:baseline;gap:18px}
 .toc-label{font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--text-tertiary);white-space:nowrap}
-.toc-label::before{content:"Â§ "}
+.toc-label::before{content:"§ "}
 .toc-links{display:flex;flex-wrap:wrap;gap:0 20px;flex:1 1 auto}
 .toc-links a{font-family:var(--font-sans);font-size:12px;font-weight:500;letter-spacing:0.04em;color:var(--text-secondary);border-bottom:none;padding:2px 0;position:relative;transition:color 0.15s ease}
 .toc-links a:hover{color:var(--accent);border-bottom:none}
 .toc-links a + a::before{content:"";position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:2px;height:2px;background:var(--text-tertiary);border-radius:50%}
 
-/* â”€â”€ Analyst byline (trust lever directly above the CTA) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Analyst byline (trust lever directly above the CTA) ─────────────────── */
 .byline{padding:32px 0 24px;border-top:1px solid var(--rule)}
 .byline-id{display:flex;gap:20px;align-items:flex-start;max-width:560px;margin:0 auto;text-align:left}
 .byline-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid var(--rule);flex-shrink:0}
@@ -212,7 +212,7 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
 .byline-link{font-family:var(--font-sans);font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--accent-line);padding-bottom:1px}
 .byline-link:hover{border-bottom-color:var(--accent)}
 
-/* â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Responsive ──────────────────────────────────────────────────────────── */
 @media(max-width:600px){
   .container{padding:0 20px}
   header{padding:44px 0 32px}
@@ -238,7 +238,7 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
 <body>
 <div class="container">
   <header>
-    <div class="tag-line">The Briefing Â· Competitive Intelligence</div>
+    <div class="tag-line">The Briefing · Competitive Intelligence</div>
     <h1>Docebo <span class="vs">versus</span> Absorb LMS</h1>
     <div class="vertical-badge">E-Learning &middot; Vertical Sample</div>
     <p class="custom-id" id="custom-id-line"></p>
@@ -251,13 +251,13 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
 
   <div class="freshness live">
       <span class="freshness-dot"></span>
-      <span><strong>Live signals</strong> &middot; 32 from 8 source type(s) &middot; Last 7â€“30 days</span>
+      <span><strong>Live signals</strong> &middot; 32 from 8 source type(s) &middot; Last 7–30 days</span>
     </div>
 <div class="conf-legend">
     <span class="conf-legend-intro"><strong>Confidence:</strong> each insight uses a label for how strongly the claim is supported.</span>
-    <span class="conf-legend-row"><span class="conf-pill conf-high" title="High confidence">High confidence</span> â€” directly evidenced by a dated source</span>
-    <span class="conf-legend-row"><span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span> â€” pattern consistent with multiple signals</span>
-    <span class="conf-legend-row"><span class="conf-pill conf-low" title="Low confidence">Low confidence</span> â€” market reasoning, not pinned to this week</span>
+    <span class="conf-legend-row"><span class="conf-pill conf-high" title="High confidence">High confidence</span> — directly evidenced by a dated source</span>
+    <span class="conf-legend-row"><span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span> — pattern consistent with multiple signals</span>
+    <span class="conf-legend-row"><span class="conf-pill conf-low" title="Low confidence">Low confidence</span> — market reasoning, not pinned to this week</span>
   </div>
 <div class="how-to-use">
     <h2>How to read this brief</h2>
@@ -271,12 +271,12 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
     <div class="trigger-label">2 trigger events this week</div>
     <div class="trigger-card">
       <div class="trigger-head"><span class="competitor-tag tag-a">Docebo</span><strong>Docebo stock hits new 1-year low; analyst price target slashed 15.71%</strong><span class="te-date">2026-04-09</span></div>
-      <p class="trigger-detail">MarketBeat confirmed DCBO reached a new 52-week low on April 9, while analysts cut the price target to $21.55 â€” a 15.71% reduction. GuruFocus flagged an additional 8.5% single-day drop with a GF Score of 70, indicating below-average financial health. This creates an opening to raise doubt about Docebo&#39;s long-term investment in product and support during competitive deals.</p>
-      <ul class="sources"><li><a href="https://www.marketbeat.com" target="_blank" rel="noopener noreferrer">MarketBeat â€” Docebo Reaches New 1-Year Low</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.msn.com" target="_blank" rel="noopener noreferrer">MSN â€” Docebo price target decreased by 15.71% to 21.55</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.gurufocus.com" target="_blank" rel="noopener noreferrer">GuruFocus â€” Docebo Shares Fall 8.5%</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li></ul>
+      <p class="trigger-detail">MarketBeat confirmed DCBO reached a new 52-week low on April 9, while analysts cut the price target to $21.55 — a 15.71% reduction. GuruFocus flagged an additional 8.5% single-day drop with a GF Score of 70, indicating below-average financial health. This creates an opening to raise doubt about Docebo&#39;s long-term investment in product and support during competitive deals.</p>
+      <ul class="sources"><li><a href="https://www.marketbeat.com" target="_blank" rel="noopener noreferrer">MarketBeat — Docebo Reaches New 1-Year Low</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.msn.com" target="_blank" rel="noopener noreferrer">MSN — Docebo price target decreased by 15.71% to 21.55</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.gurufocus.com" target="_blank" rel="noopener noreferrer">GuruFocus — Docebo Shares Fall 8.5%</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li></ul>
     </div><div class="trigger-card">
-      <div class="trigger-head"><span class="competitor-tag tag-b">Absorb LMS</span><strong>Absorb LMS posts 4 enterprise sales roles â€” aggressive upmarket expansion underway</strong></div>
-      <p class="trigger-detail">Absorb&#39;s careers page now shows four enterprise-titled positions including Enterprise Account Manager (Ã—2) and Director, Enterprise Sales (Ã—2). Combined with a Presales Support Specialist opening, this signals a deliberate push to win larger, higher-ACV deals. Any prospect being courted by Absorb should expect aggressive discounting and executive-level attention in the near term.</p>
-      <ul class="sources"><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers â€” ATS (Ashby)</a><span class="src-type">jobs</span></li></ul>
+      <div class="trigger-head"><span class="competitor-tag tag-b">Absorb LMS</span><strong>Absorb LMS posts 4 enterprise sales roles — aggressive upmarket expansion underway</strong></div>
+      <p class="trigger-detail">Absorb&#39;s careers page now shows four enterprise-titled positions including Enterprise Account Manager (×2) and Director, Enterprise Sales (×2). Combined with a Presales Support Specialist opening, this signals a deliberate push to win larger, higher-ACV deals. Any prospect being courted by Absorb should expect aggressive discounting and executive-level attention in the near term.</p>
+      <ul class="sources"><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers — ATS (Ashby)</a><span class="src-type">jobs</span></li></ul>
     </div>
   </div>
 <section id="this-week">
@@ -284,29 +284,29 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
     <h2>This Week's Signals</h2>
     <div class="signal-grid"><div class="signal-card">
       <span class="competitor-tag tag-a">Docebo</span>
-      <div class="sig-head"><strong>Multiple analyst downgrades and a new 52-week stock low across April 9â€“10</strong><span class="sig-date">2026-04-10</span></div>
+      <div class="sig-head"><strong>Multiple analyst downgrades and a new 52-week stock low across April 9–10</strong><span class="sig-date">2026-04-10</span></div>
       <div class="sig-type">news</div>
-      <ul class="sources"><li><a href="https://www.msn.com" target="_blank" rel="noopener noreferrer">MSN â€” price target decreased 15.71%</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.marketbeat.com" target="_blank" rel="noopener noreferrer">MarketBeat â€” DCBO new 1-year low</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.gurufocus.com" target="_blank" rel="noopener noreferrer">GuruFocus â€” shares fall 8.5%, GF Score 70</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li></ul>
+      <ul class="sources"><li><a href="https://www.msn.com" target="_blank" rel="noopener noreferrer">MSN — price target decreased 15.71%</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.marketbeat.com" target="_blank" rel="noopener noreferrer">MarketBeat — DCBO new 1-year low</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.gurufocus.com" target="_blank" rel="noopener noreferrer">GuruFocus — shares fall 8.5%, GF Score 70</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li></ul>
     </div><div class="signal-card">
       <span class="competitor-tag tag-a">Docebo</span>
-      <div class="sig-head"><strong>Docebo publishes product update blog post â€” AI-powered LMS narrative continues</strong><span class="sig-date">2026-04-13</span></div>
+      <div class="sig-head"><strong>Docebo publishes product update blog post — AI-powered LMS narrative continues</strong><span class="sig-date">2026-04-13</span></div>
       <div class="sig-type">news</div>
-      <ul class="sources"><li><a href="https://docebo.com" target="_blank" rel="noopener noreferrer">Docebo â€” Product updates blog post</a><span class="src-type">news</span><span class="src-date">2026-04-13</span></li></ul>
+      <ul class="sources"><li><a href="https://docebo.com" target="_blank" rel="noopener noreferrer">Docebo — Product updates blog post</a><span class="src-type">news</span><span class="src-date">2026-04-13</span></li></ul>
     </div><div class="signal-card">
       <span class="competitor-tag tag-a">Docebo</span>
-      <div class="sig-head"><strong>Reddit thread reveals mid-market buyer actively comparing Docebo, Absorb, and 360Learning â€” price negotiation tips shared</strong><span class="sig-date">2026-03-25</span></div>
+      <div class="sig-head"><strong>Reddit thread reveals mid-market buyer actively comparing Docebo, Absorb, and 360Learning — price negotiation tips shared</strong><span class="sig-date">2026-03-25</span></div>
       <div class="sig-type">reddit</div>
-      <ul class="sources"><li><a href="https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/" target="_blank" rel="noopener noreferrer">r/Training â€” LMS platform Negotiations</a><span class="src-type">reddit</span><span class="src-date">2026-03-25</span></li></ul>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/" target="_blank" rel="noopener noreferrer">r/Training — LMS platform Negotiations</a><span class="src-type">reddit</span><span class="src-date">2026-03-25</span></li></ul>
     </div><div class="signal-card">
       <span class="competitor-tag tag-b">Absorb LMS</span>
-      <div class="sig-head"><strong>Absorb publishes new Integration API and Data Import documentation â€” expanding technical onboarding surface</strong><span class="sig-date">2026-04-10</span></div>
+      <div class="sig-head"><strong>Absorb publishes new Integration API and Data Import documentation — expanding technical onboarding surface</strong><span class="sig-date">2026-04-10</span></div>
       <div class="sig-type">news</div>
-      <ul class="sources"><li><a href="https://absorblms.com" target="_blank" rel="noopener noreferrer">Absorb LMS â€” Getting Started with Integration API</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://absorblms.com" target="_blank" rel="noopener noreferrer">Absorb LMS â€” Data Imports: Enrollments</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li></ul>
+      <ul class="sources"><li><a href="https://absorblms.com" target="_blank" rel="noopener noreferrer">Absorb LMS — Getting Started with Integration API</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://absorblms.com" target="_blank" rel="noopener noreferrer">Absorb LMS — Data Imports: Enrollments</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li></ul>
     </div><div class="signal-card">
       <span class="competitor-tag tag-b">Absorb LMS</span>
-      <div class="sig-head"><strong>Absorb LMS hiring 15 roles with zero visible engineering/AI positions â€” possible product investment gap</strong></div>
+      <div class="sig-head"><strong>Absorb LMS hiring 15 roles with zero visible engineering/AI positions — possible product investment gap</strong></div>
       <div class="sig-type">jobs</div>
-      <ul class="sources"><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers â€” Ashby ATS board</a><span class="src-type">jobs</span></li></ul>
+      <ul class="sources"><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers — Ashby ATS board</a><span class="src-type">jobs</span></li></ul>
     </div></div>
   </section>
 <section id="pricing-intel">
@@ -317,12 +317,12 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
       <span class="competitor-tag tag-a">Docebo</span>
       <h3>Neither the /pricing nor /plans page returned usable Wayback Machine snapshots in the last 90 days; CDX queries timed out or returned zero results. Docebo continues to gate pricing behind a sales conversation.</h3>
       <ul class="price-bullets"><li>No material pricing-page changes detected in the archive window.</li></ul>
-      <ul class="sources"><li><span class="src-nolink">Wayback Machine CDX â€” docebo.com/pricing (timeout)</span><span class="src-type">pricing_archive</span></li></ul>
+      <ul class="sources"><li><span class="src-nolink">Wayback Machine CDX — docebo.com/pricing (timeout)</span><span class="src-type">pricing_archive</span></li></ul>
     </div><div class="insight-card">
       <span class="competitor-tag tag-b">Absorb LMS</span>
       <h3>Absorb&#39;s /pricing and /plans pages returned no Wayback Machine snapshots in the last 90 days. Absorb also gates pricing behind a demo request.</h3>
       <ul class="price-bullets"><li>No material pricing-page changes detected in the archive window.</li></ul>
-      <ul class="sources"><li><span class="src-nolink">Wayback Machine CDX â€” absorblms.com/pricing (no snapshots)</span><span class="src-type">pricing_archive</span></li></ul>
+      <ul class="sources"><li><span class="src-nolink">Wayback Machine CDX — absorblms.com/pricing (no snapshots)</span><span class="src-type">pricing_archive</span></li></ul>
     </div>
   </section>
 <section id="matrix">
@@ -334,11 +334,11 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
       <td>Absorb LMS has no visible AI-specific hiring or recent AI-feature announcements</td>
     </tr><tr>
       <th class="axis">Enterprise Sales Motion<div class="matrix-note">Absorb will likely compete harder on enterprise deals in Q2-Q3 2026; expect executive-level involvement and concessions.</div></th>
-      <td>Docebo has hiring for Customer Success Manager (Enterprise) and Sales Enablement Lead (NA) â€” steady-state investment</td>
-      <td>Absorb LMS is aggressively hiring 4 enterprise-titled roles (2 AE, 2 Director) â€” clear upmarket push</td>
+      <td>Docebo has hiring for Customer Success Manager (Enterprise) and Sales Enablement Lead (NA) — steady-state investment</td>
+      <td>Absorb LMS is aggressively hiring 4 enterprise-titled roles (2 AE, 2 Director) — clear upmarket push</td>
     </tr><tr>
       <th class="axis">Financial Stability Perception<div class="matrix-note">Use Docebo&#39;s public market distress to raise platform-continuity questions in head-to-head evaluations.</div></th>
-      <td>Stock at 52-week low; analyst downgrades; GF Score 70 â€” customers and prospects notice</td>
+      <td>Stock at 52-week low; analyst downgrades; GF Score 70 — customers and prospects notice</td>
       <td>Private company; no public financial pressure signals detected</td>
     </tr><tr>
       <th class="axis">Integration &amp; API Investment<div class="matrix-note">Both are investing in integration stories. Highlight any native integrations your platform ships that neither offers.</div></th>
@@ -350,12 +350,12 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
       <td>No public pricing; completely gated behind demo request</td>
     </tr><tr>
       <th class="axis">Product / Engineering Hiring<div class="matrix-note">Absorb&#39;s thin engineering pipeline is a vulnerability; question their roadmap velocity in competitive deals.</div></th>
-      <td>Product Manager (Analytics), Senior Product Engineer, DevOps Engineer â€” active R&amp;D investment</td>
-      <td>Only 1 Principal Product Manager role visible; zero engineering/AI roles â€” potential slowdown</td>
+      <td>Product Manager (Analytics), Senior Product Engineer, DevOps Engineer — active R&amp;D investment</td>
+      <td>Only 1 Principal Product Manager role visible; zero engineering/AI roles — potential slowdown</td>
     </tr><tr>
       <th class="axis">Mid-Market Buyer Consideration<div class="matrix-note">Both are in the same competitive set for growing mid-market companies. Differentiate on speed-to-value and TCO.</div></th>
       <td>Actively considered by 400-employee companies comparing LMS options (Reddit signal)</td>
-      <td>Named alongside Docebo in same Reddit negotiation thread â€” strong mid-market contender</td>
+      <td>Named alongside Docebo in same Reddit negotiation thread — strong mid-market contender</td>
     </tr></table></div>
   </section>
 <section id="moves">
@@ -369,7 +369,7 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
       </div>
       <h3>Docebo&#39;s Stock Collapse Creates Customer-Confidence Vulnerability</h3>
       <p>Docebo hit a new 1-year low on April 9, with analysts cutting the price target by 15.71% to $21.55 and shares dropping 8.5% in a single session. A GF Score of 70 suggests below-average financial quality. Procurement teams conducting vendor risk assessments will flag this; sales reps should be prepared with a stability narrative when competing against Docebo in enterprise deals.</p>
-      <ul class="sources"><li><a href="https://www.msn.com" target="_blank" rel="noopener noreferrer">MSN â€” price target cut to 21.55</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.marketbeat.com" target="_blank" rel="noopener noreferrer">MarketBeat â€” new 1-year low</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.gurufocus.com" target="_blank" rel="noopener noreferrer">GuruFocus â€” shares fall 8.5%</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li></ul>
+      <ul class="sources"><li><a href="https://www.msn.com" target="_blank" rel="noopener noreferrer">MSN — price target cut to 21.55</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.marketbeat.com" target="_blank" rel="noopener noreferrer">MarketBeat — new 1-year low</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.gurufocus.com" target="_blank" rel="noopener noreferrer">GuruFocus — shares fall 8.5%</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li></ul>
       <details class="verify"><summary>How to verify</summary><p>Monitor Docebo&#39;s next earnings call (expected late May) for revised guidance or customer churn commentary.</p><p class="verify-basis"><em>Confidence basis:</em> Three independent financial news sources (MSN, MarketBeat, GuruFocus) confirm the stock decline and analyst downgrade within 24 hours.</p></details>
     </div><div class="insight-card">
       <div class="card-head">
@@ -379,7 +379,7 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
       </div>
       <h3>Absorb LMS Executing an Enterprise Land-Grab</h3>
       <p>Absorb&#39;s open roles reveal a concentrated bet on enterprise: 4 of 15 open positions are enterprise-titled (2 Enterprise AMs, 2 Directors of Enterprise Sales). Combined with a Director of Customer Enablement and Presales Support Specialist, Absorb is building a full-cycle enterprise motion. Expect more aggressive pursuit of 1,000+ seat accounts and potentially discounted multi-year deals to lock in logos.</p>
-      <ul class="sources"><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers â€” 15 open roles</a><span class="src-type">jobs</span></li></ul>
+      <ul class="sources"><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers — 15 open roles</a><span class="src-type">jobs</span></li></ul>
       <details class="verify"><summary>How to verify</summary><p>Track Absorb&#39;s LinkedIn job ads weekly; watch for VP/C-level enterprise hires or new case studies featuring large deployments.</p><p class="verify-basis"><em>Confidence basis:</em> Directly observed on Absorb&#39;s Ashby ATS careers board with specific role titles.</p></details>
     </div><div class="insight-card">
       <div class="card-head">
@@ -389,7 +389,7 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
       </div>
       <h3>Absorb&#39;s Engineering Hiring Gap Signals Potential Roadmap Slowdown</h3>
       <p>Of 15 open roles at Absorb, only one is product-related (Principal Product Manager) and zero are engineering or AI-focused. This contrasts sharply with Docebo, which is hiring a Product Manager (Analytics), Senior Product Engineer, and DevOps Engineer. The absence of technical hiring at Absorb suggests either a headcount freeze or a deliberate shift of investment toward go-to-market over R&amp;D.</p>
-      <ul class="sources"><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers â€” Ashby ATS</a><span class="src-type">jobs</span></li></ul>
+      <ul class="sources"><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers — Ashby ATS</a><span class="src-type">jobs</span></li></ul>
       <details class="verify"><summary>How to verify</summary><p>Re-scrape Absorb&#39;s ATS in 2 weeks; cross-reference with any product release notes or blog posts about new features.</p><p class="verify-basis"><em>Confidence basis:</em> Pattern consistent across the full ATS listing, though internal capacity (contractors, offshore teams) is not visible from external data.</p></details>
     </div><div class="insight-card">
       <div class="card-head">
@@ -398,8 +398,8 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
         <span class="mm-date">2026-04-14</span>
       </div>
       <h3>Docebo&#39;s AI-Moat Narrative Under Scrutiny From Analysts</h3>
-      <p>Two separate analyst pieces this week questioned whether Docebo&#39;s AI-powered LMS edge is strong enough to drive new growth (AD HOC NEWS, SimplyWall.st). The market is unconvinced: the stock price reflects skepticism. In competitive deals where Docebo leads with AI, reps should press for specifics â€” ask the prospect what AI features Docebo demonstrated and whether they saw measurable outcomes, not just marketing claims.</p>
-      <ul class="sources"><li><a href="https://www.simplywall.st" target="_blank" rel="noopener noreferrer">SimplyWall.st â€” Is Docebo Turning the AI Readiness Gap Into a Long-Term Moat?</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://www.adhocnews.de" target="_blank" rel="noopener noreferrer">AD HOC NEWS â€” Docebo: Is its AI-powered LMS edge strong enough?</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li></ul>
+      <p>Two separate analyst pieces this week questioned whether Docebo&#39;s AI-powered LMS edge is strong enough to drive new growth (AD HOC NEWS, SimplyWall.st). The market is unconvinced: the stock price reflects skepticism. In competitive deals where Docebo leads with AI, reps should press for specifics — ask the prospect what AI features Docebo demonstrated and whether they saw measurable outcomes, not just marketing claims.</p>
+      <ul class="sources"><li><a href="https://www.simplywall.st" target="_blank" rel="noopener noreferrer">SimplyWall.st — Is Docebo Turning the AI Readiness Gap Into a Long-Term Moat?</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://www.adhocnews.de" target="_blank" rel="noopener noreferrer">AD HOC NEWS — Docebo: Is its AI-powered LMS edge strong enough?</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li></ul>
       <details class="verify"><summary>How to verify</summary><p>Review Docebo&#39;s April 13 product update blog post for concrete AI feature releases versus marketing-only announcements.</p><p class="verify-basis"><em>Confidence basis:</em> Two dated analyst articles from April 10-14 explicitly question Docebo&#39;s AI defensibility.</p></details>
     </div><div class="insight-card">
       <div class="card-head">
@@ -407,9 +407,9 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
         <span class="conf-pill conf-high" title="High confidence">High confidence</span>
         <span class="mm-date">2026-03-25</span>
       </div>
-      <h3>Mid-Market Buyers Actively Comparing Docebo and Absorb â€” Negotiation Intel Surfaced on Reddit</h3>
+      <h3>Mid-Market Buyers Actively Comparing Docebo and Absorb — Negotiation Intel Surfaced on Reddit</h3>
       <p>A Reddit thread in r/Training (33 comments, score 10) shows a training-team-of-one at a 400-employee company vetting Absorb, 360Learning, and Docebo. The buyer specifically called out Docebo&#39;s SharePoint integration as a differentiator and asked the community for negotiation tips. This confirms both competitors are in the same deal cycles for high-growth mid-market accounts and that buyers are crowdsourcing pricing leverage.</p>
-      <ul class="sources"><li><a href="https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/" target="_blank" rel="noopener noreferrer">r/Training â€” LMS platform Negotiations (33 comments)</a><span class="src-type">reddit</span><span class="src-date">2026-03-25</span></li></ul>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/" target="_blank" rel="noopener noreferrer">r/Training — LMS platform Negotiations (33 comments)</a><span class="src-type">reddit</span><span class="src-date">2026-03-25</span></li></ul>
       <details class="verify"><summary>How to verify</summary><p>Monitor r/Training and r/elearning weekly for new LMS comparison threads; use these to identify in-market prospects.</p><p class="verify-basis"><em>Confidence basis:</em> Direct, dated Reddit post with 33 comments confirming active evaluation.</p></details>
     </div>
   </section>
@@ -424,67 +424,67 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
       </div>
       <p class="objection">We&#39;re leaning toward Docebo because of their AI capabilities.</p>
       <p class="response-label">Recommended Response</p>
-      <p class="response">That&#39;s worth examining closely. Two independent analyst reports this week (SimplyWall.st on April 10 and AD HOC NEWS on April 14) questioned whether Docebo&#39;s AI positioning translates to a defensible product advantage or is primarily a marketing narrative. Their stock just hit a 52-week low and the analyst price target was cut 15.71% to $21.55 â€” the market is telling you something about execution risk. Before committing, ask Docebo&#39;s team to demonstrate exactly which AI features are GA today, what measurable outcomes existing customers have seen, and what their R&amp;D investment looks like given the financial pressure. Our platform ships AI-powered adaptive learning paths and intelligent content recommendations that are live in production today with over 200 enterprise customers â€” we can show you the dashboards in a 30-minute session.</p>
-      <ul class="sources"><li><a href="https://www.simplywall.st" target="_blank" rel="noopener noreferrer">SimplyWall.st â€” Docebo AI moat question</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://www.msn.com" target="_blank" rel="noopener noreferrer">MSN â€” price target cut to 21.55</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.adhocnews.de" target="_blank" rel="noopener noreferrer">AD HOC NEWS â€” Docebo AI edge questioned</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li></ul>
+      <p class="response">That&#39;s worth examining closely. Two independent analyst reports this week (SimplyWall.st on April 10 and AD HOC NEWS on April 14) questioned whether Docebo&#39;s AI positioning translates to a defensible product advantage or is primarily a marketing narrative. Their stock just hit a 52-week low and the analyst price target was cut 15.71% to $21.55 — the market is telling you something about execution risk. Before committing, ask Docebo&#39;s team to demonstrate exactly which AI features are GA today, what measurable outcomes existing customers have seen, and what their R&amp;D investment looks like given the financial pressure. Our platform ships AI-powered adaptive learning paths and intelligent content recommendations that are live in production today with over 200 enterprise customers — we can show you the dashboards in a 30-minute session.</p>
+      <ul class="sources"><li><a href="https://www.simplywall.st" target="_blank" rel="noopener noreferrer">SimplyWall.st — Docebo AI moat question</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://www.msn.com" target="_blank" rel="noopener noreferrer">MSN — price target cut to 21.55</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.adhocnews.de" target="_blank" rel="noopener noreferrer">AD HOC NEWS — Docebo AI edge questioned</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li></ul>
     </div><div class="talk-track">
       <div class="tt-head">
         <span class="objection-label">Objection</span>
         <span class="conf-pill conf-high" title="High confidence">High confidence</span>
         <span class="tt-badge tt-template">Template &mdash; customize</span>
       </div>
-      <p class="objection">Absorb LMS seems to be getting more serious about enterprise â€” they reached out with a compelling pitch.</p>
+      <p class="objection">Absorb LMS seems to be getting more serious about enterprise — they reached out with a compelling pitch.</p>
       <p class="response-label">Recommended Response</p>
-      <p class="response">You&#39;re right that Absorb is investing in enterprise sales â€” they&#39;ve posted four enterprise-titled roles this month. But look at the other side of the coin: they have zero engineering or AI hires open out of 15 total positions. That means they&#39;re investing in sellers, not in building the product you&#39;ll depend on for the next 3-5 years. Ask Absorb&#39;s team to share their product roadmap commitments for the next 12 months with delivery dates, and compare that to [your platform]&#39;s published release cadence and [your number] of shipped features in the last quarter.</p>
-      <ul class="sources"><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers â€” Ashby ATS</a><span class="src-type">jobs</span></li></ul>
+      <p class="response">You&#39;re right that Absorb is investing in enterprise sales — they&#39;ve posted four enterprise-titled roles this month. But look at the other side of the coin: they have zero engineering or AI hires open out of 15 total positions. That means they&#39;re investing in sellers, not in building the product you&#39;ll depend on for the next 3-5 years. Ask Absorb&#39;s team to share their product roadmap commitments for the next 12 months with delivery dates, and compare that to [your platform]&#39;s published release cadence and [your number] of shipped features in the last quarter.</p>
+      <ul class="sources"><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers — Ashby ATS</a><span class="src-type">jobs</span></li></ul>
     </div><div class="talk-track">
       <div class="tt-head">
         <span class="objection-label">Objection</span>
         <span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span>
         <span class="tt-badge tt-template">Template &mdash; customize</span>
       </div>
-      <p class="objection">We like Docebo&#39;s SharePoint integration â€” it&#39;s important for our Microsoft stack.</p>
+      <p class="objection">We like Docebo&#39;s SharePoint integration — it&#39;s important for our Microsoft stack.</p>
       <p class="response-label">Recommended Response</p>
-      <p class="response">SharePoint integration is a valid requirement, and Docebo does promote it. However, integration depth matters more than integration existence. Ask Docebo to demo bi-directional content sync, SSO with Azure AD conditional access policies, and Teams-embedded learning workflows â€” not just file linking. Then benchmark against [your platform]&#39;s native Microsoft 365 integration, which includes [specific capabilities]. A Reddit buyer in a 400-employee company cited SharePoint as the deciding factor, so make sure you&#39;re comparing feature-for-feature, not checkbox-for-checkbox.</p>
-      <ul class="sources"><li><a href="https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/" target="_blank" rel="noopener noreferrer">r/Training â€” LMS platform Negotiations</a><span class="src-type">reddit</span><span class="src-date">2026-03-25</span></li></ul>
+      <p class="response">SharePoint integration is a valid requirement, and Docebo does promote it. However, integration depth matters more than integration existence. Ask Docebo to demo bi-directional content sync, SSO with Azure AD conditional access policies, and Teams-embedded learning workflows — not just file linking. Then benchmark against [your platform]&#39;s native Microsoft 365 integration, which includes [specific capabilities]. A Reddit buyer in a 400-employee company cited SharePoint as the deciding factor, so make sure you&#39;re comparing feature-for-feature, not checkbox-for-checkbox.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/" target="_blank" rel="noopener noreferrer">r/Training — LMS platform Negotiations</a><span class="src-type">reddit</span><span class="src-date">2026-03-25</span></li></ul>
     </div><div class="talk-track">
       <div class="tt-head">
         <span class="objection-label">Objection</span>
         <span class="conf-pill conf-high" title="High confidence">High confidence</span>
         <span class="tt-badge tt-template">Template &mdash; customize</span>
       </div>
-      <p class="objection">We&#39;re worried about vendor stability â€” is Docebo going to be around in 3 years?</p>
+      <p class="objection">We&#39;re worried about vendor stability — is Docebo going to be around in 3 years?</p>
       <p class="response-label">Recommended Response</p>
-      <p class="response">That&#39;s a fair concern right now. Docebo&#39;s stock hit a new 1-year low on April 9, analyst targets were cut 15.71%, and shares dropped 8.5% in a single day. A GF Score of 70 from GuruFocus indicates below-average financial quality. Docebo is publicly traded on the TSX, so you can track this yourself â€” ask their team directly about cash runway, customer retention rates, and whether any cost-cutting measures will impact support SLAs. Then compare against [your platform]&#39;s [financial stability proof point â€” e.g., profitability status, funding round, customer retention rate].</p>
-      <ul class="sources"><li><a href="https://www.gurufocus.com" target="_blank" rel="noopener noreferrer">GuruFocus â€” GF Score 70, shares fall 8.5%</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://www.marketbeat.com" target="_blank" rel="noopener noreferrer">MarketBeat â€” new 1-year low</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li></ul>
+      <p class="response">That&#39;s a fair concern right now. Docebo&#39;s stock hit a new 1-year low on April 9, analyst targets were cut 15.71%, and shares dropped 8.5% in a single day. A GF Score of 70 from GuruFocus indicates below-average financial quality. Docebo is publicly traded on the TSX, so you can track this yourself — ask their team directly about cash runway, customer retention rates, and whether any cost-cutting measures will impact support SLAs. Then compare against [your platform]&#39;s [financial stability proof point — e.g., profitability status, funding round, customer retention rate].</p>
+      <ul class="sources"><li><a href="https://www.gurufocus.com" target="_blank" rel="noopener noreferrer">GuruFocus — GF Score 70, shares fall 8.5%</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://www.marketbeat.com" target="_blank" rel="noopener noreferrer">MarketBeat — new 1-year low</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li></ul>
     </div><div class="talk-track">
       <div class="tt-head">
         <span class="objection-label">Objection</span>
         <span class="conf-pill conf-high" title="High confidence">High confidence</span>
         <span class="tt-badge tt-template">Template &mdash; customize</span>
       </div>
-      <p class="objection">Neither Docebo nor Absorb publishes pricing â€” how do we know we&#39;re getting a fair deal?</p>
+      <p class="objection">Neither Docebo nor Absorb publishes pricing — how do we know we&#39;re getting a fair deal?</p>
       <p class="response-label">Recommended Response</p>
-      <p class="response">Both Docebo and Absorb gate all pricing behind a sales conversation, which makes it difficult for buyers to benchmark. A Reddit community thread with 33 comments shows mid-market buyers actively crowdsourcing negotiation tactics for these exact vendors. Use that as leverage: tell both vendors you&#39;re benchmarking against transparent-pricing alternatives. If [your platform] publishes pricing publicly, lead with that â€” transparency signals confidence. If not, offer a side-by-side TCO model that includes implementation costs, admin hours, and integration fees that Docebo and Absorb often bundle opaquely.</p>
-      <ul class="sources"><li><a href="https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/" target="_blank" rel="noopener noreferrer">r/Training â€” LMS platform Negotiations</a><span class="src-type">reddit</span><span class="src-date">2026-03-25</span></li><li><span class="src-nolink">Wayback Machine CDX â€” docebo.com/pricing (no data)</span><span class="src-type">pricing_archive</span></li><li><span class="src-nolink">Wayback Machine CDX â€” absorblms.com/pricing (no data)</span><span class="src-type">pricing_archive</span></li></ul>
+      <p class="response">Both Docebo and Absorb gate all pricing behind a sales conversation, which makes it difficult for buyers to benchmark. A Reddit community thread with 33 comments shows mid-market buyers actively crowdsourcing negotiation tactics for these exact vendors. Use that as leverage: tell both vendors you&#39;re benchmarking against transparent-pricing alternatives. If [your platform] publishes pricing publicly, lead with that — transparency signals confidence. If not, offer a side-by-side TCO model that includes implementation costs, admin hours, and integration fees that Docebo and Absorb often bundle opaquely.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/" target="_blank" rel="noopener noreferrer">r/Training — LMS platform Negotiations</a><span class="src-type">reddit</span><span class="src-date">2026-03-25</span></li><li><span class="src-nolink">Wayback Machine CDX — docebo.com/pricing (no data)</span><span class="src-type">pricing_archive</span></li><li><span class="src-nolink">Wayback Machine CDX — absorblms.com/pricing (no data)</span><span class="src-type">pricing_archive</span></li></ul>
     </div>
   </section>
 <section id="watch">
     <span class="section-label">Forward look</span>
     <h2>Watch Next Week</h2>
-    <ul class="watch-list"><li><span class="w-trigger">Docebo blog / changelog update</span><span class="w-text">Docebo posted a &#39;Product updates&#39; announcement on April 13; monitor for concrete AI feature releases vs. incremental fixes.</span><span class="w-when">2026-04-24</span></li><li><span class="w-trigger">Earnings call / 8-K equivalent</span><span class="w-text">Docebo&#39;s Q1 2026 earnings call is likely approaching (typically late April / early May for TSX-listed companies). Watch for revised guidance, churn metrics, and commentary on AI investment.</span><span class="w-when">2026-05-15</span></li><li><span class="w-trigger">Absorb LMS careers page re-check</span><span class="w-text">Re-scrape Absorb LMS ATS to see if engineering/AI roles appear â€” any new technical hiring would signal a product investment pivot.</span><span class="w-when">2026-04-24</span></li><li><span class="w-trigger">Reddit thread update monitoring</span><span class="w-text">Monitor r/Training and r/elearning for follow-up posts from the LMS negotiation thread â€” the buyer may share vendor selection outcome and pricing intel.</span><span class="w-when">2026-04-30</span></li><li><span class="w-trigger">Sitemap delta comparison</span><span class="w-text">Run second sitemap diff for both Docebo (604 URLs) and Absorb (850 URLs) to detect new product pages, case studies, or landing pages.</span><span class="w-when">2026-04-24</span></li></ul>
+    <ul class="watch-list"><li><span class="w-trigger">Docebo blog / changelog update</span><span class="w-text">Docebo posted a &#39;Product updates&#39; announcement on April 13; monitor for concrete AI feature releases vs. incremental fixes.</span><span class="w-when">2026-04-24</span></li><li><span class="w-trigger">Earnings call / 8-K equivalent</span><span class="w-text">Docebo&#39;s Q1 2026 earnings call is likely approaching (typically late April / early May for TSX-listed companies). Watch for revised guidance, churn metrics, and commentary on AI investment.</span><span class="w-when">2026-05-15</span></li><li><span class="w-trigger">Absorb LMS careers page re-check</span><span class="w-text">Re-scrape Absorb LMS ATS to see if engineering/AI roles appear — any new technical hiring would signal a product investment pivot.</span><span class="w-when">2026-04-24</span></li><li><span class="w-trigger">Reddit thread update monitoring</span><span class="w-text">Monitor r/Training and r/elearning for follow-up posts from the LMS negotiation thread — the buyer may share vendor selection outcome and pricing intel.</span><span class="w-when">2026-04-30</span></li><li><span class="w-trigger">Sitemap delta comparison</span><span class="w-text">Run second sitemap diff for both Docebo (604 URLs) and Absorb (850 URLs) to detect new product pages, case studies, or landing pages.</span><span class="w-when">2026-04-24</span></li></ul>
   </section>
 <section id="evidence">
     <span class="section-label">Appendix</span>
     <h2>Evidence Index</h2>
     <p class="muted">Every source URL consulted for this brief, grouped by competitor.</p>
-    <details class="ev-block"><summary>Docebo &middot; 13 source(s)</summary><ul class="sources"><li><a href="https://www.msn.com" target="_blank" rel="noopener noreferrer">MSN â€” Docebo price target decreased 15.71% to 21.55</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.marketbeat.com" target="_blank" rel="noopener noreferrer">MarketBeat â€” Docebo Reaches New 1-Year Low</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.gurufocus.com" target="_blank" rel="noopener noreferrer">GuruFocus â€” Docebo Shares Fall 8.5%, GF Score 70</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://www.simplywall.st" target="_blank" rel="noopener noreferrer">SimplyWall.st â€” Is Docebo Turning the AI Readiness Gap Into a Long-Term Moat?</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://www.adhocnews.de" target="_blank" rel="noopener noreferrer">AD HOC NEWS â€” Docebo AI-powered LMS edge questioned</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li><li><a href="https://docebo.com" target="_blank" rel="noopener noreferrer">Docebo â€” Product updates blog post</a><span class="src-type">news</span><span class="src-date">2026-04-13</span></li><li><a href="https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/" target="_blank" rel="noopener noreferrer">r/Training â€” LMS platform Negotiations</a><span class="src-type">reddit</span><span class="src-date">2026-03-25</span></li><li><a href="https://www.reddit.com/r/techsales/comments/1ryc1a9/best_sales_performance_management_platform/" target="_blank" rel="noopener noreferrer">r/techsales â€” Best sales performance management platform</a><span class="src-type">reddit</span><span class="src-date">2026-03-19</span></li><li><a href="https://www.reddit.com/r/spanishinterpreters/comments/1sga1yg/onboarding_at_propio/" target="_blank" rel="noopener noreferrer">r/spanishinterpreters â€” Onboarding at Propio (uses Docebo)</a><span class="src-type">reddit</span><span class="src-date">2026-04-09</span></li><li><a href="https://docebo.com/careers" target="_blank" rel="noopener noreferrer">Docebo Careers page</a><span class="src-type">jobs</span></li><li><span class="src-nolink">Wayback Machine CDX â€” docebo.com/pricing (timeout)</span><span class="src-type">pricing_archive</span></li><li><span class="src-nolink">G2 â€” Docebo Reviews 2026</span><span class="src-type">g2</span></li><li><span class="src-nolink">G2 â€” Compare Absorb LMS vs. Docebo</span><span class="src-type">g2</span></li></ul></details><details class="ev-block"><summary>Absorb LMS &middot; 6 source(s)</summary><ul class="sources"><li><a href="https://absorblms.com" target="_blank" rel="noopener noreferrer">Absorb LMS â€” Data Imports: Enrollments documentation</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://absorblms.com" target="_blank" rel="noopener noreferrer">Absorb LMS â€” Getting Started with Integration API</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers â€” Ashby ATS (15 roles)</a><span class="src-type">jobs</span></li><li><span class="src-nolink">Wayback Machine CDX â€” absorblms.com/pricing (no snapshots)</span><span class="src-type">pricing_archive</span></li><li><span class="src-nolink">G2 â€” Absorb LMS Reviews 2026</span><span class="src-type">g2</span></li><li><span class="src-nolink">G2 â€” Compare Absorb LMS vs. TalentLMS</span><span class="src-type">g2</span></li></ul></details>
+    <details class="ev-block"><summary>Docebo &middot; 13 source(s)</summary><ul class="sources"><li><a href="https://www.msn.com" target="_blank" rel="noopener noreferrer">MSN — Docebo price target decreased 15.71% to 21.55</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.marketbeat.com" target="_blank" rel="noopener noreferrer">MarketBeat — Docebo Reaches New 1-Year Low</a><span class="src-type">news</span><span class="src-date">2026-04-09</span></li><li><a href="https://www.gurufocus.com" target="_blank" rel="noopener noreferrer">GuruFocus — Docebo Shares Fall 8.5%, GF Score 70</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://www.simplywall.st" target="_blank" rel="noopener noreferrer">SimplyWall.st — Is Docebo Turning the AI Readiness Gap Into a Long-Term Moat?</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://www.adhocnews.de" target="_blank" rel="noopener noreferrer">AD HOC NEWS — Docebo AI-powered LMS edge questioned</a><span class="src-type">news</span><span class="src-date">2026-04-14</span></li><li><a href="https://docebo.com" target="_blank" rel="noopener noreferrer">Docebo — Product updates blog post</a><span class="src-type">news</span><span class="src-date">2026-04-13</span></li><li><a href="https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/" target="_blank" rel="noopener noreferrer">r/Training — LMS platform Negotiations</a><span class="src-type">reddit</span><span class="src-date">2026-03-25</span></li><li><a href="https://www.reddit.com/r/techsales/comments/1ryc1a9/best_sales_performance_management_platform/" target="_blank" rel="noopener noreferrer">r/techsales — Best sales performance management platform</a><span class="src-type">reddit</span><span class="src-date">2026-03-19</span></li><li><a href="https://www.reddit.com/r/spanishinterpreters/comments/1sga1yg/onboarding_at_propio/" target="_blank" rel="noopener noreferrer">r/spanishinterpreters — Onboarding at Propio (uses Docebo)</a><span class="src-type">reddit</span><span class="src-date">2026-04-09</span></li><li><a href="https://docebo.com/careers" target="_blank" rel="noopener noreferrer">Docebo Careers page</a><span class="src-type">jobs</span></li><li><span class="src-nolink">Wayback Machine CDX — docebo.com/pricing (timeout)</span><span class="src-type">pricing_archive</span></li><li><span class="src-nolink">G2 — Docebo Reviews 2026</span><span class="src-type">g2</span></li><li><span class="src-nolink">G2 — Compare Absorb LMS vs. Docebo</span><span class="src-type">g2</span></li></ul></details><details class="ev-block"><summary>Absorb LMS &middot; 6 source(s)</summary><ul class="sources"><li><a href="https://absorblms.com" target="_blank" rel="noopener noreferrer">Absorb LMS — Data Imports: Enrollments documentation</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://absorblms.com" target="_blank" rel="noopener noreferrer">Absorb LMS — Getting Started with Integration API</a><span class="src-type">news</span><span class="src-date">2026-04-10</span></li><li><a href="https://absorblms.com/careers" target="_blank" rel="noopener noreferrer">Absorb LMS Careers — Ashby ATS (15 roles)</a><span class="src-type">jobs</span></li><li><span class="src-nolink">Wayback Machine CDX — absorblms.com/pricing (no snapshots)</span><span class="src-type">pricing_archive</span></li><li><span class="src-nolink">G2 — Absorb LMS Reviews 2026</span><span class="src-type">g2</span></li><li><span class="src-nolink">G2 — Compare Absorb LMS vs. TalentLMS</span><span class="src-type">g2</span></li></ul></details>
   </section>
 <aside class="byline" aria-label="Analyst">
     <div class="byline-id">
       <span class="byline-monogram" aria-hidden="true">ZM</span>
       <div class="byline-text">
         <span class="byline-eyebrow">Prepared by</span>
-        <p class="byline-name">Zaeem Malik <span class="byline-sep">Â·</span> <span class="byline-title">Founder Â· MightX</span></p>
+        <p class="byline-name">Zaeem Malik <span class="byline-sep">·</span> <span class="byline-title">Founder · MightX</span></p>
         
         
       </div>

@@ -13,18 +13,42 @@ You run a weekly competitive intelligence briefing service for B2B SaaS companie
 
 You do not write the reports. Claude does.
 You do not collect the data. The system does.
-You do not send the emails. nodemailer and n8n do.
+You do not send the emails. Resend (or SMTP as a fallback) sends them; n8n triggers the Monday cron.
 
 Your job is to close clients, configure their setup, and collect the retainer.
 
 **What the system monitors autonomously per competitor:**
 - Competitor websites — homepage, /pricing, /features diffed weekly against last snapshot
+- **Pricing archaeology** — the Wayback Machine (Internet Archive) is queried for `/pricing` and `/plans` snapshots over the last 90 days; the collector extracts price tokens and plan/tier mentions and diffs earliest vs latest. Free, always on. A proprietary signal most prospects cannot replicate with ChatGPT.
 - Google News RSS — free, no API key, covers press releases and announcements
 - G2 public review pages — recent reviews, aggregate ratings, trending complaints
 - Job postings — careers page scraped and categorised by AI/ML, enterprise, sales, product roles
 - LinkedIn company pages — announcements and activity (enabled per client config)
 - GitHub org activity — public releases, changelog commits (for devtool competitors)
 - Funding & corporate signals — rounds, acquisitions, layoffs (news-based; align sales claims with `DOCUMENTATION-NOTES.md`)
+- **SEC EDGAR 8-K filings** — for public-company competitors only (configure `secCik` or `secTicker` and set `additionalCollectors.secFilings: true`). 8-K is the legal requirement to disclose material events within 4 business days. Unimpeachable, zero-cost, and faster than Google News for material changes.
+- **Sitemap diff** — `/sitemap.xml` (plus `/robots.txt` + sitemap indexes) is fetched weekly and diffed against the prior snapshot. Net-new URLs are grouped by top-level path (`/customers`, `/product`, `/pricing`, `/blog`, …). This is the silent-week workhorse: even on weeks where nothing makes the news, the sitemap almost always has net-new pages worth commenting on.
+- **Hacker News (Algolia)** — last 30 days of stories about the competitor with a score + comment floor. Leading indicator for infra / dev-tool / product launches.
+- **Reddit public search** — last 30 days of posts about the competitor across all subs, ranked by score + comment count. Often surfaces pricing + rollout + churn discussion before it hits G2.
+
+**Weekly continuity — "What Changed Since Last Week":**
+The report writer auto-loads the client's most recent prior report and emits a `changesSinceLastWeek` block (progressed / stillWatching / newThisWeek). This directly addresses the "month 3 feels like month 1" churn risk — the report explicitly shows each week what has moved, what is still open, and what is genuinely new.
+
+**Rolling 30-day momentum — "30-Day Momentum":**
+From week 2 onwards, the writer also loads the last 4–8 `report-content-*.json` files for the client and emits a `rollingHistory` block (recurring themes, momentum shifts, and competitors who were loud and have since gone silent). A deterministic local scan (`computeLocalPatterns` in `generate-report.js`) backs the claims with counts across weeks — the pattern section is not model-hallucinated summary, it is computed before the prompt.
+
+**Silent-week handling — deep-dive artifact switch:**
+Every run scores signal richness (trigger events, verified findings, breadth across competitors and signal types). On silent weeks (score < 6, no trigger events), the pipeline automatically ships a different deliverable: a single-topic `deep-dive` memo grounded in the rolling 30–90 days of archived data, with a dark indigo header, a topic badge, and an amber "silent-week" strip. Topics rotate through five playbooks (positioning-teardown, pricing-forensics, hiring-signals, scenario-essay, meta-analysis) tracked in `data/<client>/artifact-history.json` so the client never sees the same deep-dive twice in a row. Tunable per-client via `reportPreferences.richnessThresholds`, `forceArtifact`, `deepDiveRotation`, `deepDiveFocus`.
+
+**Pre-send validation gate:**
+Every artifact passes through `scripts/validate-report.js` before email. Hard failures block delivery, keep the HTML on disk, and (if `OPS_SLACK_WEBHOOK_URL` is set) ping you on Slack. Weekly-news requires a non-trivial `weekSummary`, ≥1 competitor section with findings, HTML ≥3 kB, no unfilled `{{PLACEHOLDER}}`, fact-check failure rate <50%. Deep-dive requires `headlineQuestion` ≥30 chars, `executiveAnswer` ≥60 chars, ≥2 usable analysis sections, HTML ≥3.5 kB. No degenerate Monday email ever reaches a client without your review.
+
+**Conversion surface — prospect-facing brief + cold-email pipeline:**
+Top-of-funnel sits in `brief-app` and is built to convert cold-outbound prospects into discovery calls.
+- **Vertical brief** (`brief-app/scripts/generate-html-brief.js`) — an editorial, serif-display HTML page scoped to a vertical with two named competitors (e.g. E-Learning · Docebo vs Absorb LMS). Rendered as a static file served from `brief-app/public/<slug>-brief.html`. Serves as proof-of-quality in cold email. For slugs that contain hyphens, a mirror copy without hyphens is written alongside (e.g. `elearning-brief.html`) so legacy cold-email URLs in circulation keep resolving.
+- **Skim-path table of contents** sits above the fold inside the brief header. A CRO opening the link on mobile at 7 AM can scan to Trigger Events, Pricing, or Talk Tracks in one tap.
+- **Analyst byline** renders in the trust block at the bottom of the brief when the `BRIEF_AUTHOR_*` env vars are set (name, title, credential, LinkedIn, optional avatar). Converts "anonymous AI tool" into "private research note from a named operator" — the single biggest trust delta on the brief. The outbound ask (book a call) lives in the cold-email body, not on the brief page, so the prospect's first click lands on analysis, not a pitch.
+- **Per-prospect cold-email generator** (`brief-app/scripts/generate-cold-email.js`, Claude Opus 4.7) reads the brief JSON, picks the sharpest signal matching the prospect's feared competitor, and drafts three cold-email variants (pattern-interrupt, helpful-frame, peer-reference) with a personalised brief URL (`?id=<company>`). Validation enforces 40–80 word bodies, specific subjects, soft CTAs, and brief-URL inclusion. Drafts land in `brief-app/data/cold-emails/<industry>--<company>.md` (gitignored) and print to stdout. This is the **1:1 ABM** tool — the bulk-outbound copy generator for Instantly lives in `gtm-engine/scripts/3-generate-copy.js` and uses Claude Sonnet for cost-efficiency at scale.
 
 **What you are selling, in one sentence:**
 > "Your competitors are moving every week. We make sure you know about it before your sales team walks into a call blind."
@@ -95,6 +119,8 @@ The report becomes a fixture in their Monday morning routine. Cancelling it feel
 
 **Why the Starter tier exists:** The $800/month tier removes buying friction for budget-conscious teams. A VP of Sales can expense $800/month without a finance review at most 50–200 person companies. This gets clients in the door faster, proves value in the first 4 weeks, and creates a natural upsell path to Growth when they inevitably want more competitors and Slack delivery. Expect 40–60% of Starter clients to upgrade within 3 months.
 
+**What "Slack delivery" means operationally (Growth and Strategic):** Create a Slack Connect channel per client (`client-<slug>`), share it with their workspace, and post the Monday briefing summary there in addition to email. This is the two-way surface that turns the report from a passive artifact into an analyst-on-Slack relationship. Full workflow, intro message templates, and weekly rhythm in `docs/CLIENT-SLACK-CONNECT-PLAYBOOK.md`. You can also do this for Starter clients as a differentiator if capacity allows.
+
 **Recommended default pitch:** Lead with Growth at $2,500/month as the anchor, but offer Starter when you sense price hesitation. The worst outcome is a client paying $800/month — the best outcome is they upgrade to $2,500/month within a quarter because the reports became indispensable.
 
 **Setup fee psychology:** The setup fee accomplishes two things. First, it filters out tyre-kickers — anyone unwilling to pay $1,000 upfront will also cancel the retainer at the first sign of friction. Second, it covers your time to configure the system (2–3 hours per client), write the first report prompt calibration, and do the initial quality review.
@@ -137,17 +163,23 @@ The GTM Engine's Apollo + Claude + Instantly stack finds these people, writes pe
 
 **Step 2: The cold email angle**
 
-Do not pitch "competitive intelligence service." Lead with a pain scenario:
+Do not pitch "competitive intelligence service." Lead with a **specific, dated competitor signal** lifted from a live vertical brief. The repo now has a purpose-built generator (`brief-app/scripts/generate-cold-email.js`) that does exactly this: it reads the vertical brief JSON you already produced, picks the sharpest signal that mentions the prospect's most-feared competitor, and drafts three short cold-email variants (pattern-interrupt, helpful-frame, peer-reference) with a personalised brief URL (`?id=<company>`).
 
-> Subject: {{CompanyName}} vs Gong
->
-> Saw {{CompanyName}} is in the sales engagement space — you are up against a lot of funded competitors right now.
->
-> We run a weekly competitive monitoring system for sales leaders that flags when competitors change pricing, launch features, or get a wave of negative G2 reviews — before your reps walk into a call.
->
-> [CTA: custom baseline on two named competitors + Monday send — see `gtm-engine/prompts/personalization.txt`; do **not** promise a generic sample for their “category”.]
+Run per prospect:
 
-After they reply, run a **custom** capture for **their** competitors using the free collectors (concierge MVP — no premium APIs needed). Create a throwaway `config/clients/prospect-[name].json`, run the intelligence engine, review the HTML, and send by Monday. ~30 min of your weekend per prospect. Reference the Gold Standard demo (`demo-salesloft`) only when someone asks for format proof — not as the default fulfillment.
+```bash
+cd brief-app
+npm run generate-cold-email -- \
+  --industry        "E-Learning" \
+  --prospect-name   "Jane Doe" \
+  --prospect-company "Acme Corp" \
+  --prospect-role   "VP Sales" \
+  --competitor      "Docebo"
+```
+
+The three drafts land in `brief-app/data/cold-emails/<industry>--<company>.md` and also print to stdout for paste-into-Apollo/Instantly. Validation is enforced at the source: 40–80 word body, specific subject (no "Quick question"), every factual claim grounded in the brief, soft CTA only. Pick the variant you trust; send.
+
+If the prospect replies, run a **custom** capture for **their** competitors using the free collectors. Create a throwaway `config/clients/prospect-[name].json`, run the intelligence engine, review the HTML, and send by Monday. ~30 min of your weekend per prospect. Reference the Gold Standard demo (`demo-salesloft`) only when someone asks for format proof — not as the default fulfillment.
 
 **Step 3: The discovery call**
 
@@ -212,9 +244,17 @@ The n8n cron workflow fires every Monday at 6am. It runs `run-all-clients.js`, w
 - G2 changed their HTML structure (fix: update `g2-monitor.js` selector patterns)
 - A competitor website is down or blocks the scraper (fix: remove that URL temporarily)
 - Claude API rate limit hit (fix: increase `DELAY` in `analyse.js`)
-- SMTP credentials expired (fix: refresh app password in Google account)
+- SMTP credentials expired (fix: refresh app password in Google account) or Resend `EMAIL_FROM` no longer verified (fix: re-verify in Resend dashboard)
+- Validation gate blocked a client's report (fix: run `npm run validate <id>` to see failing checks, correct, and deliver manually)
+- Wayback CDX API timed out for a competitor (self-heals next week; no action required)
+- Reddit public search returned 429/blocked responses (self-heals, usually transient; set `REDDIT_USER_AGENT` in `.env` to something distinctive)
+- Sitemap collector is reporting "first snapshot — no diff" for weeks (competitor's sitemap URL is changing or blocked; override with `competitor.sitemapUrl` in the client config)
+- A deep-dive shipped and the client expected the usual weekly briefing — expected on silent weeks (see runbook §12). If the client always wants weekly-news, set `reportPreferences.forceArtifact: "weekly-news"` in their config
 
-None of these are emergencies. Fix them before the next Monday run.
+None of these are emergencies. Fix them before the next Monday run. The validation gate specifically ensures a bad report cannot reach a client while you sleep.
+
+**Weekly client touch (new, cheap, high-retention):**
+Alongside the automated Monday email, post the same briefing summary into each client's Slack Connect channel and triage any ad-hoc asks by Friday. Full workflow in `docs/CLIENT-SLACK-CONNECT-PLAYBOOK.md`. This is the Tier 1 productization move that converts the report from a passive artifact into a visible, two-way surface — the biggest single lever on month-3 renewal odds.
 
 ---
 
@@ -234,10 +274,12 @@ None of these are emergencies. Fix them before the next Monday run.
 - Client refers you to a peer at another company → most powerful acquisition channel, handle immediately
 
 **Reducing churn:**
-The primary churn risk is the report becoming routine — the client stops reading it closely. Prevent this by:
+The primary churn risks are (a) the report becoming routine and (b) a stretch of quiet weeks where nothing newsworthy happens and the client quietly concludes they aren't getting their money's worth. Prevent both by:
 - Flagging the two most important findings in the subject line ("Outreach just cut enterprise pricing — this week's briefing")
 - When a trigger event occurs, send a separate short email the same day highlighting it (the system flags these — you send a 3-line personal note)
 - On quarterly renewal months, send a "4-week summary" report compiled from the last 4 briefings — reinforces accumulated value
+- **Silent-week coverage is now automatic:** When a week scores low on signal richness, the pipeline automatically ships a deep-dive (positioning teardown, pricing forensics, hiring signals, scenario essay, or meta-analysis) instead of a thin "not much happened" email. The client gets a differently-shaped high-value artifact, and the subject line in `generate-report.js` / `deliver.js` reflects the deep-dive topic. This is the single biggest mechanical lever on month-3+ retention, because it attacks the failure mode where $2k/mo feels wasted on a quiet Monday.
+- **Rolling 30-day momentum is the second lever:** Every report from week 2 onwards carries a "30-Day Momentum" section showing recurring themes, shifts, and competitors going quiet. Even when a single week is light, the client sees a month of accumulated pattern recognition — which is what they actually bought.
 
 ---
 
@@ -275,7 +317,7 @@ This is designed to run alongside your full-time role at Scotiabank.
 
 ### Pre-revenue phase (Concierge MVP — zero premium API spend)
 
-Until the **first paying client** signs, do **not** purchase premium scraping APIs (Proxycurl, BrightData, Exa). The free collectors (Google News RSS, careers pages, G2 search snippets, Crunchbase public) already produce report quality sufficient to close deals — proven by the Gold Standard demo. Prospect fulfillment is manual concierge work (~30 min/prospect on your weekend using free sources).
+Until the **first paying client** signs, do **not** purchase premium scraping APIs (Proxycurl, BrightData, Exa). The free collectors (Google News RSS, careers pages, G2 search snippets, Wayback Machine pricing archaeology, SEC EDGAR, sitemap diff, Hacker News, Reddit) already produce report quality sufficient to close deals — proven by the Gold Standard demo. Prospect fulfillment is manual concierge work (~30 min/prospect on your weekend using free sources).
 
 | Item | Pre-revenue cost | Notes |
 |---|---|---|
@@ -294,12 +336,18 @@ Once client retainers arrive, add premium APIs to improve weekly report depth:
 |---|---|---|
 | Anthropic API | ~$15–40 | Scales with client count. ~$5–8/client/month at current usage |
 | Proxycurl / BrightData | ~$50–100 | Funded by first client retainer. LinkedIn + deeper scraping |
-| nodemailer / SMTP | $0 | Use Gmail with App Password |
+| nodemailer / SMTP | $0 | Gmail + App Password — fine up to ~10 clients / ~500 emails/day |
+| Resend (recommended past 10 clients) | $0–20 | Free tier: 100/day, 3k/month. Paid starts $20/mo for 50k. Also unlocks per-client from-domain branding |
+| Wayback Machine (Internet Archive) | $0 | Pricing-archive collector, unlimited, no key |
+| SEC EDGAR | $0 | 8-K filings for public competitors, no key (descriptive UA required) |
+| Competitor sitemap / robots.txt | $0 | Week-over-week URL diff, silent-week workhorse, no key |
+| Hacker News (Algolia Search API) | $0 | Competitor mentions, unlimited, no key |
+| Reddit public JSON search | $0 | Competitor mentions across all subs, unlimited, no key (descriptive UA required) |
 | n8n (self-hosted) | $0 | You already have this |
 | Apollo.io | ~$99 | For your own outbound only |
 | Instantly | ~$97 | For your own outbound only |
 | Domain + hosting | ~$20 | For your own outbound sending domains |
-| **Total fixed** | **~$281–331/month** | Does not scale with client count |
+| **Total fixed** | **~$281–351/month** | Does not scale with client count |
 | **Total variable** | **~$5–8/client/month** | Claude API usage |
 
 **Blended tier example (4 clients):** Starter $800 + Standard $1,500 × 2 + Growth $2,500 = **$6,300/month** retainer. Costs: $231 fixed + ~$32 variable (4 × $8) ≈ **$263/month** → **~$6,037/mo gross profit** (~96% gross margin on the blended book).

@@ -15,6 +15,7 @@
 
 const path = require("path");
 const fs = require("fs");
+const https = require("https");
 const { spawnSync, execSync } = require("child_process");
 
 const appRoot = path.join(__dirname, "..");
@@ -109,15 +110,91 @@ const vercelProject = path.join(appRoot, ".vercel", "project.json");
 function run(cmd, args, cwd) {
   const result = spawnSync(cmd, args, {
     cwd: cwd ?? appRoot,
-    stdio: "inherit",
+    stdio: "pipe",
+    encoding: "utf8",
     env: { ...process.env },
     shell: true,
   });
+  if (typeof result.stdout === "string" && result.stdout) {
+    process.stdout.write(result.stdout);
+  }
+  if (typeof result.stderr === "string" && result.stderr) {
+    process.stderr.write(result.stderr);
+  }
   if (result.error) {
     console.error(result.error);
     process.exit(1);
   }
-  process.exit(result.status === null ? 1 : result.status);
+  return {
+    status: result.status === null ? 1 : result.status,
+    stdout: typeof result.stdout === "string" ? result.stdout : "",
+    stderr: typeof result.stderr === "string" ? result.stderr : "",
+  };
+}
+
+function getNewestBriefHtmlPath() {
+  const publicDir = path.join(appRoot, "public");
+  if (!fs.existsSync(publicDir)) return null;
+  const entries = fs.readdirSync(publicDir, { withFileTypes: true })
+    .filter((e) => e.isFile() && e.name.endsWith("-brief.html"))
+    .map((e) => {
+      const full = path.join(publicDir, e.name);
+      return { name: e.name, full, mtimeMs: fs.statSync(full).mtimeMs };
+    })
+    .sort((a, b) => b.mtimeMs - a.mtimeMs);
+  return entries[0] || null;
+}
+
+function extractDeploymentUrl(text) {
+  // Prefer aliased URL (stable), then production URL.
+  const aliasMatch = text.match(/Aliased:\s+(https:\/\/[^\s]+)/i);
+  if (aliasMatch?.[1]) return aliasMatch[1];
+  const prodMatch = text.match(/Production:\s+(https:\/\/[^\s]+)/i);
+  if (prodMatch?.[1]) return prodMatch[1];
+  return null;
+}
+
+function fetchPage(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let body = "";
+      res.setEncoding("utf8");
+      res.on("data", (chunk) => { body += chunk; });
+      res.on("end", () => resolve({
+        statusCode: res.statusCode || 0,
+        body,
+      }));
+    }).on("error", reject);
+  });
+}
+
+async function verifyDeployedBrief(deployOutput) {
+  const deployedBase = extractDeploymentUrl(deployOutput);
+  if (!deployedBase) {
+    console.warn("\n⚠ Could not parse deployed URL from Vercel output; skipping HTTP verification.");
+    return;
+  }
+
+  const newest = getNewestBriefHtmlPath();
+  if (!newest) {
+    console.warn("\n⚠ No *-brief.html file found in public/; skipping brief URL verification.");
+    return;
+  }
+
+  const verifyUrl = `${deployedBase}/${newest.name}?id=acme`;
+  console.log(`\nPost-deploy verify URL: ${verifyUrl}`);
+
+  try {
+    const { statusCode, body } = await fetchPage(verifyUrl);
+    const looksLikeBrief = /<title>The Briefing/i.test(body) || /How to read this brief/i.test(body);
+    if (statusCode >= 200 && statusCode < 300 && looksLikeBrief) {
+      console.log(`✅ Verification passed (${statusCode}) — brief content detected for ${newest.name}`);
+    } else {
+      console.warn(`⚠ Verification returned ${statusCode}. Brief markers found: ${looksLikeBrief}`);
+    }
+  } catch (err) {
+    console.warn(`⚠ Verification request failed: ${err.message}`);
+  }
 }
 
 if (!process.env.VERCEL_TOKEN?.trim()) {
@@ -181,4 +258,10 @@ if (vercelCwd !== appRoot) {
 }
 
 console.log(isPreview ? "\nDeploying preview…\n" : "\nDeploying production…\n");
-run("npx", args, vercelCwd);
+(async () => {
+  const result = run("npx", args, vercelCwd);
+  if (result.status !== 0) {
+    process.exit(result.status);
+  }
+  await verifyDeployedBrief(`${result.stdout}\n${result.stderr}`);
+})();

@@ -1,0 +1,611 @@
+{
+  "mode": "live",
+  "hero": {
+    "industry": "E-Learning",
+    "competitorA": "Docebo",
+    "competitorB": "Absorb LMS",
+    "weekSummary": "Docebo is under significant stock-market pressure, hitting a new 1-year low with analyst price targets cut ~16%, while multiple outlets question whether its AI moat is sufficient. Meanwhile, Absorb LMS is quietly doubling down on enterprise sales with four open enterprise roles, signaling an aggressive upmarket push that directly threatens shared mid-market and enterprise accounts."
+  },
+  "freshness": {
+    "generatedAt": "2026-04-17T16:59:50.248Z",
+    "signalWindowLabel": "Last 7–30 days",
+    "signalCount": 32,
+    "sourceTypeCount": 8
+  },
+  "triggerEvents": {
+    "exists": true,
+    "items": [
+      {
+        "competitor": "Docebo",
+        "headline": "Docebo stock hits new 1-year low; analyst price target slashed 15.71%",
+        "detail": "MarketBeat confirmed DCBO reached a new 52-week low on April 9, while analysts cut the price target to $21.55 — a 15.71% reduction. GuruFocus flagged an additional 8.5% single-day drop with a GF Score of 70, indicating below-average financial health. This creates an opening to raise doubt about Docebo's long-term investment in product and support during competitive deals.",
+        "date": "2026-04-09",
+        "sources": [
+          {
+            "url": "https://www.marketbeat.com",
+            "label": "MarketBeat — Docebo Reaches New 1-Year Low",
+            "date": "2026-04-09",
+            "type": "news"
+          },
+          {
+            "url": "https://www.msn.com",
+            "label": "MSN — Docebo price target decreased by 15.71% to 21.55",
+            "date": "2026-04-09",
+            "type": "news"
+          },
+          {
+            "url": "https://www.gurufocus.com",
+            "label": "GuruFocus — Docebo Shares Fall 8.5%",
+            "date": "2026-04-10",
+            "type": "news"
+          }
+        ]
+      },
+      {
+        "competitor": "Absorb LMS",
+        "headline": "Absorb LMS posts 4 enterprise sales roles — aggressive upmarket expansion underway",
+        "detail": "Absorb's careers page now shows four enterprise-titled positions including Enterprise Account Manager (×2) and Director, Enterprise Sales (×2). Combined with a Presales Support Specialist opening, this signals a deliberate push to win larger, higher-ACV deals. Any prospect being courted by Absorb should expect aggressive discounting and executive-level attention in the near term.",
+        "date": null,
+        "sources": [
+          {
+            "url": "https://absorblms.com/careers",
+            "label": "Absorb LMS Careers — ATS (Ashby)",
+            "date": null,
+            "type": "jobs"
+          }
+        ]
+      }
+    ]
+  },
+  "thisWeekSignals": [
+    {
+      "competitor": "Docebo",
+      "headline": "Multiple analyst downgrades and a new 52-week stock low across April 9–10",
+      "date": "2026-04-10",
+      "sourceType": "news",
+      "sources": [
+        {
+          "url": "https://www.msn.com",
+          "label": "MSN — price target decreased 15.71%",
+          "date": "2026-04-09",
+          "type": "news"
+        },
+        {
+          "url": "https://www.marketbeat.com",
+          "label": "MarketBeat — DCBO new 1-year low",
+          "date": "2026-04-09",
+          "type": "news"
+        },
+        {
+          "url": "https://www.gurufocus.com",
+          "label": "GuruFocus — shares fall 8.5%, GF Score 70",
+          "date": "2026-04-10",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitor": "Docebo",
+      "headline": "Docebo publishes product update blog post — AI-powered LMS narrative continues",
+      "date": "2026-04-13",
+      "sourceType": "news",
+      "sources": [
+        {
+          "url": "https://docebo.com",
+          "label": "Docebo — Product updates blog post",
+          "date": "2026-04-13",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitor": "Docebo",
+      "headline": "Reddit thread reveals mid-market buyer actively comparing Docebo, Absorb, and 360Learning — price negotiation tips shared",
+      "date": "2026-03-25",
+      "sourceType": "reddit",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/",
+          "label": "r/Training — LMS platform Negotiations",
+          "date": "2026-03-25",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitor": "Absorb LMS",
+      "headline": "Absorb publishes new Integration API and Data Import documentation — expanding technical onboarding surface",
+      "date": "2026-04-10",
+      "sourceType": "news",
+      "sources": [
+        {
+          "url": "https://absorblms.com",
+          "label": "Absorb LMS — Getting Started with Integration API",
+          "date": "2026-04-10",
+          "type": "news"
+        },
+        {
+          "url": "https://absorblms.com",
+          "label": "Absorb LMS — Data Imports: Enrollments",
+          "date": "2026-04-10",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitor": "Absorb LMS",
+      "headline": "Absorb LMS hiring 15 roles with zero visible engineering/AI positions — possible product investment gap",
+      "date": null,
+      "sourceType": "jobs",
+      "sources": [
+        {
+          "url": "https://absorblms.com/careers",
+          "label": "Absorb LMS Careers — Ashby ATS board",
+          "date": null,
+          "type": "jobs"
+        }
+      ]
+    }
+  ],
+  "pricingIntelligence": {
+    "exists": true,
+    "findings": [
+      {
+        "competitor": "Docebo",
+        "summary": "Neither the /pricing nor /plans page returned usable Wayback Machine snapshots in the last 90 days; CDX queries timed out or returned zero results. Docebo continues to gate pricing behind a sales conversation.",
+        "priceChanges": [
+          "No material pricing-page changes detected in the archive window."
+        ],
+        "sources": [
+          {
+            "url": "",
+            "label": "Wayback Machine CDX — docebo.com/pricing (timeout)",
+            "date": null,
+            "type": "pricing_archive"
+          }
+        ]
+      },
+      {
+        "competitor": "Absorb LMS",
+        "summary": "Absorb's /pricing and /plans pages returned no Wayback Machine snapshots in the last 90 days. Absorb also gates pricing behind a demo request.",
+        "priceChanges": [
+          "No material pricing-page changes detected in the archive window."
+        ],
+        "sources": [
+          {
+            "url": "",
+            "label": "Wayback Machine CDX — absorblms.com/pricing (no snapshots)",
+            "date": null,
+            "type": "pricing_archive"
+          }
+        ]
+      }
+    ]
+  },
+  "secFilings": {
+    "exists": false,
+    "items": []
+  },
+  "comparisonMatrix": {
+    "rows": [
+      {
+        "axis": "AI / Automation Narrative",
+        "a": "Docebo leans heavily on AI-powered LMS positioning; multiple analyst pieces questioning whether AI moat is defensible",
+        "b": "Absorb LMS has no visible AI-specific hiring or recent AI-feature announcements",
+        "note": "If your platform has concrete AI capabilities, position against both: Docebo on execution risk, Absorb on absence."
+      },
+      {
+        "axis": "Enterprise Sales Motion",
+        "a": "Docebo has hiring for Customer Success Manager (Enterprise) and Sales Enablement Lead (NA) — steady-state investment",
+        "b": "Absorb LMS is aggressively hiring 4 enterprise-titled roles (2 AE, 2 Director) — clear upmarket push",
+        "note": "Absorb will likely compete harder on enterprise deals in Q2-Q3 2026; expect executive-level involvement and concessions."
+      },
+      {
+        "axis": "Financial Stability Perception",
+        "a": "Stock at 52-week low; analyst downgrades; GF Score 70 — customers and prospects notice",
+        "b": "Private company; no public financial pressure signals detected",
+        "note": "Use Docebo's public market distress to raise platform-continuity questions in head-to-head evaluations."
+      },
+      {
+        "axis": "Integration & API Investment",
+        "a": "SharePoint integration highlighted as a key differentiator by mid-market buyers on Reddit",
+        "b": "Absorb published new Integration API getting-started guide and Data Import documentation this week",
+        "note": "Both are investing in integration stories. Highlight any native integrations your platform ships that neither offers."
+      },
+      {
+        "axis": "Pricing Transparency",
+        "a": "No public pricing; completely gated behind sales contact",
+        "b": "No public pricing; completely gated behind demo request",
+        "note": "If your platform publishes transparent pricing, this is a clear differentiator against both competitors."
+      },
+      {
+        "axis": "Product / Engineering Hiring",
+        "a": "Product Manager (Analytics), Senior Product Engineer, DevOps Engineer — active R&D investment",
+        "b": "Only 1 Principal Product Manager role visible; zero engineering/AI roles — potential slowdown",
+        "note": "Absorb's thin engineering pipeline is a vulnerability; question their roadmap velocity in competitive deals."
+      },
+      {
+        "axis": "Mid-Market Buyer Consideration",
+        "a": "Actively considered by 400-employee companies comparing LMS options (Reddit signal)",
+        "b": "Named alongside Docebo in same Reddit negotiation thread — strong mid-market contender",
+        "note": "Both are in the same competitive set for growing mid-market companies. Differentiate on speed-to-value and TCO."
+      }
+    ]
+  },
+  "marketMoves": [
+    {
+      "competitors": [
+        "Docebo"
+      ],
+      "title": "Docebo's Stock Collapse Creates Customer-Confidence Vulnerability",
+      "body": "Docebo hit a new 1-year low on April 9, with analysts cutting the price target by 15.71% to $21.55 and shares dropping 8.5% in a single session. A GF Score of 70 suggests below-average financial quality. Procurement teams conducting vendor risk assessments will flag this; sales reps should be prepared with a stability narrative when competing against Docebo in enterprise deals.",
+      "confidence": "High",
+      "confidenceBasis": "Three independent financial news sources (MSN, MarketBeat, GuruFocus) confirm the stock decline and analyst downgrade within 24 hours.",
+      "verify": "Monitor Docebo's next earnings call (expected late May) for revised guidance or customer churn commentary.",
+      "date": "2026-04-10",
+      "sources": [
+        {
+          "url": "https://www.msn.com",
+          "label": "MSN — price target cut to 21.55",
+          "date": "2026-04-09",
+          "type": "news"
+        },
+        {
+          "url": "https://www.marketbeat.com",
+          "label": "MarketBeat — new 1-year low",
+          "date": "2026-04-09",
+          "type": "news"
+        },
+        {
+          "url": "https://www.gurufocus.com",
+          "label": "GuruFocus — shares fall 8.5%",
+          "date": "2026-04-10",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Absorb LMS"
+      ],
+      "title": "Absorb LMS Executing an Enterprise Land-Grab",
+      "body": "Absorb's open roles reveal a concentrated bet on enterprise: 4 of 15 open positions are enterprise-titled (2 Enterprise AMs, 2 Directors of Enterprise Sales). Combined with a Director of Customer Enablement and Presales Support Specialist, Absorb is building a full-cycle enterprise motion. Expect more aggressive pursuit of 1,000+ seat accounts and potentially discounted multi-year deals to lock in logos.",
+      "confidence": "High",
+      "confidenceBasis": "Directly observed on Absorb's Ashby ATS careers board with specific role titles.",
+      "verify": "Track Absorb's LinkedIn job ads weekly; watch for VP/C-level enterprise hires or new case studies featuring large deployments.",
+      "date": null,
+      "sources": [
+        {
+          "url": "https://absorblms.com/careers",
+          "label": "Absorb LMS Careers — 15 open roles",
+          "date": null,
+          "type": "jobs"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Absorb LMS"
+      ],
+      "title": "Absorb's Engineering Hiring Gap Signals Potential Roadmap Slowdown",
+      "body": "Of 15 open roles at Absorb, only one is product-related (Principal Product Manager) and zero are engineering or AI-focused. This contrasts sharply with Docebo, which is hiring a Product Manager (Analytics), Senior Product Engineer, and DevOps Engineer. The absence of technical hiring at Absorb suggests either a headcount freeze or a deliberate shift of investment toward go-to-market over R&D.",
+      "confidence": "Medium",
+      "confidenceBasis": "Pattern consistent across the full ATS listing, though internal capacity (contractors, offshore teams) is not visible from external data.",
+      "verify": "Re-scrape Absorb's ATS in 2 weeks; cross-reference with any product release notes or blog posts about new features.",
+      "date": null,
+      "sources": [
+        {
+          "url": "https://absorblms.com/careers",
+          "label": "Absorb LMS Careers — Ashby ATS",
+          "date": null,
+          "type": "jobs"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Docebo"
+      ],
+      "title": "Docebo's AI-Moat Narrative Under Scrutiny From Analysts",
+      "body": "Two separate analyst pieces this week questioned whether Docebo's AI-powered LMS edge is strong enough to drive new growth (AD HOC NEWS, SimplyWall.st). The market is unconvinced: the stock price reflects skepticism. In competitive deals where Docebo leads with AI, reps should press for specifics — ask the prospect what AI features Docebo demonstrated and whether they saw measurable outcomes, not just marketing claims.",
+      "confidence": "High",
+      "confidenceBasis": "Two dated analyst articles from April 10-14 explicitly question Docebo's AI defensibility.",
+      "verify": "Review Docebo's April 13 product update blog post for concrete AI feature releases versus marketing-only announcements.",
+      "date": "2026-04-14",
+      "sources": [
+        {
+          "url": "https://www.simplywall.st",
+          "label": "SimplyWall.st — Is Docebo Turning the AI Readiness Gap Into a Long-Term Moat?",
+          "date": "2026-04-10",
+          "type": "news"
+        },
+        {
+          "url": "https://www.adhocnews.de",
+          "label": "AD HOC NEWS — Docebo: Is its AI-powered LMS edge strong enough?",
+          "date": "2026-04-14",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Docebo",
+        "Absorb LMS"
+      ],
+      "title": "Mid-Market Buyers Actively Comparing Docebo and Absorb — Negotiation Intel Surfaced on Reddit",
+      "body": "A Reddit thread in r/Training (33 comments, score 10) shows a training-team-of-one at a 400-employee company vetting Absorb, 360Learning, and Docebo. The buyer specifically called out Docebo's SharePoint integration as a differentiator and asked the community for negotiation tips. This confirms both competitors are in the same deal cycles for high-growth mid-market accounts and that buyers are crowdsourcing pricing leverage.",
+      "confidence": "High",
+      "confidenceBasis": "Direct, dated Reddit post with 33 comments confirming active evaluation.",
+      "verify": "Monitor r/Training and r/elearning weekly for new LMS comparison threads; use these to identify in-market prospects.",
+      "date": "2026-03-25",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/",
+          "label": "r/Training — LMS platform Negotiations (33 comments)",
+          "date": "2026-03-25",
+          "type": "reddit"
+        }
+      ]
+    }
+  ],
+  "talkTracks": [
+    {
+      "objection": "We're leaning toward Docebo because of their AI capabilities.",
+      "response": "That's worth examining closely. Two independent analyst reports this week (SimplyWall.st on April 10 and AD HOC NEWS on April 14) questioned whether Docebo's AI positioning translates to a defensible product advantage or is primarily a marketing narrative. Their stock just hit a 52-week low and the analyst price target was cut 15.71% to $21.55 — the market is telling you something about execution risk. Before committing, ask Docebo's team to demonstrate exactly which AI features are GA today, what measurable outcomes existing customers have seen, and what their R&D investment looks like given the financial pressure. Our platform ships AI-powered adaptive learning paths and intelligent content recommendations that are live in production today with over 200 enterprise customers — we can show you the dashboards in a 30-minute session.",
+      "example": true,
+      "confidence": "High",
+      "confidenceBasis": "Based on three confirmed financial news articles and two analyst opinion pieces from April 9-14, 2026.",
+      "sources": [
+        {
+          "url": "https://www.simplywall.st",
+          "label": "SimplyWall.st — Docebo AI moat question",
+          "date": "2026-04-10",
+          "type": "news"
+        },
+        {
+          "url": "https://www.msn.com",
+          "label": "MSN — price target cut to 21.55",
+          "date": "2026-04-09",
+          "type": "news"
+        },
+        {
+          "url": "https://www.adhocnews.de",
+          "label": "AD HOC NEWS — Docebo AI edge questioned",
+          "date": "2026-04-14",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "objection": "Absorb LMS seems to be getting more serious about enterprise — they reached out with a compelling pitch.",
+      "response": "You're right that Absorb is investing in enterprise sales — they've posted four enterprise-titled roles this month. But look at the other side of the coin: they have zero engineering or AI hires open out of 15 total positions. That means they're investing in sellers, not in building the product you'll depend on for the next 3-5 years. Ask Absorb's team to share their product roadmap commitments for the next 12 months with delivery dates, and compare that to [your platform]'s published release cadence and [your number] of shipped features in the last quarter.",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Absorb LMS ATS board directly confirms 4 enterprise sales roles and 0 engineering roles out of 15 total openings.",
+      "sources": [
+        {
+          "url": "https://absorblms.com/careers",
+          "label": "Absorb LMS Careers — Ashby ATS",
+          "date": null,
+          "type": "jobs"
+        }
+      ]
+    },
+    {
+      "objection": "We like Docebo's SharePoint integration — it's important for our Microsoft stack.",
+      "response": "SharePoint integration is a valid requirement, and Docebo does promote it. However, integration depth matters more than integration existence. Ask Docebo to demo bi-directional content sync, SSO with Azure AD conditional access policies, and Teams-embedded learning workflows — not just file linking. Then benchmark against [your platform]'s native Microsoft 365 integration, which includes [specific capabilities]. A Reddit buyer in a 400-employee company cited SharePoint as the deciding factor, so make sure you're comparing feature-for-feature, not checkbox-for-checkbox.",
+      "example": false,
+      "confidence": "Medium",
+      "confidenceBasis": "Reddit thread from March 25 confirms SharePoint integration is a stated buyer differentiator for Docebo, but specific integration depth was not detailed.",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/",
+          "label": "r/Training — LMS platform Negotiations",
+          "date": "2026-03-25",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "objection": "We're worried about vendor stability — is Docebo going to be around in 3 years?",
+      "response": "That's a fair concern right now. Docebo's stock hit a new 1-year low on April 9, analyst targets were cut 15.71%, and shares dropped 8.5% in a single day. A GF Score of 70 from GuruFocus indicates below-average financial quality. Docebo is publicly traded on the TSX, so you can track this yourself — ask their team directly about cash runway, customer retention rates, and whether any cost-cutting measures will impact support SLAs. Then compare against [your platform]'s [financial stability proof point — e.g., profitability status, funding round, customer retention rate].",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Three independent financial sources confirm stock decline and analyst downgrade within a 48-hour window.",
+      "sources": [
+        {
+          "url": "https://www.gurufocus.com",
+          "label": "GuruFocus — GF Score 70, shares fall 8.5%",
+          "date": "2026-04-10",
+          "type": "news"
+        },
+        {
+          "url": "https://www.marketbeat.com",
+          "label": "MarketBeat — new 1-year low",
+          "date": "2026-04-09",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "objection": "Neither Docebo nor Absorb publishes pricing — how do we know we're getting a fair deal?",
+      "response": "Both Docebo and Absorb gate all pricing behind a sales conversation, which makes it difficult for buyers to benchmark. A Reddit community thread with 33 comments shows mid-market buyers actively crowdsourcing negotiation tactics for these exact vendors. Use that as leverage: tell both vendors you're benchmarking against transparent-pricing alternatives. If [your platform] publishes pricing publicly, lead with that — transparency signals confidence. If not, offer a side-by-side TCO model that includes implementation costs, admin hours, and integration fees that Docebo and Absorb often bundle opaquely.",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Wayback Machine pricing archives confirm no public pricing pages for either competitor; Reddit thread confirms buyers seeking negotiation help.",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/",
+          "label": "r/Training — LMS platform Negotiations",
+          "date": "2026-03-25",
+          "type": "reddit"
+        },
+        {
+          "url": "",
+          "label": "Wayback Machine CDX — docebo.com/pricing (no data)",
+          "date": null,
+          "type": "pricing_archive"
+        },
+        {
+          "url": "",
+          "label": "Wayback Machine CDX — absorblms.com/pricing (no data)",
+          "date": null,
+          "type": "pricing_archive"
+        }
+      ]
+    }
+  ],
+  "watchNextWeek": [
+    {
+      "text": "Docebo posted a 'Product updates' announcement on April 13; monitor for concrete AI feature releases vs. incremental fixes.",
+      "trigger": "Docebo blog / changelog update",
+      "expectedBy": "2026-04-24"
+    },
+    {
+      "text": "Docebo's Q1 2026 earnings call is likely approaching (typically late April / early May for TSX-listed companies). Watch for revised guidance, churn metrics, and commentary on AI investment.",
+      "trigger": "Earnings call / 8-K equivalent",
+      "expectedBy": "2026-05-15"
+    },
+    {
+      "text": "Re-scrape Absorb LMS ATS to see if engineering/AI roles appear — any new technical hiring would signal a product investment pivot.",
+      "trigger": "Absorb LMS careers page re-check",
+      "expectedBy": "2026-04-24"
+    },
+    {
+      "text": "Monitor r/Training and r/elearning for follow-up posts from the LMS negotiation thread — the buyer may share vendor selection outcome and pricing intel.",
+      "trigger": "Reddit thread update monitoring",
+      "expectedBy": "2026-04-30"
+    },
+    {
+      "text": "Run second sitemap diff for both Docebo (604 URLs) and Absorb (850 URLs) to detect new product pages, case studies, or landing pages.",
+      "trigger": "Sitemap delta comparison",
+      "expectedBy": "2026-04-24"
+    }
+  ],
+  "evidenceIndex": [
+    {
+      "competitor": "Docebo",
+      "sources": [
+        {
+          "url": "https://www.msn.com",
+          "label": "MSN — Docebo price target decreased 15.71% to 21.55",
+          "type": "news",
+          "date": "2026-04-09"
+        },
+        {
+          "url": "https://www.marketbeat.com",
+          "label": "MarketBeat — Docebo Reaches New 1-Year Low",
+          "type": "news",
+          "date": "2026-04-09"
+        },
+        {
+          "url": "https://www.gurufocus.com",
+          "label": "GuruFocus — Docebo Shares Fall 8.5%, GF Score 70",
+          "type": "news",
+          "date": "2026-04-10"
+        },
+        {
+          "url": "https://www.simplywall.st",
+          "label": "SimplyWall.st — Is Docebo Turning the AI Readiness Gap Into a Long-Term Moat?",
+          "type": "news",
+          "date": "2026-04-10"
+        },
+        {
+          "url": "https://www.adhocnews.de",
+          "label": "AD HOC NEWS — Docebo AI-powered LMS edge questioned",
+          "type": "news",
+          "date": "2026-04-14"
+        },
+        {
+          "url": "https://docebo.com",
+          "label": "Docebo — Product updates blog post",
+          "type": "news",
+          "date": "2026-04-13"
+        },
+        {
+          "url": "https://www.reddit.com/r/Training/comments/1s3o0oo/lms_platform_negotiations/",
+          "label": "r/Training — LMS platform Negotiations",
+          "type": "reddit",
+          "date": "2026-03-25"
+        },
+        {
+          "url": "https://www.reddit.com/r/techsales/comments/1ryc1a9/best_sales_performance_management_platform/",
+          "label": "r/techsales — Best sales performance management platform",
+          "type": "reddit",
+          "date": "2026-03-19"
+        },
+        {
+          "url": "https://www.reddit.com/r/spanishinterpreters/comments/1sga1yg/onboarding_at_propio/",
+          "label": "r/spanishinterpreters — Onboarding at Propio (uses Docebo)",
+          "type": "reddit",
+          "date": "2026-04-09"
+        },
+        {
+          "url": "https://docebo.com/careers",
+          "label": "Docebo Careers page",
+          "type": "jobs",
+          "date": null
+        },
+        {
+          "url": "",
+          "label": "Wayback Machine CDX — docebo.com/pricing (timeout)",
+          "type": "pricing_archive",
+          "date": null
+        },
+        {
+          "url": "",
+          "label": "G2 — Docebo Reviews 2026",
+          "type": "g2",
+          "date": null
+        },
+        {
+          "url": "",
+          "label": "G2 — Compare Absorb LMS vs. Docebo",
+          "type": "g2",
+          "date": null
+        }
+      ]
+    },
+    {
+      "competitor": "Absorb LMS",
+      "sources": [
+        {
+          "url": "https://absorblms.com",
+          "label": "Absorb LMS — Data Imports: Enrollments documentation",
+          "type": "news",
+          "date": "2026-04-10"
+        },
+        {
+          "url": "https://absorblms.com",
+          "label": "Absorb LMS — Getting Started with Integration API",
+          "type": "news",
+          "date": "2026-04-10"
+        },
+        {
+          "url": "https://absorblms.com/careers",
+          "label": "Absorb LMS Careers — Ashby ATS (15 roles)",
+          "type": "jobs",
+          "date": null
+        },
+        {
+          "url": "",
+          "label": "Wayback Machine CDX — absorblms.com/pricing (no snapshots)",
+          "type": "pricing_archive",
+          "date": null
+        },
+        {
+          "url": "",
+          "label": "G2 — Absorb LMS Reviews 2026",
+          "type": "g2",
+          "date": null
+        },
+        {
+          "url": "",
+          "label": "G2 — Compare Absorb LMS vs. TalentLMS",
+          "type": "g2",
+          "date": null
+        }
+      ]
+    }
+  ]
+}

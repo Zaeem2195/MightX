@@ -20,10 +20,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const MODEL  = 'claude-sonnet-4-6';
+const MODEL  = process.env.ANALYSIS_MODEL?.trim() || 'claude-opus-4-7';
 const DELAY  = 1000;
 /** Large enough for long jobs / funding blobs without mid-string truncation. */
 const MAX_TOKENS = 4096;
+const ANALYSIS_THINKING_BUDGET_TOKENS = parseInt(
+  process.env.ANALYSIS_THINKING_BUDGET_TOKENS || '',
+  10,
+) || 12000;
 
 const ANALYST_JSON_SUFFIX = `
 
@@ -228,10 +232,19 @@ async function runAnalystPhase(signal, clientContext) {
   for (const prompt of variants) {
     for (let apiAttempt = 0; apiAttempt < 3; apiAttempt++) {
       try {
-        const message = await client.messages.create({
+        const request = {
           model:      MODEL,
           max_tokens: MAX_TOKENS,
           messages:   [{ role: 'user', content: prompt }],
+        };
+        if (ANALYSIS_THINKING_BUDGET_TOKENS > 0) {
+          request.thinking = {
+            type: 'enabled',
+            budget_tokens: ANALYSIS_THINKING_BUDGET_TOKENS,
+          };
+        }
+        const message = await client.messages.create({
+          ...request,
         });
         const raw = message.content[0]?.text?.trim() || '';
         lastRaw = raw;
@@ -250,10 +263,19 @@ async function runAnalystPhase(signal, clientContext) {
 
   if (lastRaw && lastRaw.length < 12000) {
     try {
-      const fixMsg = await client.messages.create({
+      const fixRequest = {
         model:      MODEL,
         max_tokens: MAX_TOKENS,
         messages:   [{ role: 'user', content: JSON_FIX_PREFIX_ANALYST + lastRaw }],
+      };
+      if (ANALYSIS_THINKING_BUDGET_TOKENS > 0) {
+        fixRequest.thinking = {
+          type: 'enabled',
+          budget_tokens: ANALYSIS_THINKING_BUDGET_TOKENS,
+        };
+      }
+      const fixMsg = await client.messages.create({
+        ...fixRequest,
       });
       const fixed = fixMsg.content[0]?.text?.trim() || '';
       const parsed = tryParseFindingsArray(fixed);
@@ -283,11 +305,20 @@ async function runFactCheckerPhase(signal, clientContext, analystFindings) {
   for (const prompt of variants) {
     for (let apiAttempt = 0; apiAttempt < 3; apiAttempt++) {
       try {
-        const message = await client.messages.create({
+        const request = {
           model:      MODEL,
           max_tokens: MAX_TOKENS,
           system:     FACT_CHECKER_SYSTEM,
           messages:   [{ role: 'user', content: prompt }],
+        };
+        if (ANALYSIS_THINKING_BUDGET_TOKENS > 0) {
+          request.thinking = {
+            type: 'enabled',
+            budget_tokens: ANALYSIS_THINKING_BUDGET_TOKENS,
+          };
+        }
+        const message = await client.messages.create({
+          ...request,
         });
         const raw = message.content[0]?.text?.trim() || '';
         lastRaw = raw;
@@ -306,11 +337,20 @@ async function runFactCheckerPhase(signal, clientContext, analystFindings) {
 
   if (lastRaw && lastRaw.length < 12000) {
     try {
-      const fixMsg = await client.messages.create({
+      const fixRequest = {
         model:      MODEL,
         max_tokens: MAX_TOKENS,
         system:     FACT_CHECKER_SYSTEM,
         messages:   [{ role: 'user', content: JSON_FIX_PREFIX_FACT_CHECK + lastRaw }],
+      };
+      if (ANALYSIS_THINKING_BUDGET_TOKENS > 0) {
+        fixRequest.thinking = {
+          type: 'enabled',
+          budget_tokens: ANALYSIS_THINKING_BUDGET_TOKENS,
+        };
+      }
+      const fixMsg = await client.messages.create({
+        ...fixRequest,
       });
       const fixed = fixMsg.content[0]?.text?.trim() || '';
       const parsed = tryParseFindingsArray(fixed);

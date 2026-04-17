@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Briefing · Deep Dive — {{CLIENT_NAME}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    img { border: 0; max-width: 100%; height: auto; }
+
+    :root {
+      --serif: 'Instrument Serif', 'Source Serif 4', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+      --sans:  -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+      --mono:  'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+      --paper:   #f4ecd8;
+      --card:    #fbf6ea;
+      --ink:     #1a1613;
+      --muted:   #5c5146;
+      --faint:   #8a7e6d;
+      --hairline:#e3d7ba;
+      --rule:    #cfc0a0;
+      --accent:  #7a2e0e;
+      --accent-tint: rgba(122, 46, 14, 0.06);
+      --alert:   #7a1d1d;
+      --success: #0f3d2e;
+      --success-tint: #eaf2ec;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .wrapper {
+      max-width: 720px;
+      margin: 40px auto;
+      background: var(--card);
+      border: 1px solid var(--hairline);
+      overflow: hidden;
+    }
+
+    /* ─── Masthead ──────────────────────────────────────────────────────── */
+    .header {
+      padding: 40px 48px 28px;
+      border-bottom: 3px double var(--rule);
+    }
+    .header .label {
+      font-family: var(--sans);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+    .header h1 {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .header .week {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .header .topic {
+      margin-top: 18px;
+      display: inline-block;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 4px 14px;
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .body { padding: 36px 48px 12px; }
+
+    /* ─── Silent-week strip note ────────────────────────────────────────── */
+    .strip-note {
+      background: transparent;
+      border: none;
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+      padding: 14px 0;
+      margin-bottom: 32px;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    /* ─── Headline question (this is the hook) ──────────────────────────── */
+    .headline {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.22;
+      letter-spacing: -0.015em;
+      margin-bottom: 20px;
+    }
+
+    /* ─── Executive answer (drop-cap, editorial) ────────────────────────── */
+    .executive {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink);
+      letter-spacing: -0.002em;
+      background: transparent;
+      border-left: 3px solid var(--accent);
+      padding: 6px 0 6px 22px;
+      margin-bottom: 14px;
+    }
+    .executive::first-letter {
+      font-family: var(--serif);
+      font-size: 52px;
+      font-weight: 400;
+      float: left;
+      line-height: 0.9;
+      padding: 6px 10px 0 0;
+      color: var(--accent);
+    }
+
+    .why-now {
+      margin-top: 16px;
+      font-family: var(--serif);
+      font-size: 14px;
+      color: var(--accent);
+      font-style: italic;
+      line-height: 1.6;
+    }
+    .why-now::before {
+      content: "Why now — ";
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      font-style: normal;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-right: 4px;
+    }
+
+    /* ─── Section framing ───────────────────────────────────────────────── */
+    .section { margin-top: 36px; }
+    .section-title {
+      font-family: var(--sans);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--hairline);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    /* ─── Deep-section cards (actual analysis body) ─────────────────────── */
+    .deep-section {
+      border: none;
+      border-top: 1px solid var(--hairline);
+      padding: 20px 0 22px;
+      background: transparent;
+    }
+    .deep-section:first-of-type { border-top: none; padding-top: 0; }
+    .deep-section h3 {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+      line-height: 1.25;
+    }
+    .deep-section .body-text {
+      font-family: var(--serif);
+      font-size: 16.5px;
+      color: #2a241d;
+      line-height: 1.8;
+      letter-spacing: -0.001em;
+    }
+    .deep-section .body-text p { margin-bottom: 14px; }
+    .deep-section .body-text p:last-child { margin-bottom: 0; }
+
+    .sources {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--hairline);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--faint);
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+    }
+    .sources strong {
+      font-family: var(--sans);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+    .sources a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+
+    /* ─── Recommendations ───────────────────────────────────────────────── */
+    .recs { list-style: none; }
+    .recs li {
+      padding: 12px 0 12px 28px;
+      font-family: var(--serif);
+      font-size: 15.5px;
+      color: var(--ink);
+      line-height: 1.6;
+      border-bottom: 1px solid var(--hairline);
+      position: relative;
+    }
+    .recs li::before {
+      content: counter(rec, upper-roman) ".";
+      counter-increment: rec;
+      font-family: var(--serif);
+      font-size: 13px;
+      color: var(--accent);
+      font-style: italic;
+      position: absolute;
+      left: 0;
+      top: 14px;
+    }
+    .recs { counter-reset: rec; }
+    .recs li:last-child { border-bottom: none; }
+
+    /* ─── Play box ──────────────────────────────────────────────────────── */
+    .play-box {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--success);
+      background: var(--success-tint);
+      border-left: 3px solid var(--success);
+      padding: 18px 22px;
+      letter-spacing: -0.005em;
+    }
+
+    /* ─── Watch list ────────────────────────────────────────────────────── */
+    .watch-list { list-style: none; }
+    .watch-list li {
+      padding: 10px 0 10px 22px;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 13.5px;
+      color: #2a241d;
+      line-height: 1.55;
+      position: relative;
+    }
+    .watch-list li::before {
+      content: "§";
+      font-family: var(--serif);
+      font-size: 14px;
+      color: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 10px;
+      font-style: italic;
+    }
+    .watch-list li:last-child { border-bottom: none; }
+
+    /* ─── Coverage colophon ─────────────────────────────────────────────── */
+    .coverage {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--faint);
+      background: transparent;
+      border-top: 1px solid var(--hairline);
+      border-left: none;
+      padding: 14px 0 0;
+      margin-top: 28px;
+      line-height: 1.7;
+      letter-spacing: 0.02em;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────────────── */
+    .footer {
+      border-top: 3px double var(--rule);
+      padding: 24px 48px 32px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--faint);
+      text-align: center;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+    }
+    .footer .colophon {
+      font-family: var(--serif);
+      font-size: 13px;
+      font-style: italic;
+      color: var(--muted);
+      margin-bottom: 8px;
+      letter-spacing: 0;
+    }
+
+    /* ─── Mobile ────────────────────────────────────────────────────────── */
+    @media (max-width: 560px) {
+      .wrapper { margin: 0; border-left: 0; border-right: 0; }
+      .header { padding: 28px 22px 22px; }
+      .body { padding: 28px 22px 8px; }
+      .footer { padding: 20px 22px 28px; }
+      .header h1 { font-size: 24px; }
+      .headline { font-size: 24px; }
+      .deep-section h3 { font-size: 19px; }
+      .deep-section .body-text { font-size: 15px; }
+      .executive { font-size: 16.5px; }
+      .executive::first-letter { font-size: 44px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <div class="label">The Briefing · Deep Dive</div>
+    <h1>{{CLIENT_NAME}}</h1>
+    <div class="week">Issue · Week of {{REPORT_WEEK}}</div>
+    <div class="topic">{{DEEP_DIVE_TOPIC_LABEL}}</div>
+  </div>
+
+  <div class="body">
+
+    <div class="strip-note">
+      A quiet week in the feeds &mdash; so your analyst desk stepped back and wrote the essay the weekly briefing never has time for. Grounded in the rolling 30–90 days of archived signals. Normal weekly briefings resume as soon as fresh signals return.
+    </div>
+
+    <div class="headline">{{HEADLINE_QUESTION}}</div>
+    <div class="executive">{{EXECUTIVE_ANSWER}}</div>
+    <div class="why-now">{{WHY_NOW}}</div>
+
+    <div class="section">
+      <div class="section-title">Analysis</div>
+      {{DEEP_SECTIONS}}
+    </div>
+
+    <div class="section">
+      <div class="section-title">Strategic Recommendations</div>
+      <ul class="recs">
+        {{RECOMMENDATIONS}}
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Sales Play · This Week</div>
+      <div class="play-box">{{SALES_PLAY}}</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Watch Next Week</div>
+      <ul class="watch-list">
+        {{WATCH_LIST}}
+      </ul>
+    </div>
+
+    {{DATA_GAPS_SECTION}}
+
+    <div class="coverage">{{COVERAGE_SUMMARY}}</div>
+
+  </div>
+
+  <div class="footer">
+    <div class="colophon">Prepared by your analyst desk.</div>
+    Grounded in the rolling archive · news · G2 · jobs · LinkedIn · Wayback pricing · sitemap diffs · SEC 8-K · Reddit · Hacker News<br/>
+    Questions, corrections, or a request to pin a topic? Reply directly to this email.
+  </div>
+
+</div>
+</body>
+</html>

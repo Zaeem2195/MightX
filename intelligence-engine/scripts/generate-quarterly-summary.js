@@ -20,7 +20,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const MODEL = 'claude-sonnet-4-6';
+const MODEL = process.env.QUARTERLY_SUMMARY_MODEL?.trim() || 'claude-opus-4-7';
+const QUARTERLY_SUMMARY_THINKING_BUDGET_TOKENS = parseInt(
+  process.env.QUARTERLY_SUMMARY_THINKING_BUDGET_TOKENS || '',
+  10,
+) || 14000;
 
 const clientId = process.argv[2];
 const quarterArg = process.argv.find(a => a.startsWith('--quarter'))
@@ -172,10 +176,20 @@ OUTPUT: Return a single JSON object:
   "lookingAhead": [ "..." ]
 }`;
 
-  const message = await anthropic.messages.create({
+  const request = {
     model: MODEL,
     max_tokens: 2000,
     messages: [{ role: 'user', content: prompt }],
+  };
+  if (QUARTERLY_SUMMARY_THINKING_BUDGET_TOKENS > 0) {
+    request.thinking = {
+      type: 'enabled',
+      budget_tokens: QUARTERLY_SUMMARY_THINKING_BUDGET_TOKENS,
+    };
+  }
+
+  const message = await anthropic.messages.create({
+    ...request,
   });
 
   const raw = message.content[0]?.text?.trim() || '';

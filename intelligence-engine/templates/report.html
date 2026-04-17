@@ -3,251 +3,393 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weekly Intelligence Briefing — {{CLIENT_NAME}}</title>
+  <title>The Briefing — {{CLIENT_NAME}} · Week of {{REPORT_WEEK}}</title>
   <style>
+    /* ─── Reset ─────────────────────────────────────────────────────────── */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-      background: #f4f4f5;
-      color: #111827;
-      font-size: 15px;
-      line-height: 1.6;
+    img { border: 0; max-width: 100%; height: auto; }
+
+    /* ─── Type stacks (system-first, web-font progressive enhancement) ──── */
+    :root {
+      --serif: 'Instrument Serif', 'Source Serif 4', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+      --sans:  -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+      --mono:  'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+      --paper:   #faf8f3;
+      --card:    #fcfaf5;
+      --ink:     #15181b;
+      --muted:   #5b5f66;
+      --faint:   #8b8f96;
+      --hairline:#e6e0d2;
+      --rule:    #d9d2bf;
+      --accent:  #8a4b14;
+      --accent-tint: rgba(138, 75, 20, 0.08);
+      --alert:   #7a1d1d;
+      --alert-tint: #fdf2e9;
+      --success: #0f3d2e;
+      --success-tint: #eaf2ec;
     }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ─── Paper card ────────────────────────────────────────────────────── */
     .wrapper {
       max-width: 680px;
-      margin: 32px auto;
-      background: #ffffff;
-      border-radius: 8px;
+      margin: 40px auto;
+      background: var(--card);
+      border: 1px solid var(--hairline);
       overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
+
+    /* ─── Masthead ──────────────────────────────────────────────────────── */
     .header {
-      background: #0f172a;
-      padding: 28px 36px;
-      color: #ffffff;
+      padding: 36px 44px 28px;
+      border-bottom: 3px double var(--rule);
     }
     .header .label {
-      font-size: 11px;
-      letter-spacing: 0.1em;
+      font-family: var(--sans);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: #94a3b8;
-      margin-bottom: 6px;
+      color: var(--accent);
+      margin-bottom: 18px;
     }
     .header h1 {
-      font-size: 20px;
-      font-weight: 600;
-      color: #f1f5f9;
-      margin-bottom: 4px;
+      font-family: var(--serif);
+      font-size: 36px;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 10px;
     }
-    .header .week {
-      font-size: 13px;
-      color: #64748b;
-    }
-    .body { padding: 32px 36px; }
-    .section { margin-bottom: 32px; }
-    .section-title {
+    .header .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-family: var(--mono);
       font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.04em;
+      color: var(--muted);
       text-transform: uppercase;
-      color: #6b7280;
-      border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 8px;
-      margin-bottom: 16px;
+      margin-top: 14px;
     }
+    .header .meta span strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* ─── Body ──────────────────────────────────────────────────────────── */
+    .body { padding: 36px 44px 12px; }
+
+    /* ─── Section framing (numbered, editorial) ─────────────────────────── */
+    .section {
+      margin-bottom: 40px;
+      position: relative;
+    }
+    .section-title {
+      font-family: var(--sans);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--hairline);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .section-title::before {
+      display: none; /* optional numbering, reserved for future */
+    }
+
+    /* ─── Summary block (sets editorial tone at the top) ────────────────── */
     .summary-box {
-      background: #f8fafc;
-      border-left: 3px solid #3b82f6;
-      padding: 14px 16px;
-      border-radius: 0 6px 6px 0;
-      color: #1e293b;
-      font-size: 14px;
-      line-height: 1.7;
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink);
+      letter-spacing: -0.005em;
+      padding: 4px 0 8px;
+      border-left: 3px solid var(--accent);
+      padding-left: 20px;
     }
+
+    /* ─── Alert (trigger event) ─────────────────────────────────────────── */
     .alert-box {
-      background: #fef3c7;
-      border: 1px solid #f59e0b;
-      border-left: 4px solid #f59e0b;
-      padding: 16px 18px;
-      border-radius: 0 6px 6px 0;
-      margin-bottom: 24px;
+      background: var(--alert-tint);
+      border: 1px solid #f4cfb0;
+      border-left: 4px solid var(--alert);
+      padding: 18px 20px;
+      margin-bottom: 28px;
     }
     .alert-box .alert-label {
-      font-size: 11px;
+      font-family: var(--sans);
+      font-size: 10px;
       font-weight: 700;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #92400e;
-      margin-bottom: 6px;
+      color: var(--alert);
+      margin-bottom: 8px;
     }
     .alert-box .alert-headline {
-      font-size: 15px;
-      font-weight: 600;
-      color: #78350f;
-      margin-bottom: 6px;
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: var(--ink);
+      margin-bottom: 8px;
     }
     .alert-box .alert-detail {
-      font-size: 13px;
-      color: #92400e;
-      line-height: 1.6;
+      font-size: 13.5px;
+      color: #4a2a0e;
+      line-height: 1.65;
     }
+
+    /* ─── Competitor block (restrained, hairline-ruled) ─────────────────── */
     .competitor-block {
-      border: 1px solid #e5e7eb;
-      border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 16px;
+      border-top: 1px solid var(--hairline);
+      margin-bottom: 4px;
     }
+    .competitor-block:last-child { border-bottom: 1px solid var(--hairline); }
     .competitor-header {
-      background: #f9fafb;
-      padding: 10px 16px;
+      padding: 14px 0 10px;
       display: flex;
-      align-items: center;
-      gap: 10px;
+      align-items: baseline;
+      gap: 14px;
+      flex-wrap: wrap;
     }
     .competitor-name {
-      font-size: 13px;
-      font-weight: 600;
-      color: #111827;
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: -0.005em;
     }
     .competitor-summary {
-      font-size: 12px;
-      color: #6b7280;
-      margin-left: auto;
+      font-size: 12.5px;
+      color: var(--muted);
       font-style: italic;
+      margin-left: auto;
+      text-align: right;
     }
+
     .finding {
-      padding: 12px 16px;
-      border-top: 1px solid #f3f4f6;
+      padding: 10px 0 16px 20px;
+      border-left: 1px solid var(--hairline);
+      margin-left: 2px;
+      margin-bottom: 2px;
     }
     .finding-headline {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
-      color: #1f2937;
-      margin-bottom: 4px;
-    }
-    .finding-detail {
-      font-size: 13px;
-      color: #4b5563;
-      margin-bottom: 6px;
-      line-height: 1.55;
+      color: var(--ink);
+      margin-bottom: 5px;
+      line-height: 1.45;
     }
     .finding-source-note {
-      font-size: 11px;
-      color: #64748b;
-      font-style: italic;
-      margin-bottom: 4px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--faint);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+    .finding-detail {
+      font-size: 13.5px;
+      color: #2d3138;
+      line-height: 1.65;
+      margin-bottom: 8px;
     }
     .finding-implication {
       font-size: 12px;
-      color: #2563eb;
-      background: #eff6ff;
-      padding: 6px 10px;
-      border-radius: 4px;
+      color: var(--accent);
+      background: var(--accent-tint);
+      padding: 4px 10px;
       display: inline-block;
+      letter-spacing: 0.01em;
     }
-    .finding-implication::before { content: "→ "; font-weight: 700; }
-    .finding-talk-track {
-      margin-top: 8px;
-      font-size: 12px;
-      color: #374151;
-      background: #f9fafb;
-      border-left: 3px solid #cbd5e1;
-      padding: 8px 10px;
-      border-radius: 0 4px 4px 0;
-      line-height: 1.55;
-    }
-    .play-box {
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      border-left: 4px solid #22c55e;
-      padding: 14px 16px;
-      border-radius: 0 6px 6px 0;
-      font-size: 14px;
-      color: #14532d;
-      line-height: 1.65;
-    }
-    .email-block {
-      border: 1px solid #e5e7eb;
-      border-radius: 6px;
-      margin-bottom: 14px;
-      overflow: hidden;
-    }
-    .email-label {
-      background: #f3f4f6;
-      padding: 8px 14px;
-      font-size: 11px;
+    .finding-implication::before {
+      content: "So what — ";
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      font-size: 9.5px;
+      letter-spacing: 0.12em;
+    }
+    .finding-talk-track {
+      margin-top: 10px;
+      font-size: 12.5px;
       color: #374151;
+      background: #f5f1e6;
+      border-left: 2px solid var(--rule);
+      padding: 10px 14px;
+      line-height: 1.65;
+    }
+    .finding-talk-track strong {
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ─── Sales play — confident emerald ────────────────────────────────── */
+    .play-box {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--success);
+      background: var(--success-tint);
+      border-left: 3px solid var(--success);
+      padding: 18px 22px;
+      letter-spacing: -0.005em;
+    }
+
+    /* ─── Trigger emails (mono, draft-feel) ─────────────────────────────── */
+    .email-block {
+      border: 1px solid var(--hairline);
+      margin-bottom: 14px;
+      background: #fbf8ee;
+    }
+    .email-label {
+      background: transparent;
+      padding: 9px 16px 4px;
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--hairline);
     }
     .email-subject {
-      padding: 10px 14px 0;
-      font-size: 13px;
-      font-weight: 600;
-      color: #111827;
+      padding: 12px 16px 2px;
+      font-family: var(--serif);
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.4;
     }
     .email-subject::before {
-      content: "Subject: ";
+      content: "Subject · ";
+      font-family: var(--mono);
       font-weight: 400;
-      color: #6b7280;
-      font-size: 12px;
+      color: var(--faint);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
     .email-body {
-      padding: 8px 14px 14px;
-      font-size: 13px;
-      color: #374151;
-      line-height: 1.65;
+      padding: 10px 16px 16px;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: #2d3138;
+      line-height: 1.7;
       white-space: pre-line;
-      font-family: 'Courier New', Courier, monospace;
-      background: #fafafa;
-      border-top: 1px solid #f3f4f6;
-      margin-top: 8px;
+      background: #fefcf5;
+      border-top: 1px solid var(--hairline);
     }
+
+    /* ─── Watch list (editorial, restrained) ────────────────────────────── */
     .watch-list { list-style: none; }
     .watch-list li {
-      padding: 7px 0;
-      border-bottom: 1px solid #f3f4f6;
-      font-size: 13px;
-      color: #4b5563;
+      padding: 10px 0 10px 22px;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 13.5px;
+      color: #2d3138;
+      line-height: 1.55;
+      position: relative;
     }
-    .watch-list li::before { content: "○  "; color: #9ca3af; }
+    .watch-list li::before {
+      content: "§";
+      font-family: var(--serif);
+      font-size: 14px;
+      color: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 10px;
+      font-style: italic;
+    }
     .watch-list li:last-child { border-bottom: none; }
+
+    /* ─── Footer ────────────────────────────────────────────────────────── */
     .footer {
-      background: #f9fafb;
-      border-top: 1px solid #e5e7eb;
-      padding: 20px 36px;
-      font-size: 12px;
-      color: #9ca3af;
+      border-top: 3px double var(--rule);
+      padding: 24px 44px 32px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--faint);
       text-align: center;
-      line-height: 1.6;
+      line-height: 1.8;
+      letter-spacing: 0.02em;
     }
+    .footer .colophon {
+      font-family: var(--serif);
+      font-size: 13px;
+      font-style: italic;
+      color: var(--muted);
+      margin-bottom: 8px;
+      letter-spacing: 0;
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+
     .no-findings {
       font-size: 13px;
-      color: #9ca3af;
+      color: var(--faint);
       font-style: italic;
-      padding: 8px 0;
+      padding: 6px 0;
+    }
+
+    /* ─── Mobile ────────────────────────────────────────────────────────── */
+    @media (max-width: 560px) {
+      .wrapper { margin: 0; border-left: 0; border-right: 0; }
+      .header { padding: 28px 22px 20px; }
+      .body { padding: 28px 22px 8px; }
+      .footer { padding: 20px 22px 28px; }
+      .header h1 { font-size: 28px; }
+      .competitor-summary { margin-left: 0; text-align: left; width: 100%; }
     }
   </style>
 </head>
 <body>
 <div class="wrapper">
 
-  <!-- Header -->
+  <!-- Masthead -->
   <div class="header">
-    <div class="label">Competitive Intelligence Briefing</div>
+    <div class="label">The Briefing · Competitive Intelligence</div>
     <h1>{{CLIENT_NAME}}</h1>
-    <div class="week">Week of {{REPORT_WEEK}}</div>
+    <div class="meta">
+      <span><strong>Week of</strong> {{REPORT_WEEK}}</span>
+      <span><strong>Edition</strong> Weekly</span>
+    </div>
   </div>
 
   <div class="body">
 
     <!-- Executive Summary -->
     <div class="section">
-      <div class="section-title">This Week's Summary</div>
+      <div class="section-title"><span>This Week, In One Paragraph</span></div>
       <div class="summary-box">{{WEEK_SUMMARY}}</div>
     </div>
 
+    {{CHANGES_SINCE_LAST_WEEK_SECTION}}
+    {{ROLLING_HISTORY_SECTION}}
     {{COVERAGE_SECTION}}
     {{DATA_GAPS_SECTION}}
 
@@ -256,25 +398,25 @@
 
     <!-- Competitor Sections -->
     <div class="section">
-      <div class="section-title">Competitor Activity</div>
+      <div class="section-title"><span>Competitor Activity</span></div>
       {{COMPETITOR_SECTIONS}}
     </div>
 
     <!-- Sales Play -->
     <div class="section">
-      <div class="section-title">Sales Play This Week</div>
+      <div class="section-title"><span>Sales Play · This Week</span></div>
       <div class="play-box">{{SALES_PLAY}}</div>
     </div>
 
     <!-- Enablement Update -->
     {{ENABLEMENT_UPDATE_SECTION}}
 
-    <!-- Trigger Emails (only rendered if exist) -->
+    <!-- Trigger Emails -->
     {{TRIGGER_EMAILS_SECTION}}
 
     <!-- Watch Next Week -->
     <div class="section">
-      <div class="section-title">Watch Next Week</div>
+      <div class="section-title"><span>Watch Next Week</span></div>
       <ul class="watch-list">
         {{WATCH_LIST_ITEMS}}
       </ul>
@@ -282,12 +424,11 @@
 
   </div>
 
-  <!-- Footer -->
+  <!-- Colophon -->
   <div class="footer">
-    Generated automatically by your AI Intelligence Engine.<br/>
-    Signals collected: competitor websites · Google News · G2 reviews · job postings · LinkedIn · Glassdoor (optional) · GitHub · funding news<br/>
-    <br/>
-    Questions or feedback? Reply to this email.
+    <div class="colophon">Prepared by your analyst desk.</div>
+    Signals · websites · Google News · G2 · careers · LinkedIn · Wayback pricing · sitemap diffs · SEC · Hacker News · Reddit<br/>
+    Questions, corrections, or a request to pin a topic? Reply directly to this email.
   </div>
 
 </div>

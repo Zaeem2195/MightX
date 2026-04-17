@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "generate-html-brief": "node scripts/generate-html-brief.js",
+    "generate-html-brief:fresh": "node ../intelligence-engine/scripts/collect-for-brief.js \"E-Learning\" \"Docebo\" \"Absorb LMS\" && node scripts/generate-html-brief.js \"E-Learning\" \"Docebo\" \"Absorb LMS\"",
+    "generate-cold-email": "node scripts/generate-cold-email.js",
     "deploy:vercel": "node scripts/deploy-vercel.js"
   },
   "dependencies": {

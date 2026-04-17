@@ -1,5 +1,5 @@
 {
-  "_instructions": "Duplicate this file for each client. Filename = client slug (e.g. acme-corp.json). Use 'node scripts/onboard-client.js' for interactive setup. Per competitor, optional: atsProvider (greenhouse|lever|ashby), atsSlug (board id), knownHeadcountRange [min,max] for LinkedIn validation, glassdoorSlug (full Glassdoor reviews URL for Apify), linkedinSlugAlternates (backup vanity slugs for Apify if primary 404s or rate-limits), linkedinCompanyUrls (full LinkedIn company URLs). Set additionalCollectors.glassdoor true only with APIFY_API_TOKEN.",
+  "_instructions": "Duplicate this file for each client. Filename = client slug (e.g. acme-corp.json). Use 'node scripts/onboard-client.js' for interactive setup. Per competitor, optional: atsProvider (greenhouse|lever|ashby), atsSlug (board id), knownHeadcountRange [min,max] for LinkedIn validation, glassdoorSlug (full Glassdoor reviews URL for Apify), linkedinSlugAlternates (backup vanity slugs for Apify if primary 404s or rate-limits), linkedinCompanyUrls (full LinkedIn company URLs), pricingUrls (override default /pricing + /plans probes for the Wayback pricing-archive collector; absolute URLs or paths), secCik (10-digit SEC CIK for 8-K filings) or secTicker (ticker symbol SEC EDGAR can map to CIK). Set additionalCollectors.glassdoor true only with APIFY_API_TOKEN. pricingArchive defaults to true (free, Wayback Machine); secFilings only runs when a CIK or ticker is configured on the competitor.",
 
   "id": "example-client",
   "name": "Acme Corp",
@@ -69,7 +69,9 @@
     "linkedin": true,
     "github": false,
     "crunchbase": true,
-    "glassdoor": false
+    "glassdoor": false,
+    "pricingArchive": true,
+    "secFilings": false
   },
 
   "reportPreferences": {
@@ -87,5 +89,12 @@
     "championTitle": "VP of Sales",
     "renewalDate": null,
     "healthStatus": "healthy"
+  },
+
+  "slackConnect": {
+    "_note": "See docs/CLIENT-SLACK-CONNECT-PLAYBOOK.md. Fill in after you create and share the client channel.",
+    "channelId": null,
+    "clientPrimary": null,
+    "sharedAt": null
   }
 }
