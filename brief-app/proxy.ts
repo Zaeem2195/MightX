@@ -3,6 +3,36 @@ import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 const DEDUPE_WINDOW_MS = 60_000;
 const recentOpenMap = new Map<string, number>();
 const TRACKING_SIGNING_SECRET = process.env.TRACKING_SIGNING_SECRET?.trim();
+
+/** Comma-separated recipient emails (from signed token) — no Slack ping (test inboxes). */
+function slackSkipRecipients(): Set<string> {
+  const raw = process.env.TRACKING_SLACK_SKIP_RECIPIENTS?.trim();
+  if (!raw) return new Set();
+  return new Set(
+    raw
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean),
+  );
+}
+
+async function verifySlackSuppressSig(trk: string, sq: string | null): Promise<boolean> {
+  if (!sq || !TRACKING_SIGNING_SECRET || !trk) return false;
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(TRACKING_SIGNING_SECRET),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signed = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    new TextEncoder().encode(`slack-open-suppress:v1:${trk}`),
+  );
+  const expected = base64UrlEncode(signed);
+  return safeEquals(expected, sq);
+}
 const BOT_UA_PATTERNS = [
   /bot/i,
   /spider/i,
@@ -143,9 +173,14 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
       return NextResponse.next();
     }
 
+    const suppressSq = request.nextUrl.searchParams.get("sq");
+    const slackQuiet =
+      (await verifySlackSuppressSig(trackingToken, suppressSq)) === true;
+
     const leadId = id || verifiedPayload.i;
     const campaign = verifiedPayload.c || campaignParam;
     const recipientEmail = verifiedPayload.e.toLowerCase();
+    const skipForTestInbox = slackSkipRecipients().has(recipientEmail);
     const dedupeKey = `${recipientEmail}::${leadId}::${campaign}`;
     const nowMs = Date.now();
     const lastOpenAt = recentOpenMap.get(dedupeKey) ?? 0;
@@ -157,20 +192,28 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
     recentOpenMap.set(dedupeKey, nowMs);
     const logLine = `[ASSET OPENED] Lead ID: ${leadId} at ${timestamp}`;
     console.log(logLine);
+
+    const defaultAttribution =
+      "Note: Slack fires when this signed URL loads in a browser — not proof the mailbox owner clicked (internal QA, forwards, or inbox previews can trigger).";
+    const attributionLine =
+      process.env.TRACKING_SLACK_ATTRIBUTION_NOTE?.trim() || defaultAttribution;
+
     const slackMessage = [
       "*ASSET OPENED*",
       `Lead ID: ${leadId}`,
-      `Email: ${recipientEmail}`,
+      `Email (encoded in token): ${recipientEmail}`,
       `Time (UTC): ${timestamp}`,
       `Source: ${source}`,
       `Campaign: ${campaign}`,
       `IP: ${ip}`,
       `Path: ${request.nextUrl.pathname}${request.nextUrl.search}`,
       `User-Agent: ${userAgent.slice(0, 140)}`,
+      "",
+      attributionLine,
     ].join("\n");
 
     const webhookUrl = process.env.SLACK_WEBHOOK_URL;
-    if (webhookUrl) {
+    if (webhookUrl && !slackQuiet && !skipForTestInbox) {
       event.waitUntil(
         fetch(webhookUrl, {
           method: "POST",
@@ -179,6 +222,10 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
         }).catch(() => {
           // Keep request flow uninterrupted if webhook fails.
         }),
+      );
+    } else if (webhookUrl && (slackQuiet || skipForTestInbox)) {
+      console.log(
+        `[ASSET OPENED] Slack skipped (${slackQuiet ? "valid sq= suppress sig" : "TRACKING_SLACK_SKIP_RECIPIENTS"})`,
       );
     }
   }

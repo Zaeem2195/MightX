@@ -55,14 +55,24 @@ async function classifyReply(replyText) {
   return JSON.parse(cleaned);
 }
 
-// ── CLI mode: read reply from stdin ──────────────────────────────────────────
+// ── CLI mode: --reply-text "..." (dashboard) or read reply from stdin ───────
+function replyTextFromArgv() {
+  const idx = process.argv.indexOf('--reply-text');
+  if (idx === -1 || !process.argv[idx + 1]) return null;
+  return process.argv[idx + 1].trim();
+}
+
 async function runCLI() {
-  const chunks = [];
-  for await (const chunk of process.stdin) chunks.push(chunk);
-  const replyText = Buffer.concat(chunks).toString('utf8').trim();
+  let replyText = replyTextFromArgv();
 
   if (!replyText) {
-    console.error('❌  Pipe a reply into this script: echo "reply text" | node scripts/5-classify-replies.js');
+    const chunks = [];
+    for await (const chunk of process.stdin) chunks.push(chunk);
+    replyText = Buffer.concat(chunks).toString('utf8').trim();
+  }
+
+  if (!replyText) {
+    console.error('❌  Pass --reply-text "..." or pipe a reply: echo "reply text" | node scripts/5-classify-replies.js');
     process.exit(1);
   }
 

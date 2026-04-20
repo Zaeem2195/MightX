@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Briefing · Oracle NetSuite vs Sage Intacct</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-primary:#0b0c10; --bg-secondary:#111216; --bg-tertiary:#161820; --bg-card:#141620;
+  --border-subtle:#262830; --border-accent:#3a3d48;
+  --text-primary:#f2efe8; --text-secondary:#a8a49a; --text-tertiary:#6f6b60;
+  --accent:#c48a47;          /* burnt amber — the single editorial accent */
+  --accent-tint:rgba(196,138,71,0.08);
+  --accent-line:rgba(196,138,71,0.35);
+  --positive:#7fb896;        /* muted sage, not neon green */
+  --warning:#d4a44e;
+  --alert:#c35555;            /* oxblood, not bright red */
+  --rule:#2a2c36;
+  --font-serif:'Fraunces','Iowan Old Style',Georgia,'Times New Roman',serif;
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,'Cascadia Code','Segoe UI Mono','SF Mono',Menlo,Consolas,monospace;
+  --max-width:880px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-sans);font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:"kern" 1,"liga" 1,"cv11" 1}
+.container{max-width:var(--max-width);margin:0 auto;padding:0 28px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 0.15s ease}
+a:hover{border-bottom-color:var(--accent-line);text-decoration:none}
+
+/* ── Masthead ────────────────────────────────────────────────────────────── */
+header{border-bottom:2px solid var(--rule);padding:64px 0 40px;position:relative}
+header::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:var(--max-width);height:1px;background:var(--rule);padding:0 28px}
+.tag-line{display:block;font-family:var(--font-sans);font-size:10.5px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--accent);margin-bottom:28px;padding:0;background:transparent;border:none;border-radius:0}
+.tag-line::before{content:"§ ";font-family:var(--font-serif);font-style:italic}
+header h1{font-family:var(--font-serif);font-size:clamp(34px,5vw,52px);font-weight:600;line-height:1.12;letter-spacing:-0.02em;color:var(--text-primary);margin-bottom:16px}
+header h1 span.vs{color:var(--text-tertiary);font-style:italic;font-weight:400;font-size:0.68em;padding:0 4px;vertical-align:0.08em}
+.vertical-badge{display:inline-block;font-family:var(--font-sans);font-size:10px;font-weight:600;color:var(--text-secondary);background:transparent;border:1px solid var(--rule);padding:4px 12px;border-radius:0;margin-top:8px;letter-spacing:0.2em;text-transform:uppercase}
+.custom-id{font-family:var(--font-sans);font-size:12.5px;color:var(--text-tertiary);margin-top:20px;font-weight:500;letter-spacing:0.06em;text-transform:none}
+.custom-id::before{content:"";display:inline-block;width:24px;height:1px;background:var(--accent);vertical-align:middle;margin-right:10px}
+.week-summary{font-family:var(--font-serif);font-size:20px;font-weight:400;line-height:1.6;color:var(--text-primary);letter-spacing:-0.01em;margin-top:32px;padding:0 0 0 24px;background:transparent;border-left:2px solid var(--accent);border-radius:0}
+
+/* ── Freshness strip ─────────────────────────────────────────────────────── */
+.freshness{display:flex;align-items:center;gap:12px;margin:24px 0 0;padding:12px 16px;border-radius:0;font-family:var(--font-sans);font-size:13px;letter-spacing:0.02em;color:var(--text-secondary);border:1px solid var(--rule);background:var(--bg-secondary);text-transform:none}
+.freshness.live{border-color:rgba(127,184,150,0.3)}
+.freshness.sample{border-color:rgba(212,164,78,0.3)}
+.freshness-dot{width:6px;height:6px;border-radius:50%;background:var(--positive);box-shadow:0 0 0 4px rgba(127,184,150,0.1)}
+.freshness.sample .freshness-dot{background:var(--warning);box-shadow:0 0 0 4px rgba(212,164,78,0.1)}
+.freshness strong{color:var(--text-primary);font-weight:600}
+
+/* ── Confidence legend ───────────────────────────────────────────────────── */
+.conf-legend{display:flex;flex-direction:column;gap:10px;font-family:var(--font-sans);font-size:14px;line-height:1.5;color:var(--text-secondary);margin:20px 0 0;padding:16px 18px;background:var(--bg-secondary);border:1px solid var(--rule);border-radius:0}
+.conf-legend-intro{margin-bottom:2px}
+.conf-legend strong{font-family:var(--font-sans);color:var(--text-primary);font-weight:600;text-transform:none;letter-spacing:0;font-size:14px}
+.conf-legend-row{display:block;padding-left:0}
+.conf-pill{display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:3px 10px;border-radius:4px;font-size:12.5px;font-weight:600;font-family:var(--font-sans);margin-right:8px;vertical-align:middle;border:1px solid;white-space:nowrap;letter-spacing:0.01em}
+.conf-high{background:rgba(127,184,150,0.12);color:var(--positive);border-color:rgba(127,184,150,0.45)}
+.conf-med{background:var(--accent-tint);color:var(--accent);border-color:var(--accent-line)}
+.conf-low{background:transparent;color:var(--text-tertiary);border-color:var(--rule)}
+
+/* ── How to use (now framed as editor's note) ────────────────────────────── */
+.how-to-use{background:transparent;border:none;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);border-radius:0;padding:24px 0;margin:28px 0 0}
+.how-to-use h2{font-family:var(--font-sans);font-size:10.5px;font-weight:700;color:var(--accent);margin-bottom:16px;letter-spacing:0.24em;text-transform:uppercase}
+.how-to-use h2::before{content:"Editor's note · "}
+.how-to-use ol{list-style:none;counter-reset:steps}
+.how-to-use ol li{counter-increment:steps;position:relative;padding-left:36px;margin-bottom:10px;font-size:14.5px;color:var(--text-secondary);line-height:1.65}
+.how-to-use ol li::before{content:counter(steps,upper-roman);position:absolute;left:0;top:0;font-family:var(--font-serif);font-style:italic;font-size:14px;color:var(--accent);letter-spacing:0.02em}
+.how-to-use ol li strong{color:var(--text-primary);font-weight:600}
+
+/* ── Sections (numbered editorial chapters) ──────────────────────────────── */
+section{padding:56px 0;border-bottom:1px solid var(--rule);position:relative}
+section:last-of-type{border-bottom:none}
+.section-label{display:block;font-family:var(--font-sans);font-size:10.5px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:14px}
+.section-label::before{content:"— "}
+section h2{font-family:var(--font-serif);font-size:clamp(26px,3.8vw,36px);font-weight:600;letter-spacing:-0.015em;line-height:1.22;margin-bottom:10px;color:var(--text-primary)}
+section p.muted{color:var(--text-secondary);font-size:14.5px;margin-bottom:24px;font-family:var(--font-serif);font-style:italic;line-height:1.6;max-width:640px}
+.badge-src{display:inline-block;font-family:var(--font-sans);font-size:10px;font-weight:600;color:var(--accent);background:transparent;border:1px solid var(--accent-line);padding:3px 10px;border-radius:0;margin-left:10px;vertical-align:middle;letter-spacing:0.18em;text-transform:uppercase}
+
+/* ── Trigger banner ──────────────────────────────────────────────────────── */
+.trigger-banner{margin:20px 0 0;padding:22px 26px;border-radius:0;border:1px solid var(--rule);background:var(--bg-secondary)}
+.trigger-banner.none{background:transparent;color:var(--text-tertiary);font-family:var(--font-serif);font-style:italic;font-size:15px;padding:18px 0;border:none;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.trigger-banner.has{background:transparent;border-color:rgba(195,85,85,0.3);border-left:3px solid var(--alert)}
+.trigger-label{font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--alert);margin-bottom:18px}
+.trigger-card{padding:14px 0 4px;border-top:1px solid var(--rule)}
+.trigger-card:first-of-type{border-top:none;padding-top:0}
+.trigger-head{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;margin-bottom:8px}
+.trigger-head strong{font-family:var(--font-serif);color:var(--text-primary);font-size:19px;font-weight:400;line-height:1.3}
+.te-date,.sig-date,.mm-date,.w-when{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);letter-spacing:0.04em;text-transform:uppercase}
+.trigger-detail{font-size:14.5px;color:var(--text-secondary);line-height:1.7}
+
+/* ── Signal grid ─────────────────────────────────────────────────────────── */
+.signal-grid{display:grid;grid-template-columns:1fr;gap:0;margin-top:8px}
+@media(min-width:720px){.signal-grid{grid-template-columns:1fr 1fr;gap:0 36px}}
+.signal-card{background:transparent;border:none;border-top:1px solid var(--rule);border-radius:0;padding:18px 0 16px}
+.sig-head{margin-top:8px;display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
+.sig-head strong{font-family:var(--font-serif);font-size:17px;font-weight:400;color:var(--text-primary);line-height:1.3}
+.sig-type{font-size:10.5px;font-family:var(--font-mono);color:var(--text-tertiary);margin-top:6px;text-transform:uppercase;letter-spacing:0.14em}
+
+/* ── Insight cards (pricing, SEC, market moves) ──────────────────────────── */
+.insight-card{background:transparent;border:none;border-top:1px solid var(--rule);border-radius:0;padding:24px 0 20px;margin-bottom:0;transition:none}
+.insight-card:hover{border-color:var(--rule)}
+.insight-card .card-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
+.insight-card h3{font-family:var(--font-serif);font-size:21px;font-weight:400;color:var(--text-primary);margin-bottom:10px;letter-spacing:-0.01em;line-height:1.3}
+.insight-card p{font-size:14.5px;color:var(--text-secondary);line-height:1.75;margin-bottom:10px}
+.insight-card p:last-of-type{margin-bottom:0}
+.price-bullets{margin:10px 0 14px 0;list-style:none}
+.price-bullets li{font-size:14px;color:var(--text-secondary);margin-bottom:6px;padding-left:20px;position:relative;line-height:1.6}
+.price-bullets li::before{content:"→";position:absolute;left:0;top:0;color:var(--accent);font-family:var(--font-serif)}
+.sec-items{font-family:var(--font-mono);font-size:11.5px;color:var(--text-tertiary) !important;background:transparent;padding:6px 10px;border-radius:0;border:1px solid var(--rule);display:inline-block;letter-spacing:0.02em}
+
+/* ── Competitor tags (restrained, not neon) ──────────────────────────────── */
+.competitor-tag{display:inline-block;font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:3px 10px;border-radius:0;margin-right:6px;border:1px solid}
+.tag-a{color:var(--accent);background:transparent;border-color:var(--accent-line)}
+.tag-b{color:var(--positive);background:transparent;border-color:rgba(127,184,150,0.35)}
+.tag-neutral{color:var(--text-tertiary);background:transparent;border-color:var(--rule)}
+
+/* ── Sources (editorial footnote style) ──────────────────────────────────── */
+.sources{list-style:none;margin:14px 0 0;padding:10px 0 0;background:transparent;border:none;border-top:1px dashed var(--rule);border-radius:0;font-family:var(--font-mono);font-size:11.5px;line-height:1.7}
+.sources li{padding:3px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;letter-spacing:0.01em}
+.sources li::before{content:"·";color:var(--text-tertiary);margin-right:2px}
+.sources a{color:var(--accent);word-break:break-all;border-bottom:1px dotted var(--accent-line)}
+.sources .src-nolink{color:var(--text-secondary)}
+.sources .src-type{font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.16em;background:transparent;padding:1px 0;border-radius:0;border:none}
+.sources .src-type::before{content:"["}
+.sources .src-type::after{content:"]"}
+.sources .src-date{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary)}
+
+/* ── Verify details ──────────────────────────────────────────────────────── */
+details.verify{margin-top:12px;font-size:13px;color:var(--text-tertiary)}
+details.verify summary{cursor:pointer;color:var(--accent);user-select:none;font-family:var(--font-sans);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;padding:4px 0}
+details.verify summary:hover{color:var(--text-primary)}
+details.verify p{font-size:13.5px;color:var(--text-secondary);margin-top:8px;margin-bottom:0;line-height:1.7}
+details.verify .verify-basis{font-family:var(--font-serif);font-style:italic;color:var(--text-tertiary);font-size:13px}
+
+/* ── Matrix ──────────────────────────────────────────────────────────────── */
+.matrix-wrap{overflow-x:auto;margin-top:12px;border:1px solid var(--rule)}
+table.matrix{width:100%;border-collapse:collapse;font-size:14.5px}
+table.matrix th,table.matrix td{text-align:left;padding:16px 18px;border-bottom:1px solid var(--rule);vertical-align:top}
+table.matrix tr:last-child th,table.matrix tr:last-child td{border-bottom:none}
+table.matrix th{color:var(--text-tertiary);font-weight:700;font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;font-family:var(--font-sans)}
+table.matrix tr:first-child th{font-family:var(--font-serif);font-size:17px;color:var(--text-primary);text-transform:none;letter-spacing:-0.005em;font-weight:400;background:var(--bg-secondary)}
+table.matrix th.axis{color:var(--text-primary);font-weight:600;text-transform:none;letter-spacing:0;font-size:14.5px;width:32%;font-family:var(--font-sans)}
+table.matrix td{color:var(--text-secondary);line-height:1.65}
+.matrix-note{font-family:var(--font-serif);font-size:13px;color:var(--text-tertiary);font-style:italic;font-weight:400;margin-top:6px}
+
+/* ── Talk tracks (objection + response, editorial dialogue) ─────────────── */
+.talk-track{background:transparent;border:none;border-top:1px solid var(--rule);border-radius:0;padding:28px 0 24px;margin-bottom:0}
+.talk-track:first-of-type{border-top:none;padding-top:8px}
+.tt-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:12px}
+.objection-label{font-family:var(--font-sans);font-size:10.5px;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:var(--alert)}
+.response-label{font-family:var(--font-sans);font-size:10.5px;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:var(--positive);margin:18px 0 10px}
+.objection{font-family:var(--font-serif);font-size:22px;font-weight:400;color:var(--text-primary);font-style:italic;margin-bottom:12px;line-height:1.4;letter-spacing:-0.01em;padding-left:16px;border-left:2px solid var(--rule)}
+.objection::before{content:"\201C";color:var(--text-tertiary);font-size:1.2em;margin-right:2px}
+.objection::after{content:"\201D";color:var(--text-tertiary);font-size:1.2em;margin-left:2px}
+.response{font-size:15px;color:var(--text-secondary);line-height:1.8}
+.tt-badge{font-family:var(--font-sans);font-size:9.5px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;padding:3px 10px;border-radius:0;border:1px solid}
+.tt-example{color:var(--positive);background:transparent;border-color:rgba(127,184,150,0.35)}
+.tt-template{color:var(--text-tertiary);background:transparent;border-color:var(--rule)}
+
+/* ── Watch list ──────────────────────────────────────────────────────────── */
+.watch-list{list-style:none;padding:0;margin:12px 0 0}
+.watch-list li{padding:16px 0;border:none;border-bottom:1px solid var(--rule);border-radius:0;margin-bottom:0;display:flex;flex-wrap:wrap;gap:14px;align-items:baseline;background:transparent}
+.watch-list li:last-child{border-bottom:none}
+.w-trigger{font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);background:transparent;border:1px solid var(--accent-line);padding:3px 10px;border-radius:0}
+.w-text{font-family:var(--font-serif);font-size:16px;color:var(--text-secondary);flex:1 1 60%;line-height:1.5;font-weight:400}
+
+/* ── Evidence index (appendix) ───────────────────────────────────────────── */
+.ev-block{margin-bottom:4px;padding:14px 0;background:transparent;border:none;border-bottom:1px solid var(--rule);border-radius:0}
+.ev-block summary{cursor:pointer;font-family:var(--font-sans);font-size:13px;color:var(--text-primary);font-weight:600;letter-spacing:0.02em;user-select:none;padding:4px 0}
+.ev-block summary:hover{color:var(--accent)}
+
+/* ── CTA (tasteful, single confident button) ─────────────────────────────── */
+#cta{border-bottom:none;padding-bottom:72px}
+.cta-card{background:transparent;border:1px solid var(--rule);border-radius:0;padding:48px 36px;text-align:center;position:relative}
+.cta-card::before{content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:80px;height:2px;background:var(--accent)}
+.cta-card h2{font-family:var(--font-serif);font-size:clamp(28px,4vw,36px);font-weight:400;letter-spacing:-0.015em;margin-bottom:16px;color:var(--text-primary);line-height:1.2}
+.cta-card p{font-family:var(--font-serif);color:var(--text-secondary);font-size:17px;line-height:1.6;max-width:560px;margin:0 auto 28px;font-weight:400}
+.cta-btn{display:inline-block;background:var(--accent);color:var(--bg-primary);padding:14px 36px;border-radius:0;font-family:var(--font-sans);font-weight:600;font-size:13.5px;letter-spacing:0.14em;text-transform:uppercase;border:none;transition:background 0.15s ease;border-bottom:none}
+.cta-btn:hover{background:#d79b55;text-decoration:none;border-bottom:none}
+.cta-micro{font-family:var(--font-mono);color:var(--text-tertiary);font-size:11px;margin-top:20px;letter-spacing:0.04em;text-transform:uppercase}
+
+/* ── Footer colophon ─────────────────────────────────────────────────────── */
+footer{border-top:2px solid var(--rule);padding:32px 0 48px;text-align:center;position:relative}
+footer::before{content:"§";display:block;font-family:var(--font-serif);font-style:italic;font-size:20px;color:var(--accent);margin-bottom:14px}
+footer p{font-family:var(--font-sans);font-size:13px;color:var(--text-tertiary);letter-spacing:0.02em;line-height:1.75}
+footer p.colophon{font-family:var(--font-serif);font-style:italic;font-size:14px;color:var(--text-secondary);letter-spacing:0;margin-bottom:8px}
+footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-secondary);text-transform:none;letter-spacing:0.04em;font-size:12px}
+
+/* ── Table of contents (skim path above the fold) ────────────────────────── */
+.toc{margin-top:32px;padding:18px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;flex-wrap:wrap;align-items:baseline;gap:18px}
+.toc-label{font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--text-tertiary);white-space:nowrap}
+.toc-label::before{content:"§ "}
+.toc-links{display:flex;flex-wrap:wrap;gap:0 20px;flex:1 1 auto}
+.toc-links a{font-family:var(--font-sans);font-size:12px;font-weight:500;letter-spacing:0.04em;color:var(--text-secondary);border-bottom:none;padding:2px 0;position:relative;transition:color 0.15s ease}
+.toc-links a:hover{color:var(--accent);border-bottom:none}
+.toc-links a + a::before{content:"";position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:2px;height:2px;background:var(--text-tertiary);border-radius:50%}
+
+/* ── Analyst byline (trust lever directly above the CTA) ─────────────────── */
+.byline{padding:32px 0 24px;border-top:1px solid var(--rule)}
+.byline-id{display:flex;gap:20px;align-items:flex-start;max-width:560px;margin:0 auto;text-align:left}
+.byline-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid var(--rule);flex-shrink:0}
+.byline-monogram{width:56px;height:56px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:22px;font-weight:400;color:var(--accent);background:transparent;border:1px solid var(--accent-line);flex-shrink:0;letter-spacing:0.02em}
+.byline-text{flex:1 1 auto;min-width:0}
+.byline-eyebrow{display:block;font-family:var(--font-sans);font-size:10px;font-weight:600;letter-spacing:0.24em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px}
+.byline-name{font-family:var(--font-serif);font-size:22px;font-weight:400;letter-spacing:-0.01em;color:var(--text-primary);line-height:1.25;margin-bottom:6px}
+.byline-title{font-family:var(--font-sans);font-size:13px;font-weight:500;color:var(--text-secondary);letter-spacing:0;text-transform:none}
+.byline-sep{color:var(--text-tertiary);font-weight:400;margin:0 2px}
+.byline-credential{font-family:var(--font-serif);font-style:italic;font-size:15px;line-height:1.55;color:var(--text-secondary);margin-bottom:10px;letter-spacing:-0.002em}
+.byline-link{font-family:var(--font-sans);font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--accent-line);padding-bottom:1px}
+.byline-link:hover{border-bottom-color:var(--accent)}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media(max-width:600px){
+  .container{padding:0 20px}
+  header{padding:44px 0 32px}
+  header h1{font-size:32px}
+  .week-summary{font-size:17px;padding-left:18px}
+  section{padding:40px 0}
+  section h2{font-size:26px}
+  .insight-card,.talk-track,.signal-card{padding:20px 0}
+  table.matrix th,table.matrix td{padding:12px 12px;font-size:13.5px}
+  .objection{font-size:18px}
+  .cta-card{padding:36px 22px}
+  .cta-card h2{font-size:26px}
+  .cta-card p{font-size:15.5px}
+  .toc{padding:14px 0;gap:12px}
+  .toc-links{gap:0 14px}
+  .toc-links a{font-size:11.5px}
+  .byline-id{gap:16px}
+  .byline-name{font-size:19px}
+  .byline-avatar,.byline-monogram{width:48px;height:48px;font-size:19px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="tag-line">The Briefing · Competitive Intelligence</div>
+    <h1>Oracle NetSuite <span class="vs">versus</span> Sage Intacct</h1>
+    <div class="vertical-badge">Accounting &middot; Vertical Sample</div>
+    <p class="custom-id" id="custom-id-line"></p>
+    <div class="week-summary">Oracle filed an 8-K on 2026-04-06 covering an officer change and Reg FD disclosure, while Reddit chatter references a large-scale NetSuite workforce reduction — both create disruption selling angles. Sage Intacct is drawing a clean flow of GAAP-forward reputation signals on r/Accounting, but users continue to flag API transaction caps and sandbox access friction as practical limits.</div>
+    <nav class="toc" aria-label="Sections">
+    <span class="toc-label">Sections</span>
+    <div class="toc-links"><a href="#this-week">Trigger Events</a><a href="#pricing-intel">Pricing</a><a href="#sec-filings">SEC 8-K</a><a href="#matrix">Comparison</a><a href="#moves">Market Moves</a><a href="#talk-tracks">Talk Tracks</a><a href="#watch">Watch Next Week</a></div>
+  </nav>
+  </header>
+
+  <div class="freshness live">
+      <span class="freshness-dot"></span>
+      <span><strong>Live signals</strong> &middot; 22 from 9 source type(s) &middot; Last 7-30 days (mixed windows by collector)</span>
+    </div>
+<div class="conf-legend">
+    <span class="conf-legend-intro"><strong>Confidence:</strong> each insight uses a label for how strongly the claim is supported.</span>
+    <span class="conf-legend-row"><span class="conf-pill conf-high" title="High confidence">High confidence</span> — directly evidenced by a dated source</span>
+    <span class="conf-legend-row"><span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span> — pattern consistent with multiple signals</span>
+    <span class="conf-legend-row"><span class="conf-pill conf-low" title="Low confidence">Low confidence</span> — market reasoning, not pinned to this week</span>
+  </div>
+<div class="how-to-use">
+    <h2>How to read this brief</h2>
+    <ol>
+      <li>Start with <strong>This Week's Signals</strong> and <strong>Trigger Events</strong>. These are today's talking points.</li>
+      <li>The <strong>Talk Track</strong> tagged "Fully-worked example" is ready to paste into your next discovery call as-is.</li>
+      <li>Every claim carries a source. Click through before citing a specific number in a proposal.</li>
+    </ol>
+  </div>
+<div class="trigger-banner has">
+    <div class="trigger-label">2 trigger events this week</div>
+    <div class="trigger-card">
+      <div class="trigger-head"><span class="competitor-tag tag-a">Oracle NetSuite</span><strong>Oracle 8-K: officer departure/appointment plus Reg FD disclosure (2026-04-06)</strong><span class="te-date">2026-04-06</span></div>
+      <p class="trigger-detail">Oracle (parent of NetSuite, CIK 0001341439) filed an 8-K covering Item 5.02 (officer change), Item 7.01 (Reg FD), and Item 9.01. Leadership turnover at the parent typically shifts account team priorities and slows in-flight NetSuite renegotiations — creating a 30-60 day window where buyers welcome alternate evaluations.</p>
+      <ul class="sources"><li><a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm" target="_blank" rel="noopener noreferrer">Oracle 8-K (Items 5.02, 7.01, 9.01)</a><span class="src-type">sec_filings</span><span class="src-date">2026-04-06</span></li></ul>
+    </div><div class="trigger-card">
+      <div class="trigger-head"><span class="competitor-tag tag-a">Oracle NetSuite</span><strong>Reddit thread cites &#39;30,000&#39; Oracle NetSuite layoffs as career-market context</strong><span class="te-date">2026-04-04</span></div>
+      <p class="trigger-detail">A widely-read r/ConstructionManagers discussion references &#39;Oracle Netsuite recently letting 30,000 people go.&#39; Whether precise or inflated, prospects are hearing this number — it is a live objection your reps must be ready to reframe around account-team continuity and implementation risk.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/ConstructionManagers/comments/1schyib/do_you_feel_different_about_this_career_path/" target="_blank" rel="noopener noreferrer">r/ConstructionManagers thread referencing NetSuite layoffs</a><span class="src-type">reddit</span><span class="src-date">2026-04-04</span></li></ul>
+    </div>
+  </div>
+<section id="this-week">
+    <span class="section-label">Section 1</span>
+    <h2>This Week's Signals</h2>
+    <div class="signal-grid"><div class="signal-card">
+      <span class="competitor-tag tag-a">Oracle NetSuite</span>
+      <div class="sig-head"><strong>Oracle files 8-K disclosing officer change + Reg FD item</strong><span class="sig-date">2026-04-06</span></div>
+      <div class="sig-type">sec_filings</div>
+      <ul class="sources"><li><a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm" target="_blank" rel="noopener noreferrer">Oracle Corp 8-K</a><span class="src-type">sec_filings</span><span class="src-date">2026-04-06</span></li></ul>
+    </div><div class="signal-card">
+      <span class="competitor-tag tag-a">Oracle NetSuite</span>
+      <div class="sig-head"><strong>r/Netsuite user publicly documents broken purchase-request workflow due to license scarcity</strong><span class="sig-date">2026-04-19</span></div>
+      <div class="sig-type">reddit</div>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Netsuite/comments/1spxau5/lack_of_visibility_and_control_in_our_pr/" target="_blank" rel="noopener noreferrer">r/Netsuite — PR process visibility complaint</a><span class="src-type">reddit</span><span class="src-date">2026-04-19</span></li></ul>
+    </div><div class="signal-card">
+      <span class="competitor-tag tag-a">Oracle NetSuite</span>
+      <div class="sig-head"><strong>Developer post highlights NetSuite still lacks native webhooks, requires SuiteCloud+Cyclr workaround</strong><span class="sig-date">2026-04-10</span></div>
+      <div class="sig-type">reddit</div>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Netsuite/comments/1shhvn2/building_a_webhookstyle_integration_in_oracle/" target="_blank" rel="noopener noreferrer">r/Netsuite — webhook workaround thread</a><span class="src-type">reddit</span><span class="src-date">2026-04-10</span></li></ul>
+    </div><div class="signal-card">
+      <span class="competitor-tag tag-b">Sage Intacct</span>
+      <div class="sig-head"><strong>r/Accounting thread positions Sage Intacct as best-fit for GAAP-client financial prep</strong><span class="sig-date">2026-04-15</span></div>
+      <div class="sig-type">reddit</div>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Accounting/comments/1slv9dz/one_of_the_biggest_problems_with_qbo_that_ive/" target="_blank" rel="noopener noreferrer">r/Accounting — QBO vs Sage/NetSuite training thread (80 upvotes)</a><span class="src-type">reddit</span><span class="src-date">2026-04-15</span></li></ul>
+    </div><div class="signal-card">
+      <span class="competitor-tag tag-b">Sage Intacct</span>
+      <div class="sig-head"><strong>r/intacct user flags 100k/month API transaction cap while migrating from Sage 300 (~850k tx/yr)</strong><span class="sig-date">2026-03-31</span></div>
+      <div class="sig-type">reddit</div>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/intacct/comments/1s8bwgt/connecting_sage_intacct_to_power_bi_using_cdata/" target="_blank" rel="noopener noreferrer">r/intacct — Power BI via CData, API limits</a><span class="src-type">reddit</span><span class="src-date">2026-03-31</span></li></ul>
+    </div><div class="signal-card">
+      <span class="competitor-tag tag-b">Sage Intacct</span>
+      <div class="sig-head"><strong>Slash Financial ships native Sage Intacct integration — ecosystem momentum continues</strong><span class="sig-date">2026-03-30</span></div>
+      <div class="sig-type">reddit</div>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/SlashFinancial/comments/1s80l3q/now_live_integrations_with_xero_and_sage_intacct/" target="_blank" rel="noopener noreferrer">r/SlashFinancial launch post</a><span class="src-type">reddit</span><span class="src-date">2026-03-30</span></li></ul>
+    </div></div>
+  </section>
+<section id="pricing-intel">
+    <span class="section-label">Section 2</span>
+    <h2>Pricing Intelligence <span class="badge-src">Wayback Machine</span></h2>
+    <p class="muted">Pricing-page changes detected by diffing archived snapshots. Most prospects cannot replicate this with ChatGPT.</p>
+    <div class="insight-card">
+      <span class="competitor-tag tag-a">Oracle NetSuite</span>
+      <h3>Wayback CDX lookup timed out on /pricing and returned no snapshots for /plans in the last 90 days — no archival evidence of a public price-page change this window.</h3>
+      <ul class="price-bullets"><li>No material pricing-page changes detected in the archive window.</li></ul>
+      <ul class="sources"><li><a href="https://www.netsuite.com/pricing" target="_blank" rel="noopener noreferrer">NetSuite pricing page (Wayback CDX timeout)</a><span class="src-type">pricing_archive</span></li></ul>
+    </div><div class="insight-card">
+      <span class="competitor-tag tag-b">Sage Intacct</span>
+      <h3>Wayback CDX lookup timed out on both /pricing and /plans URLs for Sage Intacct in the last 90 days. No material changes detected, and G2 ecosystem content continues to reference a &#39;Sage Intacct Pricing Guide: What It Really Costs in 2025&#39; — implying pricing is still quote-based and opaque.</h3>
+      <ul class="price-bullets"><li>No material pricing-page changes detected in the archive window.</li></ul>
+      <ul class="sources"><li><a href="https://www.sage.com/en-us/sage-business-cloud/intacct/pricing" target="_blank" rel="noopener noreferrer">Sage Intacct pricing page (Wayback CDX timeout)</a><span class="src-type">pricing_archive</span></li><li><span class="src-nolink">G2 Learning Hub — &#39;Sage Intacct Pricing Guide: What It Really Costs in 2025&#39;</span><span class="src-type">g2</span></li></ul>
+    </div>
+  </section>
+<section id="sec-filings">
+    <span class="section-label">Section 3</span>
+    <h2>SEC 8-K Filings <span class="badge-src">EDGAR</span></h2>
+    <p class="muted">Material events a public competitor is legally required to disclose within 4 business days. Unimpeachable, zero-cost signal source.</p>
+    <div class="insight-card">
+      <span class="competitor-tag tag-a">Oracle NetSuite</span>
+      <h3>8-K &middot; filed 2026-04-06</h3>
+      <p class="sec-items">Item 5.02 (Departure/Appointment of Directors or Officers); Item 7.01 (Regulation FD Disclosure); Item 9.01 (Financial Statements and Exhibits)</p>
+      <p>Oracle Corp (parent of NetSuite) disclosed an officer-level change plus a Reg FD exhibit. Combined with Reddit-reported workforce cuts, this is the clearest evidence this week that account-team continuity at NetSuite is in flux.</p>
+      <ul class="sources"><li><a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm" target="_blank" rel="noopener noreferrer">Oracle Corp 8-K filing</a><span class="src-type">sec_filings</span><span class="src-date">2026-04-06</span></li></ul>
+    </div>
+  </section>
+<section id="matrix">
+    <span class="section-label">At a glance</span>
+    <h2>Competitor Comparison</h2>
+    <div class="matrix-wrap"><table class="matrix"><tr><th>&nbsp;</th><th>Oracle NetSuite</th><th>Sage Intacct</th></tr><tr>
+      <th class="axis">Parent / ownership<div class="matrix-note">Use the fresh Oracle 8-K to frame &#39;who owns your roadmap?&#39; for NetSuite accounts.</div></th>
+      <td>Oracle Corp (NYSE: ORCL) — just filed an officer-change 8-K on 2026-04-06</td>
+      <td>Sage Group plc — standalone finance-focused vendor</td>
+    </tr><tr>
+      <th class="axis">Public pricing transparency<div class="matrix-note">Neither publishes list pricing — your published tiers become the differentiator.</div></th>
+      <td>No public price page; Wayback returned no pricing changes in 90 days</td>
+      <td>No public price page; G2 still publishes a third-party &#39;what it really costs&#39; guide</td>
+    </tr><tr>
+      <th class="axis">Integration/API posture<div class="matrix-note">Both force middleware. If you ship native webhooks + uncapped API, quantify the hours saved.</div></th>
+      <td>No native webhook triggers; customers use SuiteCloud User Event Scripts + middleware (e.g., Cyclr)</td>
+      <td>API transaction caps (~100k/month cited by users); third-party tools like CData needed for SQL/BI</td>
+    </tr><tr>
+      <th class="axis">User-base sentiment (last 30 days)<div class="matrix-note">Sage Intacct has the brand halo this week; NetSuite has the disruption.</div></th>
+      <td>Threads on license scarcity, manual PR workflows, webhook gaps, layoff chatter</td>
+      <td>Positive &#39;best for GAAP prep&#39; framing but API-limit and sandbox-access friction</td>
+    </tr><tr>
+      <th class="axis">Implementation &amp; training<div class="matrix-note">Both leave the buyer dependent on a partner network — sell your direct-delivery model.</div></th>
+      <td>Implementation-heavy; consultant-led (see active hiring for NetSuite Functional Consultants in India/US)</td>
+      <td>Also consultant-led (Blytheco, Cherry Bekaert, UHY-US hiring Intacct roles)</td>
+    </tr><tr>
+      <th class="axis">GAAP/financial reporting fit<div class="matrix-note">Against Intacct, compete on automation and AI; against NetSuite, compete on finance depth.</div></th>
+      <td>Broad ERP; finance is one of many modules</td>
+      <td>Explicitly positioned as GAAP-friendly by practitioners (&#39;soooo much better suited for actual financial prep reporting&#39;)</td>
+    </tr><tr>
+      <th class="axis">Review footprint (G2)<div class="matrix-note">Both are entrenched — lead with switching-cost ROI, not feature parity.</div></th>
+      <td>~4,656 G2 reviews (very high volume)</td>
+      <td>3,000+ G2 reviews per G2 community page</td>
+    </tr></table></div>
+  </section>
+<section id="moves">
+    <span class="section-label">Recent market moves</span>
+    <h2>What Each Competitor Is Doing</h2>
+    <div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-a">Oracle NetSuite</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="mm-date">2026-04-06</span>
+      </div>
+      <h3>Officer change at Oracle creates a real renegotiation window for NetSuite accounts</h3>
+      <p>The 2026-04-06 8-K covers Item 5.02 (officer change) plus a Reg FD disclosure. Historically, leadership shuffles at the parent slow mid-cycle NetSuite upsells as new execs reset priorities. Reps should accelerate outreach into NetSuite accounts whose renewals land in the next 90 days.</p>
+      <ul class="sources"><li><a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm" target="_blank" rel="noopener noreferrer">Oracle 8-K 2026-04-06</a><span class="src-type">sec_filings</span><span class="src-date">2026-04-06</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>Open the 8-K exhibit and cross-reference the named officer against the NetSuite account team on target logos.</p><p class="verify-basis"><em>Confidence basis:</em> Directly evidenced by a dated SEC filing with a verifiable URL.</p></details>
+    </div><div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-a">Oracle NetSuite</span>
+        <span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span>
+        <span class="mm-date">2026-04-04</span>
+      </div>
+      <h3>&#39;NetSuite laid off 30,000&#39; narrative is now public and spreading on Reddit</h3>
+      <p>A 35-score r/ConstructionManagers thread cites the 30,000 figure in the context of career stability. Prospects in evaluation will surface this unprompted. Arm your AEs with a direct, non-defensive reframe: implementation continuity, SI partner bench, and your own delivery team.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/ConstructionManagers/comments/1schyib/do_you_feel_different_about_this_career_path/" target="_blank" rel="noopener noreferrer">r/ConstructionManagers thread</a><span class="src-type">reddit</span><span class="src-date">2026-04-04</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>Before citing the number to a prospect, validate via Oracle&#39;s next 10-Q or WARN Act filings; otherwise reference &#39;widely reported&#39; only.</p><p class="verify-basis"><em>Confidence basis:</em> Headcount number is not independently verified in this signal set; the Reddit discussion itself is, however, dated and linkable.</p></details>
+    </div><div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-a">Oracle NetSuite</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="mm-date">2026-04-19</span>
+      </div>
+      <h3>NetSuite&#39;s &#39;limited licenses&#39; problem is breaking the PR workflow for real customers</h3>
+      <p>An r/Netsuite post on 2026-04-19 describes requisitions being emailed to buyers because users don&#39;t have licenses, then manually typed into NetSuite — introducing delay and data loss. This is a live wedge for any platform with per-user or unlimited-requester pricing.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Netsuite/comments/1spxau5/lack_of_visibility_and_control_in_our_pr/" target="_blank" rel="noopener noreferrer">r/Netsuite — PR process thread</a><span class="src-type">reddit</span><span class="src-date">2026-04-19</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>Ask any NetSuite prospect: &#39;How many of your requesters actually have NetSuite seats today?&#39; — measure the gap.</p><p class="verify-basis"><em>Confidence basis:</em> Dated, sourced first-person customer complaint on official subreddit.</p></details>
+    </div><div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-b">Sage Intacct</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="mm-date">2026-03-31</span>
+      </div>
+      <h3>Sage Intacct API caps are a disqualifier for mid-market BI projects</h3>
+      <p>On 2026-03-31 an r/intacct user migrating from Sage 300 flagged that Intacct&#39;s ~100k/month API transaction limit is a hard ceiling against their ~850k/year transaction volume — even with a Web Services Developer License. Any prospect using Power BI, Looker, or a data warehouse will hit this ceiling.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/intacct/comments/1s8bwgt/connecting_sage_intacct_to_power_bi_using_cdata/" target="_blank" rel="noopener noreferrer">r/intacct — Power BI via CData</a><span class="src-type">reddit</span><span class="src-date">2026-03-31</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>In discovery, ask: &#39;What&#39;s your monthly Intacct API call volume, and are you at the 100k tier?&#39; — force the quantified answer.</p><p class="verify-basis"><em>Confidence basis:</em> Specific numeric limits cited in a dated, linked post on the vendor&#39;s subreddit.</p></details>
+    </div><div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-b">Sage Intacct</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="mm-date">2026-04-15</span>
+      </div>
+      <h3>Sage Intacct brand halo on GAAP reporting is hardening on r/Accounting</h3>
+      <p>An 80-upvote 2026-04-15 thread on r/Accounting explicitly calls Sage Intacct &#39;soooo much better suited for actual financial prep reporting...especially for GAAP-clients.&#39; This narrative is becoming the default why-Intacct — plan to compete on it directly rather than dismiss it.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Accounting/comments/1slv9dz/one_of_the_biggest_problems_with_qbo_that_ive/" target="_blank" rel="noopener noreferrer">r/Accounting — QBO vs Sage/NetSuite thread</a><span class="src-type">reddit</span><span class="src-date">2026-04-15</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>Monitor r/Accounting weekly for rebuttals; pull your own GAAP-reporting proof points from 3 named customers.</p><p class="verify-basis"><em>Confidence basis:</em> Widely upvoted, dated, quoted post on a relevant subreddit.</p></details>
+    </div><div class="insight-card">
+      <div class="card-head">
+        <span class="competitor-tag tag-a">Oracle NetSuite</span><span class="competitor-tag tag-b">Sage Intacct</span>
+        <span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span>
+        
+      </div>
+      <h3>Both vendors are hiring consultants, not cutting price — buyers pay the services tax</h3>
+      <p>This week surfaces active NetSuite Functional Consultant, Customer Success, and Business Analyst openings globally, plus Sage Intacct Consultant, Administrator, and Vertical Manager roles at Sage, Blytheco, Cherry Bekaert, and UHY-US. The signal: both vendors are still scaling delivery headcount, which means SI-dependent implementations (and the cost that comes with them) are not going away in 2026.</p>
+      <ul class="sources"><li><span class="src-nolink">Google News fallback — NetSuite/Intacct consultant job listings (multiple)</span><span class="src-type">jobs</span></li></ul>
+      <details class="verify"><summary>How to verify</summary><p>Pull Greenhouse/Lever listings directly next week to confirm open req counts and geographies.</p><p class="verify-basis"><em>Confidence basis:</em> Signal is a hiring RSS fallback, not a verified ATS; pattern across many listings is consistent.</p></details>
+    </div>
+  </section>
+<section id="talk-tracks">
+    <span class="section-label">Rep talk tracks</span>
+    <h2>Objection Handling</h2>
+    <div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="tt-badge tt-example">Fully-worked example</span>
+      </div>
+      <p class="objection">We&#39;re already in an active eval with NetSuite.</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">Worth knowing Oracle just filed an 8-K on April 6 disclosing an officer-level change plus a Reg FD item — typically your NetSuite account team&#39;s priorities reset in the weeks after that. Before you sign, I&#39;d ask them in writing who owns your implementation escalation path for the next 12 months. Happy to send you the filing.</p>
+      <ul class="sources"><li><a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm" target="_blank" rel="noopener noreferrer">Oracle 8-K 2026-04-06</a><span class="src-type">sec_filings</span><span class="src-date">2026-04-06</span></li></ul>
+    </div><div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="tt-badge tt-template">Template &mdash; customize</span>
+      </div>
+      <p class="objection">Sage Intacct is the gold standard for GAAP reporting.</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">That reputation is real — there&#39;s an 80-upvote r/Accounting thread from April 15 saying exactly that. The follow-up question is API volume: one of their own users on r/intacct flagged the 100k/month API transaction cap against ~850k annual transactions. If [your reporting stack] pulls into Power BI or a warehouse, we should stress-test that ceiling against your volumes before you commit.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Accounting/comments/1slv9dz/one_of_the_biggest_problems_with_qbo_that_ive/" target="_blank" rel="noopener noreferrer">r/Accounting GAAP thread</a><span class="src-type">reddit</span><span class="src-date">2026-04-15</span></li><li><a href="https://www.reddit.com/r/intacct/comments/1s8bwgt/connecting_sage_intacct_to_power_bi_using_cdata/" target="_blank" rel="noopener noreferrer">r/intacct API cap thread</a><span class="src-type">reddit</span><span class="src-date">2026-03-31</span></li></ul>
+    </div><div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="tt-badge tt-template">Template &mdash; customize</span>
+      </div>
+      <p class="objection">NetSuite&#39;s ecosystem is too big to compete with.</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">Size cuts both ways. A NetSuite customer publicly posted on April 19 that their purchase-request process is broken because they can&#39;t afford enough licenses — so requesters email buyers who retype data into NetSuite. If [your team] has more than [X] occasional requesters, you&#39;re paying for either seats you don&#39;t use or data you&#39;ll lose.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Netsuite/comments/1spxau5/lack_of_visibility_and_control_in_our_pr/" target="_blank" rel="noopener noreferrer">r/Netsuite PR process post</a><span class="src-type">reddit</span><span class="src-date">2026-04-19</span></li></ul>
+    </div><div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-high" title="High confidence">High confidence</span>
+        <span class="tt-badge tt-template">Template &mdash; customize</span>
+      </div>
+      <p class="objection">We need native webhooks for our integrations, so NetSuite is the safer bet.</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">Actually the opposite — a NetSuite developer post on April 10 walks through the fact that NetSuite doesn&#39;t natively support webhook triggers, so teams end up using User Event Scripts on SuiteCloud plus a middleware like Cyclr to route events. Ask your NetSuite SE to write out the reference architecture for [your use case] and compare it to our native webhook flow.</p>
+      <ul class="sources"><li><a href="https://www.reddit.com/r/Netsuite/comments/1shhvn2/building_a_webhookstyle_integration_in_oracle/" target="_blank" rel="noopener noreferrer">r/Netsuite webhook workaround</a><span class="src-type">reddit</span><span class="src-date">2026-04-10</span></li></ul>
+    </div><div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span>
+        <span class="tt-badge tt-template">Template &mdash; customize</span>
+      </div>
+      <p class="objection">Switching cost is too high; we&#39;ve standardized on Intacct/NetSuite.</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">Understood. The switching cost conversation has changed this month though — both vendors are actively hiring consultants (NetSuite Functional Consultants, Sage Intacct Account Executives, Vertical Managers) which means your implementation fees aren&#39;t coming down. Let&#39;s scope a 90-day co-funded migration PoC on just [your highest-pain module] and compare total cost against your next renewal.</p>
+      <ul class="sources"><li><span class="src-nolink">Aggregate hiring signal — NetSuite + Sage Intacct consultant roles</span><span class="src-type">jobs</span></li></ul>
+    </div><div class="talk-track">
+      <div class="tt-head">
+        <span class="objection-label">Objection</span>
+        <span class="conf-pill conf-med" title="Medium confidence">Medium confidence</span>
+        <span class="tt-badge tt-template">Template &mdash; customize</span>
+      </div>
+      <p class="objection">We&#39;ll just wait and see if pricing changes.</p>
+      <p class="response-label">Recommended Response</p>
+      <p class="response">Neither NetSuite nor Sage Intacct published pricing-page changes in the last 90 days — Wayback shows no new snapshots. Waiting doesn&#39;t help you; these vendors negotiate at the account level, not the list-price level. We publish our tiers on [your pricing URL] — let&#39;s map the 3-year TCO today.</p>
+      <ul class="sources"><li><a href="https://www.netsuite.com/pricing" target="_blank" rel="noopener noreferrer">NetSuite pricing page (no snapshots)</a><span class="src-type">pricing_archive</span></li><li><a href="https://www.sage.com/en-us/sage-business-cloud/intacct/pricing" target="_blank" rel="noopener noreferrer">Sage Intacct pricing page (no snapshots)</a><span class="src-type">pricing_archive</span></li></ul>
+    </div>
+  </section>
+<section id="watch">
+    <span class="section-label">Forward look</span>
+    <h2>Watch Next Week</h2>
+    <ul class="watch-list"><li><span class="w-trigger">Pricing snapshot recheck</span><span class="w-text">Re-run Wayback CDX on NetSuite /pricing and /plans once archive timeouts clear — first clean capture post 8-K is the one that matters.</span><span class="w-when">2026-04-26</span></li><li><span class="w-trigger">SEC filing</span><span class="w-text">Monitor SEC EDGAR for any follow-up Oracle 8-K or Reg FD exhibit that names the incoming/outgoing officer&#39;s NetSuite scope.</span><span class="w-when">2026-05-06</span></li><li><span class="w-trigger">Reddit sentiment check</span><span class="w-text">Track r/Accounting and r/intacct for a rebuttal to the &#39;Intacct = best for GAAP&#39; thread; if silent, the narrative hardens.</span><span class="w-when">2026-04-26</span></li><li><span class="w-trigger">Oracle quarterly filing</span><span class="w-text">Confirm the &#39;30,000 NetSuite layoffs&#39; figure against Oracle&#39;s next 10-Q or state WARN Act disclosures before letting AEs cite the number.</span><span class="w-when">2026-06-20</span></li><li><span class="w-trigger">ATS re-scrape</span><span class="w-text">Pull verified ATS (Greenhouse/Lever) for Sage to confirm true open req count on Intacct consulting and product marketing roles.</span><span class="w-when">2026-04-26</span></li></ul>
+  </section>
+<section id="evidence">
+    <span class="section-label">Appendix</span>
+    <h2>Evidence Index</h2>
+    <p class="muted">Every source URL consulted for this brief, grouped by competitor.</p>
+    <details class="ev-block"><summary>Oracle NetSuite &middot; 5 source(s)</summary><ul class="sources"><li><a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm" target="_blank" rel="noopener noreferrer">Oracle Corp 8-K (Items 5.02, 7.01, 9.01)</a><span class="src-type">sec_filings</span><span class="src-date">2026-04-06</span></li><li><a href="https://www.reddit.com/r/ConstructionManagers/comments/1schyib/do_you_feel_different_about_this_career_path/" target="_blank" rel="noopener noreferrer">r/ConstructionManagers — NetSuite layoff reference</a><span class="src-type">reddit</span><span class="src-date">2026-04-04</span></li><li><a href="https://www.reddit.com/r/Netsuite/comments/1spxau5/lack_of_visibility_and_control_in_our_pr/" target="_blank" rel="noopener noreferrer">r/Netsuite — PR process visibility</a><span class="src-type">reddit</span><span class="src-date">2026-04-19</span></li><li><a href="https://www.reddit.com/r/Netsuite/comments/1shhvn2/building_a_webhookstyle_integration_in_oracle/" target="_blank" rel="noopener noreferrer">r/Netsuite — webhook workaround</a><span class="src-type">reddit</span><span class="src-date">2026-04-10</span></li><li><a href="https://www.netsuite.com/pricing" target="_blank" rel="noopener noreferrer">NetSuite pricing page (Wayback timeout)</a><span class="src-type">pricing_archive</span></li></ul></details><details class="ev-block"><summary>Sage Intacct &middot; 5 source(s)</summary><ul class="sources"><li><a href="https://www.reddit.com/r/Accounting/comments/1slv9dz/one_of_the_biggest_problems_with_qbo_that_ive/" target="_blank" rel="noopener noreferrer">r/Accounting — Sage Intacct best for GAAP</a><span class="src-type">reddit</span><span class="src-date">2026-04-15</span></li><li><a href="https://www.reddit.com/r/intacct/comments/1s8bwgt/connecting_sage_intacct_to_power_bi_using_cdata/" target="_blank" rel="noopener noreferrer">r/intacct — API cap vs Power BI/CData</a><span class="src-type">reddit</span><span class="src-date">2026-03-31</span></li><li><a href="https://www.reddit.com/r/intacct/comments/1s50ocb/sage_intacct_account_access_for_testing/" target="_blank" rel="noopener noreferrer">r/intacct — sandbox access friction</a><span class="src-type">reddit</span><span class="src-date">2026-03-27</span></li><li><a href="https://www.reddit.com/r/SlashFinancial/comments/1s80l3q/now_live_integrations_with_xero_and_sage_intacct/" target="_blank" rel="noopener noreferrer">r/SlashFinancial — Intacct integration launch</a><span class="src-type">reddit</span><span class="src-date">2026-03-30</span></li><li><a href="https://www.sage.com/en-us/sage-business-cloud/intacct/pricing" target="_blank" rel="noopener noreferrer">Sage Intacct pricing page (Wayback timeout)</a><span class="src-type">pricing_archive</span></li></ul></details>
+  </section>
+<aside class="byline" aria-label="Analyst">
+    <div class="byline-id">
+      <span class="byline-monogram" aria-hidden="true">ZM</span>
+      <div class="byline-text">
+        <span class="byline-eyebrow">Prepared by</span>
+        <p class="byline-name">Zaeem Malik <span class="byline-sep">·</span> <span class="byline-title">Founder · MightX</span></p>
+        
+        
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <div class="container">
+    <p class="colophon">Prepared by the MightX Competitive Intelligence analyst desk.</p>
+    <p><span class="gen-date" id="generated-date-label">Generated April 2026</span> &middot; Accounting vertical &middot; Oracle NetSuite vs Sage Intacct</p>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Personalize the hero line from ?id=
+  var params = new URLSearchParams(window.location.search);
+  var idRaw = params.get('id');
+  var displayId = idRaw ? decodeURIComponent(idRaw) : '(no id in URL)';
+  var el = document.getElementById('custom-id-line');
+  if (el) el.textContent = 'Prepared for ' + displayId;
+
+  // Preserve ?id= through the CTA click so open-tracking can bind the lead
+  var cta = document.getElementById('cta-link');
+  if (cta && idRaw) {
+    try {
+      var url = new URL(cta.href);
+      url.searchParams.set('ref_id', idRaw);
+      cta.href = url.toString();
+    } catch (_) { /* leave href unchanged */ }
+  }
+
+  // Dynamic Month Year if the server-side label wasn't filled in
+  var dateEl = document.getElementById('generated-date-label');
+  if (dateEl && dateEl.textContent.trim() === 'Generated') {
+    var d = new Date();
+    var fmt = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(d);
+    dateEl.textContent = 'Generated ' + fmt;
+  }
+});
+</script>
+</body>
+</html>

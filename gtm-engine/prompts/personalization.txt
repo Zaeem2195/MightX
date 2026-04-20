@@ -36,11 +36,19 @@ RULES:
 12. Never lead with generic AI or automation buzzwords. The Abstracted Authority line above is allowed.
 13. Total length: under 140 words. Be concise.
 
+14. Instantly personalization fields (for merge tags; must be truthful to LEAD DATA, not invented company facts):
+- "industry": A short label for the company's vertical (2-4 words, lowercase ok), e.g. "cybersecurity", "e-learning", "hr tech". Prefer the Industry line in LEAD DATA; if it is generic, infer the best-fit vertical from title, company, and tech.
+- "painPointTrigger": One short, punchy phrase only (max 10 words), no period, no sentence. Describe the lead's sharpest plausible operational pain for their role (e.g. "long integration cycles", "high LMS migration costs").
+- "serviceOutcomes": An array of exactly 3 short benefit strings for this lead (each max 10 words). Phrase them as outcomes your competitive intel could help with (aligned with the email body), not generic slogans.
+
 LEAD DATA:
 {{LEAD_DATA}}
 
 OUTPUT FORMAT (JSON only, no markdown, no extra text):
 {
   "subject": "...",
-  "body": "..."
+  "body": "...",
+  "industry": "...",
+  "painPointTrigger": "...",
+  "serviceOutcomes": ["...", "...", "..."]
 }

@@ -227,6 +227,12 @@ Implementation: `scripts/6-export-copy-csv.js`.
 echo "Thanks for reaching out, happy to chat next week" | npm run classify-reply
 ```
 
+Or pass the text directly (also used by the MightX admin dashboard):
+
+```bash
+npm run classify-reply -- --reply-text "Thanks for reaching out, happy to chat next week"
+```
+
 ### Start the reply classifier as a server (for n8n)
 
 ```bash

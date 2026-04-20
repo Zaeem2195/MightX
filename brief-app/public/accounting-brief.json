@@ -1,0 +1,561 @@
+{
+  "mode": "live",
+  "hero": {
+    "industry": "Accounting",
+    "competitorA": "Oracle NetSuite",
+    "competitorB": "Sage Intacct",
+    "weekSummary": "Oracle filed an 8-K on 2026-04-06 covering an officer change and Reg FD disclosure, while Reddit chatter references a large-scale NetSuite workforce reduction — both create disruption selling angles. Sage Intacct is drawing a clean flow of GAAP-forward reputation signals on r/Accounting, but users continue to flag API transaction caps and sandbox access friction as practical limits."
+  },
+  "freshness": {
+    "generatedAt": "2026-04-19T19:30:38.968Z",
+    "signalWindowLabel": "Last 7-30 days (mixed windows by collector)",
+    "signalCount": 22,
+    "sourceTypeCount": 9
+  },
+  "triggerEvents": {
+    "exists": true,
+    "items": [
+      {
+        "competitor": "Oracle NetSuite",
+        "headline": "Oracle 8-K: officer departure/appointment plus Reg FD disclosure (2026-04-06)",
+        "detail": "Oracle (parent of NetSuite, CIK 0001341439) filed an 8-K covering Item 5.02 (officer change), Item 7.01 (Reg FD), and Item 9.01. Leadership turnover at the parent typically shifts account team priorities and slows in-flight NetSuite renegotiations — creating a 30-60 day window where buyers welcome alternate evaluations.",
+        "date": "2026-04-06",
+        "sources": [
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm",
+            "label": "Oracle 8-K (Items 5.02, 7.01, 9.01)",
+            "date": "2026-04-06",
+            "type": "sec_filings"
+          }
+        ]
+      },
+      {
+        "competitor": "Oracle NetSuite",
+        "headline": "Reddit thread cites '30,000' Oracle NetSuite layoffs as career-market context",
+        "detail": "A widely-read r/ConstructionManagers discussion references 'Oracle Netsuite recently letting 30,000 people go.' Whether precise or inflated, prospects are hearing this number — it is a live objection your reps must be ready to reframe around account-team continuity and implementation risk.",
+        "date": "2026-04-04",
+        "sources": [
+          {
+            "url": "https://www.reddit.com/r/ConstructionManagers/comments/1schyib/do_you_feel_different_about_this_career_path/",
+            "label": "r/ConstructionManagers thread referencing NetSuite layoffs",
+            "date": "2026-04-04",
+            "type": "reddit"
+          }
+        ]
+      }
+    ]
+  },
+  "thisWeekSignals": [
+    {
+      "competitor": "Oracle NetSuite",
+      "headline": "Oracle files 8-K disclosing officer change + Reg FD item",
+      "date": "2026-04-06",
+      "sourceType": "sec_filings",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm",
+          "label": "Oracle Corp 8-K",
+          "date": "2026-04-06",
+          "type": "sec_filings"
+        }
+      ]
+    },
+    {
+      "competitor": "Oracle NetSuite",
+      "headline": "r/Netsuite user publicly documents broken purchase-request workflow due to license scarcity",
+      "date": "2026-04-19",
+      "sourceType": "reddit",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Netsuite/comments/1spxau5/lack_of_visibility_and_control_in_our_pr/",
+          "label": "r/Netsuite — PR process visibility complaint",
+          "date": "2026-04-19",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitor": "Oracle NetSuite",
+      "headline": "Developer post highlights NetSuite still lacks native webhooks, requires SuiteCloud+Cyclr workaround",
+      "date": "2026-04-10",
+      "sourceType": "reddit",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Netsuite/comments/1shhvn2/building_a_webhookstyle_integration_in_oracle/",
+          "label": "r/Netsuite — webhook workaround thread",
+          "date": "2026-04-10",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitor": "Sage Intacct",
+      "headline": "r/Accounting thread positions Sage Intacct as best-fit for GAAP-client financial prep",
+      "date": "2026-04-15",
+      "sourceType": "reddit",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Accounting/comments/1slv9dz/one_of_the_biggest_problems_with_qbo_that_ive/",
+          "label": "r/Accounting — QBO vs Sage/NetSuite training thread (80 upvotes)",
+          "date": "2026-04-15",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitor": "Sage Intacct",
+      "headline": "r/intacct user flags 100k/month API transaction cap while migrating from Sage 300 (~850k tx/yr)",
+      "date": "2026-03-31",
+      "sourceType": "reddit",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/intacct/comments/1s8bwgt/connecting_sage_intacct_to_power_bi_using_cdata/",
+          "label": "r/intacct — Power BI via CData, API limits",
+          "date": "2026-03-31",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitor": "Sage Intacct",
+      "headline": "Slash Financial ships native Sage Intacct integration — ecosystem momentum continues",
+      "date": "2026-03-30",
+      "sourceType": "reddit",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/SlashFinancial/comments/1s80l3q/now_live_integrations_with_xero_and_sage_intacct/",
+          "label": "r/SlashFinancial launch post",
+          "date": "2026-03-30",
+          "type": "reddit"
+        }
+      ]
+    }
+  ],
+  "pricingIntelligence": {
+    "exists": true,
+    "findings": [
+      {
+        "competitor": "Oracle NetSuite",
+        "summary": "Wayback CDX lookup timed out on /pricing and returned no snapshots for /plans in the last 90 days — no archival evidence of a public price-page change this window.",
+        "priceChanges": [
+          "No material pricing-page changes detected in the archive window."
+        ],
+        "sources": [
+          {
+            "url": "https://www.netsuite.com/pricing",
+            "label": "NetSuite pricing page (Wayback CDX timeout)",
+            "date": null,
+            "type": "pricing_archive"
+          }
+        ]
+      },
+      {
+        "competitor": "Sage Intacct",
+        "summary": "Wayback CDX lookup timed out on both /pricing and /plans URLs for Sage Intacct in the last 90 days. No material changes detected, and G2 ecosystem content continues to reference a 'Sage Intacct Pricing Guide: What It Really Costs in 2025' — implying pricing is still quote-based and opaque.",
+        "priceChanges": [
+          "No material pricing-page changes detected in the archive window."
+        ],
+        "sources": [
+          {
+            "url": "https://www.sage.com/en-us/sage-business-cloud/intacct/pricing",
+            "label": "Sage Intacct pricing page (Wayback CDX timeout)",
+            "date": null,
+            "type": "pricing_archive"
+          },
+          {
+            "url": "",
+            "label": "G2 Learning Hub — 'Sage Intacct Pricing Guide: What It Really Costs in 2025'",
+            "date": null,
+            "type": "g2"
+          }
+        ]
+      }
+    ]
+  },
+  "secFilings": {
+    "exists": true,
+    "items": [
+      {
+        "competitor": "Oracle NetSuite",
+        "form": "8-K",
+        "filedDate": "2026-04-06",
+        "items": "Item 5.02 (Departure/Appointment of Directors or Officers); Item 7.01 (Regulation FD Disclosure); Item 9.01 (Financial Statements and Exhibits)",
+        "summary": "Oracle Corp (parent of NetSuite) disclosed an officer-level change plus a Reg FD exhibit. Combined with Reddit-reported workforce cuts, this is the clearest evidence this week that account-team continuity at NetSuite is in flux.",
+        "sources": [
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm",
+            "label": "Oracle Corp 8-K filing",
+            "date": "2026-04-06",
+            "type": "sec_filings"
+          }
+        ]
+      }
+    ]
+  },
+  "comparisonMatrix": {
+    "rows": [
+      {
+        "axis": "Parent / ownership",
+        "a": "Oracle Corp (NYSE: ORCL) — just filed an officer-change 8-K on 2026-04-06",
+        "b": "Sage Group plc — standalone finance-focused vendor",
+        "note": "Use the fresh Oracle 8-K to frame 'who owns your roadmap?' for NetSuite accounts."
+      },
+      {
+        "axis": "Public pricing transparency",
+        "a": "No public price page; Wayback returned no pricing changes in 90 days",
+        "b": "No public price page; G2 still publishes a third-party 'what it really costs' guide",
+        "note": "Neither publishes list pricing — your published tiers become the differentiator."
+      },
+      {
+        "axis": "Integration/API posture",
+        "a": "No native webhook triggers; customers use SuiteCloud User Event Scripts + middleware (e.g., Cyclr)",
+        "b": "API transaction caps (~100k/month cited by users); third-party tools like CData needed for SQL/BI",
+        "note": "Both force middleware. If you ship native webhooks + uncapped API, quantify the hours saved."
+      },
+      {
+        "axis": "User-base sentiment (last 30 days)",
+        "a": "Threads on license scarcity, manual PR workflows, webhook gaps, layoff chatter",
+        "b": "Positive 'best for GAAP prep' framing but API-limit and sandbox-access friction",
+        "note": "Sage Intacct has the brand halo this week; NetSuite has the disruption."
+      },
+      {
+        "axis": "Implementation & training",
+        "a": "Implementation-heavy; consultant-led (see active hiring for NetSuite Functional Consultants in India/US)",
+        "b": "Also consultant-led (Blytheco, Cherry Bekaert, UHY-US hiring Intacct roles)",
+        "note": "Both leave the buyer dependent on a partner network — sell your direct-delivery model."
+      },
+      {
+        "axis": "GAAP/financial reporting fit",
+        "a": "Broad ERP; finance is one of many modules",
+        "b": "Explicitly positioned as GAAP-friendly by practitioners ('soooo much better suited for actual financial prep reporting')",
+        "note": "Against Intacct, compete on automation and AI; against NetSuite, compete on finance depth."
+      },
+      {
+        "axis": "Review footprint (G2)",
+        "a": "~4,656 G2 reviews (very high volume)",
+        "b": "3,000+ G2 reviews per G2 community page",
+        "note": "Both are entrenched — lead with switching-cost ROI, not feature parity."
+      }
+    ]
+  },
+  "marketMoves": [
+    {
+      "competitors": [
+        "Oracle NetSuite"
+      ],
+      "title": "Officer change at Oracle creates a real renegotiation window for NetSuite accounts",
+      "body": "The 2026-04-06 8-K covers Item 5.02 (officer change) plus a Reg FD disclosure. Historically, leadership shuffles at the parent slow mid-cycle NetSuite upsells as new execs reset priorities. Reps should accelerate outreach into NetSuite accounts whose renewals land in the next 90 days.",
+      "confidence": "High",
+      "confidenceBasis": "Directly evidenced by a dated SEC filing with a verifiable URL.",
+      "verify": "Open the 8-K exhibit and cross-reference the named officer against the NetSuite account team on target logos.",
+      "date": "2026-04-06",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm",
+          "label": "Oracle 8-K 2026-04-06",
+          "date": "2026-04-06",
+          "type": "sec_filings"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Oracle NetSuite"
+      ],
+      "title": "'NetSuite laid off 30,000' narrative is now public and spreading on Reddit",
+      "body": "A 35-score r/ConstructionManagers thread cites the 30,000 figure in the context of career stability. Prospects in evaluation will surface this unprompted. Arm your AEs with a direct, non-defensive reframe: implementation continuity, SI partner bench, and your own delivery team.",
+      "confidence": "Medium",
+      "confidenceBasis": "Headcount number is not independently verified in this signal set; the Reddit discussion itself is, however, dated and linkable.",
+      "verify": "Before citing the number to a prospect, validate via Oracle's next 10-Q or WARN Act filings; otherwise reference 'widely reported' only.",
+      "date": "2026-04-04",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/ConstructionManagers/comments/1schyib/do_you_feel_different_about_this_career_path/",
+          "label": "r/ConstructionManagers thread",
+          "date": "2026-04-04",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Oracle NetSuite"
+      ],
+      "title": "NetSuite's 'limited licenses' problem is breaking the PR workflow for real customers",
+      "body": "An r/Netsuite post on 2026-04-19 describes requisitions being emailed to buyers because users don't have licenses, then manually typed into NetSuite — introducing delay and data loss. This is a live wedge for any platform with per-user or unlimited-requester pricing.",
+      "confidence": "High",
+      "confidenceBasis": "Dated, sourced first-person customer complaint on official subreddit.",
+      "verify": "Ask any NetSuite prospect: 'How many of your requesters actually have NetSuite seats today?' — measure the gap.",
+      "date": "2026-04-19",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Netsuite/comments/1spxau5/lack_of_visibility_and_control_in_our_pr/",
+          "label": "r/Netsuite — PR process thread",
+          "date": "2026-04-19",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Sage Intacct"
+      ],
+      "title": "Sage Intacct API caps are a disqualifier for mid-market BI projects",
+      "body": "On 2026-03-31 an r/intacct user migrating from Sage 300 flagged that Intacct's ~100k/month API transaction limit is a hard ceiling against their ~850k/year transaction volume — even with a Web Services Developer License. Any prospect using Power BI, Looker, or a data warehouse will hit this ceiling.",
+      "confidence": "High",
+      "confidenceBasis": "Specific numeric limits cited in a dated, linked post on the vendor's subreddit.",
+      "verify": "In discovery, ask: 'What's your monthly Intacct API call volume, and are you at the 100k tier?' — force the quantified answer.",
+      "date": "2026-03-31",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/intacct/comments/1s8bwgt/connecting_sage_intacct_to_power_bi_using_cdata/",
+          "label": "r/intacct — Power BI via CData",
+          "date": "2026-03-31",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Sage Intacct"
+      ],
+      "title": "Sage Intacct brand halo on GAAP reporting is hardening on r/Accounting",
+      "body": "An 80-upvote 2026-04-15 thread on r/Accounting explicitly calls Sage Intacct 'soooo much better suited for actual financial prep reporting...especially for GAAP-clients.' This narrative is becoming the default why-Intacct — plan to compete on it directly rather than dismiss it.",
+      "confidence": "High",
+      "confidenceBasis": "Widely upvoted, dated, quoted post on a relevant subreddit.",
+      "verify": "Monitor r/Accounting weekly for rebuttals; pull your own GAAP-reporting proof points from 3 named customers.",
+      "date": "2026-04-15",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Accounting/comments/1slv9dz/one_of_the_biggest_problems_with_qbo_that_ive/",
+          "label": "r/Accounting — QBO vs Sage/NetSuite thread",
+          "date": "2026-04-15",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Oracle NetSuite",
+        "Sage Intacct"
+      ],
+      "title": "Both vendors are hiring consultants, not cutting price — buyers pay the services tax",
+      "body": "This week surfaces active NetSuite Functional Consultant, Customer Success, and Business Analyst openings globally, plus Sage Intacct Consultant, Administrator, and Vertical Manager roles at Sage, Blytheco, Cherry Bekaert, and UHY-US. The signal: both vendors are still scaling delivery headcount, which means SI-dependent implementations (and the cost that comes with them) are not going away in 2026.",
+      "confidence": "Medium",
+      "confidenceBasis": "Signal is a hiring RSS fallback, not a verified ATS; pattern across many listings is consistent.",
+      "verify": "Pull Greenhouse/Lever listings directly next week to confirm open req counts and geographies.",
+      "date": null,
+      "sources": [
+        {
+          "url": "",
+          "label": "Google News fallback — NetSuite/Intacct consultant job listings (multiple)",
+          "date": null,
+          "type": "jobs"
+        }
+      ]
+    }
+  ],
+  "talkTracks": [
+    {
+      "objection": "We're already in an active eval with NetSuite.",
+      "response": "Worth knowing Oracle just filed an 8-K on April 6 disclosing an officer-level change plus a Reg FD item — typically your NetSuite account team's priorities reset in the weeks after that. Before you sign, I'd ask them in writing who owns your implementation escalation path for the next 12 months. Happy to send you the filing.",
+      "example": true,
+      "confidence": "High",
+      "confidenceBasis": "Anchored to the literal 8-K filed 2026-04-06 with a live SEC URL.",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm",
+          "label": "Oracle 8-K 2026-04-06",
+          "date": "2026-04-06",
+          "type": "sec_filings"
+        }
+      ]
+    },
+    {
+      "objection": "Sage Intacct is the gold standard for GAAP reporting.",
+      "response": "That reputation is real — there's an 80-upvote r/Accounting thread from April 15 saying exactly that. The follow-up question is API volume: one of their own users on r/intacct flagged the 100k/month API transaction cap against ~850k annual transactions. If [your reporting stack] pulls into Power BI or a warehouse, we should stress-test that ceiling against your volumes before you commit.",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Both the GAAP claim and the API cap are sourced to dated Reddit posts this window.",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Accounting/comments/1slv9dz/one_of_the_biggest_problems_with_qbo_that_ive/",
+          "label": "r/Accounting GAAP thread",
+          "date": "2026-04-15",
+          "type": "reddit"
+        },
+        {
+          "url": "https://www.reddit.com/r/intacct/comments/1s8bwgt/connecting_sage_intacct_to_power_bi_using_cdata/",
+          "label": "r/intacct API cap thread",
+          "date": "2026-03-31",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "objection": "NetSuite's ecosystem is too big to compete with.",
+      "response": "Size cuts both ways. A NetSuite customer publicly posted on April 19 that their purchase-request process is broken because they can't afford enough licenses — so requesters email buyers who retype data into NetSuite. If [your team] has more than [X] occasional requesters, you're paying for either seats you don't use or data you'll lose.",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Dated first-person complaint on r/Netsuite, 2026-04-19.",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Netsuite/comments/1spxau5/lack_of_visibility_and_control_in_our_pr/",
+          "label": "r/Netsuite PR process post",
+          "date": "2026-04-19",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "objection": "We need native webhooks for our integrations, so NetSuite is the safer bet.",
+      "response": "Actually the opposite — a NetSuite developer post on April 10 walks through the fact that NetSuite doesn't natively support webhook triggers, so teams end up using User Event Scripts on SuiteCloud plus a middleware like Cyclr to route events. Ask your NetSuite SE to write out the reference architecture for [your use case] and compare it to our native webhook flow.",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Dated r/Netsuite post explicitly stating native webhooks are unavailable.",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Netsuite/comments/1shhvn2/building_a_webhookstyle_integration_in_oracle/",
+          "label": "r/Netsuite webhook workaround",
+          "date": "2026-04-10",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "objection": "Switching cost is too high; we've standardized on Intacct/NetSuite.",
+      "response": "Understood. The switching cost conversation has changed this month though — both vendors are actively hiring consultants (NetSuite Functional Consultants, Sage Intacct Account Executives, Vertical Managers) which means your implementation fees aren't coming down. Let's scope a 90-day co-funded migration PoC on just [your highest-pain module] and compare total cost against your next renewal.",
+      "example": false,
+      "confidence": "Medium",
+      "confidenceBasis": "Hiring signal derived from Google News fallback, not verified ATS; pattern is consistent across 20+ listings.",
+      "sources": [
+        {
+          "url": "",
+          "label": "Aggregate hiring signal — NetSuite + Sage Intacct consultant roles",
+          "date": null,
+          "type": "jobs"
+        }
+      ]
+    },
+    {
+      "objection": "We'll just wait and see if pricing changes.",
+      "response": "Neither NetSuite nor Sage Intacct published pricing-page changes in the last 90 days — Wayback shows no new snapshots. Waiting doesn't help you; these vendors negotiate at the account level, not the list-price level. We publish our tiers on [your pricing URL] — let's map the 3-year TCO today.",
+      "example": false,
+      "confidence": "Medium",
+      "confidenceBasis": "Wayback CDX timed out this run, so the 'no change' claim is based on absence of evidence rather than confirmed diff.",
+      "sources": [
+        {
+          "url": "https://www.netsuite.com/pricing",
+          "label": "NetSuite pricing page (no snapshots)",
+          "date": null,
+          "type": "pricing_archive"
+        },
+        {
+          "url": "https://www.sage.com/en-us/sage-business-cloud/intacct/pricing",
+          "label": "Sage Intacct pricing page (no snapshots)",
+          "date": null,
+          "type": "pricing_archive"
+        }
+      ]
+    }
+  ],
+  "watchNextWeek": [
+    {
+      "text": "Re-run Wayback CDX on NetSuite /pricing and /plans once archive timeouts clear — first clean capture post 8-K is the one that matters.",
+      "trigger": "Pricing snapshot recheck",
+      "expectedBy": "2026-04-26"
+    },
+    {
+      "text": "Monitor SEC EDGAR for any follow-up Oracle 8-K or Reg FD exhibit that names the incoming/outgoing officer's NetSuite scope.",
+      "trigger": "SEC filing",
+      "expectedBy": "2026-05-06"
+    },
+    {
+      "text": "Track r/Accounting and r/intacct for a rebuttal to the 'Intacct = best for GAAP' thread; if silent, the narrative hardens.",
+      "trigger": "Reddit sentiment check",
+      "expectedBy": "2026-04-26"
+    },
+    {
+      "text": "Confirm the '30,000 NetSuite layoffs' figure against Oracle's next 10-Q or state WARN Act disclosures before letting AEs cite the number.",
+      "trigger": "Oracle quarterly filing",
+      "expectedBy": "2026-06-20"
+    },
+    {
+      "text": "Pull verified ATS (Greenhouse/Lever) for Sage to confirm true open req count on Intacct consulting and product marketing roles.",
+      "trigger": "ATS re-scrape",
+      "expectedBy": "2026-04-26"
+    }
+  ],
+  "evidenceIndex": [
+    {
+      "competitor": "Oracle NetSuite",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526142939/d132760d8k.htm",
+          "label": "Oracle Corp 8-K (Items 5.02, 7.01, 9.01)",
+          "type": "sec_filings",
+          "date": "2026-04-06"
+        },
+        {
+          "url": "https://www.reddit.com/r/ConstructionManagers/comments/1schyib/do_you_feel_different_about_this_career_path/",
+          "label": "r/ConstructionManagers — NetSuite layoff reference",
+          "type": "reddit",
+          "date": "2026-04-04"
+        },
+        {
+          "url": "https://www.reddit.com/r/Netsuite/comments/1spxau5/lack_of_visibility_and_control_in_our_pr/",
+          "label": "r/Netsuite — PR process visibility",
+          "type": "reddit",
+          "date": "2026-04-19"
+        },
+        {
+          "url": "https://www.reddit.com/r/Netsuite/comments/1shhvn2/building_a_webhookstyle_integration_in_oracle/",
+          "label": "r/Netsuite — webhook workaround",
+          "type": "reddit",
+          "date": "2026-04-10"
+        },
+        {
+          "url": "https://www.netsuite.com/pricing",
+          "label": "NetSuite pricing page (Wayback timeout)",
+          "type": "pricing_archive",
+          "date": null
+        }
+      ]
+    },
+    {
+      "competitor": "Sage Intacct",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/Accounting/comments/1slv9dz/one_of_the_biggest_problems_with_qbo_that_ive/",
+          "label": "r/Accounting — Sage Intacct best for GAAP",
+          "type": "reddit",
+          "date": "2026-04-15"
+        },
+        {
+          "url": "https://www.reddit.com/r/intacct/comments/1s8bwgt/connecting_sage_intacct_to_power_bi_using_cdata/",
+          "label": "r/intacct — API cap vs Power BI/CData",
+          "type": "reddit",
+          "date": "2026-03-31"
+        },
+        {
+          "url": "https://www.reddit.com/r/intacct/comments/1s50ocb/sage_intacct_account_access_for_testing/",
+          "label": "r/intacct — sandbox access friction",
+          "type": "reddit",
+          "date": "2026-03-27"
+        },
+        {
+          "url": "https://www.reddit.com/r/SlashFinancial/comments/1s80l3q/now_live_integrations_with_xero_and_sage_intacct/",
+          "label": "r/SlashFinancial — Intacct integration launch",
+          "type": "reddit",
+          "date": "2026-03-30"
+        },
+        {
+          "url": "https://www.sage.com/en-us/sage-business-cloud/intacct/pricing",
+          "label": "Sage Intacct pricing page (Wayback timeout)",
+          "type": "pricing_archive",
+          "date": null
+        }
+      ]
+    }
+  ]
+}

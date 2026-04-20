@@ -192,5 +192,6 @@ Once you know the above, each of the other docs has a narrow job:
 - `brief-app/README.md` — Vercel deploy mechanics + tracking behaviour.
 - `gtm-engine/README.md` — Apollo → Instantly pipeline commands.
 - `gtm-engine/docs/VERTICAL-BRIEF-AND-EMAIL.md` — how the bulk cold-email copy references the vertical brief.
+- `admin-dashboard/README.md` — optional internal RevOps dashboard (dark UI + allowlisted `npm run` via server actions). Run locally only; does not deploy to production serverless.
 
 If anything in those docs contradicts this README, **this README wins** — the others are technical appendices and may lag behind when scripts change.

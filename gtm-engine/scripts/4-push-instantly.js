@@ -226,9 +226,20 @@ function loadCopyData() {
 }
 
 // ── Add a single lead via Instantly API v2 ───────────────────────────────────
+function serviceOutcomesForInstantly(entry) {
+  const raw = entry.serviceOutcomes;
+  const arr = Array.isArray(raw)
+    ? raw.map(s => String(s).trim()).filter(Boolean)
+    : [];
+  const pad = ['', '', ''];
+  const three = [...arr, ...pad].slice(0, 3);
+  return { o1: three[0], o2: three[1], o3: three[2], joined: three.filter(Boolean).join(' | ') };
+}
+
 async function pushLead(entry) {
   const trackingUrl = buildTrackingUrl(entry);
   const trackedBody = buildTrackedBody(entry.body, trackingUrl);
+  const outcomes = serviceOutcomesForInstantly(entry);
   const body = {
     campaign: INSTANTLY_CAMPAIGN_ID,
     email: entry.email,
@@ -242,6 +253,13 @@ async function pushLead(entry) {
       title: entry.title,
       trackingUrl,
       leadId: normalizeLeadId(entry.companyName || entry.email),
+      industry: typeof entry.industry === 'string' ? entry.industry : '',
+      painPointTrigger:
+        typeof entry.painPointTrigger === 'string' ? entry.painPointTrigger : '',
+      serviceOutcomes: outcomes.joined,
+      service_outcome_1: outcomes.o1,
+      service_outcome_2: outcomes.o2,
+      service_outcome_3: outcomes.o3,
     },
   };
 

@@ -36,6 +36,12 @@ File: `proxy.ts`
 - Skips noisy non-human events (`HEAD`, prefetch headers, common bot user-agents)
 - Returns `NextResponse.next()` so the page loads normally
 
+**Slack is not proof the recipient clicked.** The signed `trk` token only encodes which *campaign email address* the link was generated for. Anyone who loads that URL (you QA-testing, a colleague, a forward, some inbox clients prefetching links) can trigger the same Slack event. Optional mitigations in `proxy.ts`:
+
+- `TRACKING_SLACK_SKIP_RECIPIENTS` — comma-separated emails (same addresses as in the token). Those opens still log `[ASSET OPENED]` but do not post to Slack (use for test inboxes).
+- `sq` query param — HMAC of the full `trk` value; generate with `node brief-app/scripts/print-slack-suppress-sig.mjs "<trk>"` and append `&sq=<output>` to preview without Slack noise.
+- `TRACKING_SLACK_ATTRIBUTION_NOTE` — optional override for the disclaimer line appended to every Slack open message.
+
 ### 2) Real-time Slack alerting
 
 Environment variable:
@@ -67,6 +73,23 @@ File: `lib/brief-loader.ts`
   - `topAlert`
   - top 2 competitor summaries
   - recommended actions (from `enablementUpdate`, with fallback)
+
+### 5) Vercel Web Analytics
+
+The app includes `@vercel/analytics` on Next.js routes (for example `/`, `/brief`). Enable **Web Analytics** for the project in the Vercel dashboard to see aggregate visitors and pages.
+
+**Exclude your own clicks (this browser only):** open your production site once with  
+`?brief_analytics_opt_out=1` on any URL (for example  
+`https://your-domain/brief?id=test&brief_analytics_opt_out=1`). That sets `localStorage` so the analytics script never loads on future visits from that browser.  
+Alternatively in DevTools console:  
+`localStorage.setItem('brief_analytics_opt_out','1'); location.reload()`.
+
+Set `NEXT_PUBLIC_DISABLE_VERCEL_ANALYTICS=1` in Vercel to turn off analytics for all visitors.  
+Analytics is disabled on `localhost` in the wrapper so local dev does not noise the project.
+
+Plain static files under `public/` (for example `/cybersecurity-brief.html` served as a static asset without the Next.js shell) do not load this component; use the `/brief` flow or aggregate Vercel **edge** logs for those if needed.
+
+Per-lead identification (who opened a tracked CTA link) continues to rely on the existing **Slack + signed `trk`** path in `proxy.ts`, not Vercel Analytics.
 
 ---
 
@@ -132,6 +155,12 @@ Create `brief-app/.env.local`:
 ```txt
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
 TRACKING_SIGNING_SECRET=replace_with_shared_secret_used_in_gtm-engine
+
+# Optional — comma-separated; opens for these recipient emails skip Slack (test leads)
+# TRACKING_SLACK_SKIP_RECIPIENTS=you@company.com,qa@company.com
+
+# Optional — custom disclaimer line in Slack (default is set in proxy.ts)
+# TRACKING_SLACK_ATTRIBUTION_NOTE=Your note here
 ```
 
 For production, set the same variable in Vercel project settings.

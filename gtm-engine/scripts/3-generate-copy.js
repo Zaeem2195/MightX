@@ -35,9 +35,13 @@ const ROOT = path.join(__dirname, '..');
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const MODEL         = 'claude-sonnet-4-6';
+/** Anthropic Messages API model id (default: Opus 4.7). Override via GTM_GENERATE_COPY_MODEL e.g. claude-sonnet-4-6 for lower cost. */
+const MODEL =
+  process.env.GTM_GENERATE_COPY_MODEL?.trim() || 'claude-opus-4-7';
 const BATCH_DELAY   = 1200;   // ms between API calls — stay well within rate limits
 const MAX_RETRIES   = 2;
+/** More headroom now that Claude also returns industry / pain / outcomes. */
+const MAX_TOKENS_COPY = 600;
 
 if (!process.env.ANTHROPIC_API_KEY) {
   console.error('❌  ANTHROPIC_API_KEY missing from .env');
@@ -201,6 +205,64 @@ function loadPrompt() {
 }
 
 // ── Build lead data block for the prompt ─────────────────────────────────────
+/** Short vertical label for Instantly; prefers Apollo industry, then fallback. */
+function fallbackIndustry(lead) {
+  const raw = lead.personalization?.companyIndustry?.trim();
+  if (raw) return raw;
+  return 'B2B SaaS';
+}
+
+/** Enrich heuristic is long prose; optional short slot for templates. */
+function fallbackPainPointTrigger(lead) {
+  const short = lead.personalization?.painPointShort?.trim();
+  if (short) return short;
+  const long = lead.personalization?.painPointTrigger;
+  if (typeof long === 'string' && long.trim()) {
+    const one = long.split(/[.!?]\s+/)[0]?.trim() || long.trim();
+    return one.length > 90 ? `${one.slice(0, 87)}...` : one;
+  }
+  return 'competitor intel falling through the cracks';
+}
+
+function fallbackServiceOutcomes(lead) {
+  const fromIcp = lead.personalization?.serviceOutcomes;
+  if (Array.isArray(fromIcp) && fromIcp.length >= 3) {
+    return fromIcp.slice(0, 3).map(o => String(o).trim()).filter(Boolean);
+  }
+  return [
+    'faster prep for competitive calls',
+    'alerts when rivals shift pricing or positioning',
+    'clear rep-facing talk tracks from live signals',
+  ];
+}
+
+/** Ensure exactly three non-empty short strings for Instantly. */
+function normalizeServiceOutcomes(raw, lead) {
+  const fallback = fallbackServiceOutcomes(lead);
+  const arr = Array.isArray(raw)
+    ? raw.map(s => String(s).trim()).filter(Boolean)
+    : [];
+  const out = [...arr];
+  let i = 0;
+  while (out.length < 3) {
+    out.push(fallback[i] || fallback[0] || 'actionable competitor context');
+    i++;
+  }
+  return out.slice(0, 3);
+}
+
+function normalizeIndustryField(value, lead) {
+  const v = typeof value === 'string' ? value.trim() : '';
+  if (v) return v;
+  return fallbackIndustry(lead);
+}
+
+function normalizePainPointField(value, lead) {
+  const v = typeof value === 'string' ? value.trim() : '';
+  if (v) return v;
+  return fallbackPainPointTrigger(lead);
+}
+
 function buildLeadBlock(lead) {
   const p = lead.personalization;
   return [
@@ -226,7 +288,7 @@ async function generateCopy(lead, promptTemplate, attempt = 0) {
   try {
     const message = await client.messages.create({
       model:      MODEL,
-      max_tokens: 400,
+      max_tokens: MAX_TOKENS_COPY,
       messages:   [{ role: 'user', content: prompt }],
     });
 
@@ -241,7 +303,14 @@ async function generateCopy(lead, promptTemplate, attempt = 0) {
       throw new Error('Claude returned malformed JSON — missing subject or body');
     }
 
-    return { ok: true, subject: parsed.subject, body: parsed.body };
+    return {
+      ok:                true,
+      subject:           parsed.subject,
+      body:              parsed.body,
+      industry:          normalizeIndustryField(parsed.industry, lead),
+      painPointTrigger:  normalizePainPointField(parsed.painPointTrigger, lead),
+      serviceOutcomes:   normalizeServiceOutcomes(parsed.serviceOutcomes, lead),
+    };
   } catch (err) {
     if (attempt < MAX_RETRIES) {
       await new Promise(r => setTimeout(r, 2000));
@@ -286,17 +355,20 @@ async function main() {
 
     if (result.ok) {
       results.push({
-        leadId:      lead.id,
-        email:       lead.email,
-        firstName:   lead.firstName,
-        lastName:    lead.lastName,
-        companyName: lead.companyName,
-        title:       lead.title,
-        subject:     result.subject,
-        body:        result.body,
-        generatedAt: new Date().toISOString(),
+        leadId:            lead.id,
+        email:             lead.email,
+        firstName:         lead.firstName,
+        lastName:          lead.lastName,
+        companyName:       lead.companyName,
+        title:             lead.title,
+        subject:           result.subject,
+        body:              result.body,
+        industry:          result.industry,
+        painPointTrigger:  result.painPointTrigger,
+        serviceOutcomes:   result.serviceOutcomes,
+        generatedAt:       new Date().toISOString(),
       });
-      cost_estimate_tokens += 450;   // rough avg tokens per call
+      cost_estimate_tokens += 650;   // rough avg tokens per call
       process.stdout.write(`✅\n`);
     } else {
       failures.push({ leadId: lead.id, label, error: result.error });
@@ -308,13 +380,30 @@ async function main() {
     }
   }
 
-  // Rough cost estimate (Claude Sonnet pricing)
-  const estimatedCost = ((cost_estimate_tokens / 1_000_000) * 3.0).toFixed(4);
+  // Rough cost estimate (~$3/M tok Sonnet-class vs ~$15/M tok Opus-class input blend — see Anthropic pricing)
+  const approxPerMTok = MODEL.includes('opus') ? 15 : 3;
+  const estimatedCost = ((cost_estimate_tokens / 1_000_000) * approxPerMTok).toFixed(4);
 
   console.log(`\n📊  Results:`);
   console.log(`    ✅  Generated: ${results.length}`);
   console.log(`    ❌  Failed:    ${failures.length}`);
   console.log(`    💰  Estimated API cost: ~$${estimatedCost}`);
+
+  const previewN = Math.min(5, results.length);
+  if (previewN > 0) {
+    console.log(`\n📎  Instantly merge fields (sample, first ${previewN} leads):`);
+    for (let i = 0; i < previewN; i++) {
+      const r = results[i];
+      const outcomes = (r.serviceOutcomes || []).join(' | ');
+      console.log(`    ${i + 1}. ${r.email} @ ${r.companyName}`);
+      console.log(`       industry: ${r.industry}`);
+      console.log(`       painPointTrigger: ${r.painPointTrigger}`);
+      console.log(`       serviceOutcomes: ${outcomes}`);
+    }
+    console.log(
+      '    Also passed on push: ai_subject, ai_body, title, trackingUrl, leadId, service_outcome_1…3\n',
+    );
+  }
 
   const output = {
     meta: {
