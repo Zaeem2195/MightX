@@ -118,6 +118,16 @@ npm run generate-html-brief -- "Cybersecurity" "CrowdStrike" "SentinelOne"
 
 Requires **exactly three** quoted arguments for a custom run; otherwise the script prints usage and exits. From the repo root you can run: `node brief-app/scripts/generate-html-brief.js "Cybersecurity" "CrowdStrike" "SentinelOne"` (still uses `brief-app/.env` paths via `__dirname`).
 
+#### Brief quality gates (enforced by the generator)
+
+The vertical brief is the single most-scrutinised surface in the whole funnel — a skeptical VP Sales reads it in 3 minutes and decides whether the service is serious. The generator's prompt + post-generation validator enforce the rules below. Each one was added because the free-form version of the output leaked visible quality holes.
+
+- **Talk-track 3-of-5 quota.** At least **3 fully-worked talk tracks** (`example=true`, zero `[your X]` placeholders, real competitor named, dated signal cited) and at least **2 template talk tracks** (`example=false`, placeholders present for reps to customise). The validator rejects briefs that mislabel entries (an `example=true` entry containing `[your platform]` fails). Rationale: the previous "at least one example" rule produced 1-of-6 fully-worked — buyers saw a wall of skeletons and assumed the product was thin.
+- **No unlinked sources.** Every source object across `marketMoves`, `thisWeekSignals`, `triggerEvents`, `pricingIntelligence`, `secFilings`, and `talkTracks` must have a non-empty `url`. If an insight cannot be backed by a real URL, Claude is instructed to drop the insight entirely rather than emit a `src-nolink` citation. Rationale: the brief's pitch is "every claim carries a clickable source" — even one unlinked entry breaks that promise.
+- **Signal dedup across sections.** Any underlying signal (a news article, a Reddit thread, an 8-K filing) may appear in at most two sections. Talk tracks should reference prior sections (e.g. "as noted in Market Moves…") rather than retell the narrative. Rationale: the prior prompt produced the same CPU-Z story in five sections and made the week look shallower than it was.
+- **Strict mode.** Set `BRIEF_STRICT_VALIDATION=1` in `.env.local` to make validation failures fatal (`process.exit(2)`). Default is warning-only so existing workflows keep working, but for production runs (the brief the prospect actually sees) set strict mode on. Re-running the generator usually fixes a quota miss on the second attempt.
+- **SEC filler filter.** Item 8.01 ("Other Events") and Item 9.01 (exhibits) filings are dropped at the collector level unless the filing also carries a material item (1.x / 2.x / 3.x / 5.x). Implemented in `intelligence-engine/scripts/collectors/sec-filings-monitor.js` (`MATERIAL_8K_ITEMS` set + `hasMaterialItems()` guard). Rationale: an Item 8.01–only 8-K forces the analyst to write "no earnings item was disclosed" — visible filler in a brief that's supposed to showcase signal density.
+
 Open:
 
 - [http://localhost:3000/](http://localhost:3000/) — redirects to the latest `*-report-*.html` or `/brief?id=salesloft`

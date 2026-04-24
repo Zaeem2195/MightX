@@ -142,6 +142,7 @@ The ones you will actually touch:
 | `BRIEF_AUTHOR_NAME` + `TITLE` / `CREDENTIAL` / `LINKEDIN` / `AVATAR_URL` | `brief-app/.env.local` | Enables the **founder byline** on the vertical brief (trust boost). Leave `BRIEF_AUTHOR_NAME` blank to hide the whole block. |
 | `TRACKING_SIGNING_SECRET` | `gtm-engine/.env` **and** `brief-app/.env.local` | Must match exactly. Signs the `trk` token in tracked brief links. |
 | `SLACK_WEBHOOK_URL` | `brief-app/.env.local` | Where open-tracking alerts are posted. |
+| `BRIEF_STRICT_VALIDATION` | `brief-app/.env.local` | `1` / `true` makes the vertical-brief generator fail fast when quality gates fail (talk-track quota, unlinked sources, placeholder leaks in fully-worked entries). Default warn-only. Turn on for production brief runs. |
 | `REPORT_MODEL` / `ANALYSIS_MODEL` / `QUARTERLY_SUMMARY_MODEL` | `intelligence-engine/.env` | Override the Claude model (default is `claude-opus-4-7`). |
 | Email delivery (`EMAIL_DRIVER` + Resend or SMTP keys) | `intelligence-engine/.env` | Required for the weekly Monday email to actually send. |
 

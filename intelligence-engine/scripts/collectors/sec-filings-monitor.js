@@ -158,6 +158,28 @@ function parseItemCodes(itemsStr) {
     .filter(Boolean);
 }
 
+/**
+ * 8-K item codes that carry real strategic signal. Item 8.01 ("Other Events")
+ * and 9.01 ("Financial Statements and Exhibits") are procedural catch-alls —
+ * a filing whose ONLY items are 8.01/9.01 is almost always a boilerplate
+ * disclosure that reads as filler in a sales-ready brief. We drop those
+ * before Claude ever sees them so the analyst is not forced to synthesise a
+ * "we don't actually know why this was filed" paragraph.
+ */
+const MATERIAL_8K_ITEMS = new Set([
+  '1.01', '1.02', '1.03',              // material agreements / bankruptcy
+  '2.01', '2.02', '2.03', '2.04', '2.05', '2.06', // M&A, results, financial obligations, impairments
+  '3.01', '3.02', '3.03',              // delisting, equity sales, rights modifications
+  '4.01', '4.02',                      // auditor change / non-reliance
+  '5.01', '5.02', '5.03', '5.07',      // control change, officer/director change, bylaw change, shareholder vote
+]);
+
+function hasMaterialItems(itemsStr) {
+  const codes = parseItemCodes(itemsStr);
+  if (codes.length === 0) return false;
+  return codes.some((code) => MATERIAL_8K_ITEMS.has(code));
+}
+
 function describeItems(items) {
   if (!items.length) return '(no item codes reported)';
   return items
@@ -267,7 +289,10 @@ export async function collectSECFilings(clientId, competitor) {
   }
 
   const allFilings = zipRecentFilings(submissions);
-  const recent8K = filterRelevantFilings(allFilings).slice(0, MAX_FILINGS_REPORTED);
+  const relevant8K = filterRelevantFilings(allFilings);
+  const materialFiltered = relevant8K.filter((f) => hasMaterialItems(f.items));
+  const droppedProcedural = relevant8K.length - materialFiltered.length;
+  const recent8K = materialFiltered.slice(0, MAX_FILINGS_REPORTED);
 
   const state = loadState(clientId, name);
   const priorAccession = new Set(state?.lastSeenAccessions || []);
@@ -287,14 +312,20 @@ export async function collectSECFilings(clientId, competitor) {
       lastRunAt: new Date().toISOString(),
       lastSeenAccessions: [],
     });
+    const emptyMsg = droppedProcedural > 0
+      ? `No material 8-K filings (Items 1.x / 2.x / 3.x / 4.x / 5.x) in the last ${LOOKBACK_DAYS} days. ${droppedProcedural} procedural filing(s) (Item 8.01 "Other Events" / 9.01 exhibits only) were excluded to avoid filler in the brief.`
+      : `No 8-K filings in the last ${LOOKBACK_DAYS} days.`;
     return {
       type: 'sec_filings',
       competitor: name,
-      data: [...headerLines, `No 8-K filings in the last ${LOOKBACK_DAYS} days.`].join('\n'),
+      data: [...headerLines, emptyMsg].join('\n'),
     };
   }
 
-  const lines = [...headerLines, `Found ${recent8K.length} 8-K filing(s) in the window:`, ''];
+  const headerNote = droppedProcedural > 0
+    ? `Found ${recent8K.length} material 8-K filing(s) in the window (${droppedProcedural} procedural 8.01/9.01-only filing(s) excluded):`
+    : `Found ${recent8K.length} 8-K filing(s) in the window:`;
+  const lines = [...headerLines, headerNote, ''];
 
   for (const f of recent8K) {
     const items = parseItemCodes(f.items);

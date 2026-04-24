@@ -213,16 +213,22 @@ OUTPUT FORMAT (strict):
 
 EVIDENCE RULES:
 - Every "marketMoves", "thisWeekSignals", "pricingIntelligence.findings", "secFilings.items", and "triggerEvents.items" entry MUST include an array of at least one source object of shape {"url": string, "label": string, "date": "YYYY-MM-DD" or null, "type": string}. Pull these from the raw collector text — prefer URLs and dates that literally appear in the signal data.
-- If a useful signal appears in raw data without a URL, synthesise a plausible label (e.g. "Wayback Machine snapshot diff") but leave "url" as "" — never fabricate a URL.
+- EVERY source object MUST have a non-empty "url". If an insight cannot be backed by at least one source with a real URL, DROP THE INSIGHT ENTIRELY. Never emit an unlinked citation — the whole trust pitch is "every claim has a clickable source," and a single src-nolink entry destroys that. Never fabricate a URL either.
 - Confidence is scored High / Medium / Low:
   - High   = directly evidenced by a dated, sourced signal (news URL, 8-K filing, Wayback diff).
   - Medium = pattern consistent with multiple signals but not explicitly stated.
   - Low    = general market reasoning not pinned to a specific signal this run.
 - Do NOT add hedge language like "may vary", "industry chatter", "anecdotally", "some customers". Remove such phrases before responding.
 
+DEDUPLICATION (critical for perceived depth):
+- Each distinct underlying signal (a specific news story, Reddit thread, SEC filing, G2 review) should appear in AT MOST TWO sections across the whole brief.
+- If a signal is the hero of triggerEvents, do NOT repeat it as a thisWeekSignals card — pick a different signal for thisWeekSignals.
+- If a signal is covered in marketMoves, talkTracks should reference it briefly (e.g. "as noted in Market Moves, the April 9 CPU-Z kill-chain…") rather than re-telling the full narrative.
+- Spread coverage horizontally: different competitors, different signal types (news / Reddit / 8-K / sitemap / jobs / HN), different dates. A reader who sees the same signal in five sections concludes the analyst had a shallow pool.
+
 WRITING STYLE:
 - Claim-first, tactical, sales-ready. Each insight is one short title + 2-4 sentence body.
-- One fully-worked talk track must include zero "[your X]" style placeholders; label it example=true. Others may contain placeholders so reps customize.
+- Talk tracks split 50/50: produce AT LEAST 3 fully-worked examples (example=true) that contain ZERO "[your X]" / "[your platform]" / "[your …]" placeholders — name the actual competitor, cite a dated signal, and read as copy-paste-ready on a call. Produce AT LEAST 2 templates (example=false) that DO contain customizable "[your X]" placeholders for reps to adapt. Briefs with only one fully-worked example feel skeletal and will be rejected.
 - Everything should be useful to a VP of Sales inside 60 seconds of reading.`;
 
 function buildUserPrompt({ industryName, competitorA, competitorB, signalsBlock, hasSignals }) {
@@ -319,11 +325,11 @@ ${signalsBlock}
       "sources":     [ { "url": string, "label": string, "date": string | null, "type": string } ]
     }
   ],
-  "talkTracks": [                                        // 4-6 objections
+  "talkTracks": [                                        // 5-6 objections total — MINIMUM 3 example=true + MINIMUM 2 example=false
     {
       "objection":       string,
-      "response":        string,                         // may include "[your X]" placeholders unless example=true
-      "example":         boolean,                        // exactly ONE item must have example=true with all placeholders resolved to concrete copy
+      "response":        string,                         // example=true → zero placeholders, concrete competitor name + dated signal. example=false → MUST contain "[your X]" placeholders for reps to customize.
+      "example":         boolean,                        // at least 3 entries must be true; at least 2 must be false
       "confidence":      "High" | "Medium" | "Low",
       "confidenceBasis": string,
       "sources":         [ { "url": string, "label": string, "date": string | null, "type": string } ]
@@ -345,9 +351,11 @@ ${signalsBlock}
 }
 
 HARD REQUIREMENTS:
-- At least ONE talkTracks entry must have example=true with no unresolved "[your ...]" placeholders. Keep it concrete and named so the reader sees the finished quality.
-- marketMoves, thisWeekSignals, pricingIntelligence.findings, secFilings.items, and triggerEvents.items every have at least one "sources" entry.
+- talkTracks: AT LEAST 3 entries with example=true (zero "[your ...]" placeholders, real competitor named, dated signal cited). AT LEAST 2 entries with example=false that DO contain "[your X]" placeholders. Briefs with fewer than 3 fully-worked examples will be rejected by the validator.
+- EVERY source object across the whole brief must have a non-empty "url". No src-nolink fallbacks. If you can't source an insight with a real URL, delete the insight.
+- marketMoves, thisWeekSignals, pricingIntelligence.findings, secFilings.items, and triggerEvents.items each have at least one "sources" entry with a real URL.
 - When the raw signals contain URLs, those URLs MUST appear in the "sources" arrays.
+- No single underlying signal (same news article, same Reddit thread, same 8-K) may appear in more than 2 sections. Talk tracks should reference earlier sections instead of re-narrating.
 - If raw pricing_archive signals show no material change, pricingIntelligence.exists may still be true but findings[].priceChanges should plainly say "No material pricing-page changes detected in the archive window."
 - If raw sec_filings signals are not present, secFilings.exists = false and items = [].
 
@@ -1154,6 +1162,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ─── Post-generation validation ───────────────────────────────────────────────
 
+const PLACEHOLDER_PATTERN = /\[your [^\]]+\]/i;
+
+function collectAllSourceEntries(brief) {
+  const out = [];
+  const push = (label, sources) => {
+    if (!Array.isArray(sources)) return;
+    sources.forEach((s, i) => out.push({ location: `${label}[${i}]`, source: s }));
+  };
+  (brief.marketMoves || []).forEach((m, i) => push(`marketMoves[${i}].sources`, m?.sources));
+  (brief.thisWeekSignals || []).forEach((s, i) => push(`thisWeekSignals[${i}].sources`, s?.sources));
+  (brief.triggerEvents?.items || []).forEach((t, i) => push(`triggerEvents.items[${i}].sources`, t?.sources));
+  (brief.pricingIntelligence?.findings || []).forEach((f, i) => push(`pricingIntelligence.findings[${i}].sources`, f?.sources));
+  (brief.secFilings?.items || []).forEach((f, i) => push(`secFilings.items[${i}].sources`, f?.sources));
+  (brief.talkTracks || []).forEach((t, i) => push(`talkTracks[${i}].sources`, t?.sources));
+  return out;
+}
+
 function validateBriefJson(brief) {
   const problems = [];
   if (!brief || typeof brief !== "object") {
@@ -1165,15 +1190,50 @@ function validateBriefJson(brief) {
     problems.push("hero.weekSummary is missing or too short");
   }
 
+  // Talk-track quota: ≥3 fully-worked examples (no placeholders), ≥2 templates (with placeholders).
   const tt = Array.isArray(brief.talkTracks) ? brief.talkTracks : [];
   if (tt.length === 0) problems.push("talkTracks is empty");
-  const hasExample = tt.some((t) => t && t.example === true);
-  if (!hasExample) problems.push("no talkTrack marked example=true (need at least one fully-worked example)");
+
+  const examples = tt.filter((t) => t && t.example === true);
+  const templates = tt.filter((t) => t && t.example === false);
+
+  if (examples.length < 3) {
+    problems.push(`only ${examples.length} talkTrack(s) marked example=true (need ≥3 fully-worked examples; prompt enforces the 3/2 split)`);
+  }
+  if (templates.length < 2) {
+    problems.push(`only ${templates.length} talkTrack(s) marked example=false (need ≥2 templates with [your X] placeholders)`);
+  }
+
+  // Any "fully-worked" example must not contain an unresolved placeholder.
+  examples.forEach((t, i) => {
+    const resp = typeof t.response === "string" ? t.response : "";
+    if (PLACEHOLDER_PATTERN.test(resp)) {
+      problems.push(`talkTracks example[${i}] is marked example=true but still contains a "[your ...]" placeholder — fully-worked entries must resolve all placeholders`);
+    }
+  });
+
+  // Templates should actually carry a placeholder (otherwise they are just examples mislabeled).
+  templates.forEach((t, i) => {
+    const resp = typeof t.response === "string" ? t.response : "";
+    if (!PLACEHOLDER_PATTERN.test(resp)) {
+      problems.push(`talkTracks template[${i}] is marked example=false but has no "[your X]" placeholder — template entries must leave something for the rep to customize`);
+    }
+  });
 
   const mm = Array.isArray(brief.marketMoves) ? brief.marketMoves : [];
   if (mm.length === 0) problems.push("marketMoves is empty");
   const mmNoSource = mm.findIndex((m) => !Array.isArray(m.sources) || m.sources.length === 0);
   if (mmNoSource !== -1) problems.push(`marketMoves[${mmNoSource}] has no sources`);
+
+  // Every source across the whole brief must carry a real URL. src-nolink entries destroy the "every claim sourced" trust pitch.
+  const allSources = collectAllSourceEntries(brief);
+  const unlinked = allSources.filter(({ source }) => !source || typeof source.url !== "string" || source.url.trim() === "");
+  if (unlinked.length > 0) {
+    const sample = unlinked.slice(0, 3).map((u) => u.location).join(", ");
+    problems.push(
+      `${unlinked.length} source(s) have empty "url" — unlinked citations are banned (first: ${sample}). Drop the parent insight or find a real URL.`
+    );
+  }
 
   return problems;
 }
@@ -1216,9 +1276,17 @@ async function main() {
 
   const problems = validateBriefJson(brief);
   if (problems.length) {
-    console.warn(`\n⚠️   Brief JSON validation warnings:`);
+    const strict = /^(1|true|yes)$/i.test(String(process.env.BRIEF_STRICT_VALIDATION || ""));
+    const label = strict ? "Brief JSON validation FAILED" : "Brief JSON validation warnings";
+    console.warn(`\n⚠️   ${label}:`);
     for (const p of problems) console.warn(`    - ${p}`);
-    console.warn(`    (continuing — inspect the output to decide if a re-run is needed)\n`);
+    if (strict) {
+      console.error(`\n    Strict mode on (BRIEF_STRICT_VALIDATION=1) — refusing to write a brief that fails the quality gate.`);
+      console.error(`    Re-run the generator; Claude usually meets the quota on the second attempt when the prompt is honored.\n`);
+      process.exit(2);
+    } else {
+      console.warn(`    (continuing — inspect the output to decide if a re-run is needed. Set BRIEF_STRICT_VALIDATION=1 to make these fatal.)\n`);
+    }
   }
 
   const html = renderHtml({

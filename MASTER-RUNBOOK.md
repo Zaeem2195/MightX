@@ -264,9 +264,15 @@ If the signals JSON is missing, the generator still runs but labels the output a
 The generator:
 
 - asks Claude for structured JSON (not HTML) and renders it locally so the design is owned by the script;
-- enforces at least one fully-worked talk track (no `[your X]` placeholders) so prospects see finished quality;
+- enforces a **3-of-5 talk-track split**: at least 3 fully-worked examples (`example=true`, zero `[your X]` placeholders, real competitor named, dated signal cited) and at least 2 templates (`example=false`, placeholders present for reps). The validator rejects mislabeled entries — an `example=true` response containing `[your platform]` fails;
+- **rejects unlinked sources.** Every `sources[].url` across the whole brief must be non-empty. Claude is instructed to drop the parent insight rather than emit an `src-nolink` citation. This preserves the "every claim is clickable" trust pitch;
+- **enforces cross-section dedup.** Any underlying signal (a news article, a Reddit thread, an 8-K filing) may appear in at most two sections. Talk tracks reference prior sections by name rather than retelling narratives — prevents the "same CPU-Z story five times" feel;
 - emits a single confidence legend at the top and a full-phrase confidence label per insight ("High confidence" / "Medium confidence" / "Low confidence") — no repeated confidence paragraphs and no unexplained abbreviations for the reader;
 - renders a "This Week's Signals", "Pricing Intelligence" (Wayback Machine diff), "SEC 8-K Filings" (EDGAR), comparison matrix, "Watch Next Week", and "Evidence Index" block.
+
+**Strict validation mode.** Set `BRIEF_STRICT_VALIDATION=1` in `brief-app/.env.local` to make validation failures fatal (`process.exit(2)`). Default is warning-only so existing workflows keep working; turn it on for production brief runs so a broken brief cannot overwrite a good one. Re-running the generator usually fixes quota misses on the second attempt — Claude honors the 3/2 split and URL requirement reliably when the prompt is followed.
+
+**Collector-side filler guard.** `intelligence-engine/scripts/collectors/sec-filings-monitor.js` drops 8-K filings whose only items are 8.01 ("Other Events") or 9.01 (exhibits) before they reach the analyst prompt. The `MATERIAL_8K_ITEMS` allowlist covers 1.x / 2.x / 3.x / 4.x / 5.x codes — the ones that carry real strategic signal. This prevents the brief from including procedural filings the analyst can only describe as "no earnings item was disclosed."
 
 Shortcut for the default pair (Docebo vs Absorb):
 
