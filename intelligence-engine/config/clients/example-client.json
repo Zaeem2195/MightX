@@ -92,7 +92,7 @@
   },
 
   "slackConnect": {
-    "_note": "See docs/CLIENT-SLACK-CONNECT-PLAYBOOK.md. Fill in after you create and share the client channel.",
+    "_note": "See the root README.md. Fill in after you create and share the client channel.",
     "channelId": null,
     "clientPrimary": null,
     "sharedAt": null

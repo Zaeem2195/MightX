@@ -1,84 +1,340 @@
-# MightX — Founder Operating Manual
+# MightX Operating Playbook
 
-**Read this first.** It explains, in plain language, what MightX is, what the three flows are, and what to type when you want to run them. Every other doc in this repo is a deeper reference — this one is the only one you *have* to know.
+This is the only human-facing doc you should follow day to day.
 
----
+MightX is a managed competitive intelligence service for B2B SaaS sales teams. The product is a weekly Monday briefing that tells a client what their competitors changed, why it matters in active deals, and what their reps should say this week.
 
-## 1. What MightX is (30-second version)
+## The Strategy
 
-MightX is three small apps that share one goal: **turn competitive intelligence into paying clients.**
+The current best strategy is:
 
-| App | What it does for your business | Who uses the output |
-|---|---|---|
-| `intelligence-engine` | Writes the **weekly competitive briefing** that clients pay you for. Runs every Monday morning, fully automated. | Paying clients |
-| `brief-app` | Hosts the **public sample brief** prospects land on when they click a link in your cold email. Also tracks who opened it and generates personalised follow-up emails. | Prospects (cold outbound) |
-| `gtm-engine` | Your **outbound machine**. Pulls leads from Apollo, writes cold-email copy in bulk, and pushes them into Instantly. | Prospects (cold outbound) |
+1. Pick one narrow wedge.
+2. Send signal-first cold email.
+3. Use a hosted brief as proof of quality and tracked engagement.
+4. When a prospect replies, run a custom report on their actual competitors.
+5. Sell a small paid pilot.
+6. Convert useful pilots into monthly retainers.
 
-Put another way:
+Do not pitch "AI competitive intelligence" as an abstract service. Pitch the outcome:
 
-- **`gtm-engine` fills the pipeline.**
-- **`brief-app` converts the pipeline.**
-- **`intelligence-engine` is what the clients actually buy.**
+> Your competitors move every week. We make sure your sales team knows before they walk into a call blind.
 
----
+## What To Focus On Right Now
 
-## 2. The three flows you will actually run
+Default wedge: **sales tech / RevOps / revenue enablement**.
 
-You only ever run three workflows. Learn these and you're done.
+Why:
 
-### Flow A — Generate and deploy a vertical sample brief (for cold outbound)
+- The buyer is already VP Sales, CRO, VP Revenue, Head of Sales Enablement, or Product Marketing.
+- The pain is easy to explain: reps get compared against visible competitors constantly.
+- The demo ecosystem already fits sales tech: Outreach, Salesloft, Apollo, Gong, Clari.
 
-**When to run it:** Whenever you start a new vertical (e.g. Cybersecurity, Sales Tech, HR Tech) or refresh a live one.
+Cybersecurity is also viable if you are intentionally running a CrowdStrike vs SentinelOne campaign, but do not mix a cybersecurity brief with a sales-tech ICP. Every campaign must align:
 
-**What it does:** Collects real-world signals about two named competitors, asks Claude to write an editorial competitive brief, renders it as a polished HTML page, and deploys it to your live domain. The finished page is the "proof of quality" asset you link to in cold emails.
+- target buyer
+- target vertical
+- named competitors
+- hosted brief
+- email copy
 
-**Commands (in order):**
+If those five do not match, pause before sending.
+
+## The Three Apps
+
+| App | Job | Used For |
+| --- | --- | --- |
+| `gtm-engine` | Pulls leads, enriches them, writes cold emails, pushes to Instantly or exports CSV | Finding prospects |
+| `brief-app` | Hosts public vertical sample briefs and tracks signed opens | Proof artifact and engagement signal |
+| `intelligence-engine` | Generates the weekly paid client report | Client delivery |
+| `admin-dashboard` | Local-only control panel for allowed scripts across the three apps | Operator convenience |
+
+Simple mental model:
+
+- `gtm-engine` fills the pipeline.
+- `brief-app` proves quality.
+- `intelligence-engine` is what clients buy.
+- `admin-dashboard` is optional; it makes local operations easier but is not part of the client-facing product.
+
+## The Offer
+
+Lead with:
+
+> A weekly competitive intelligence briefing for sales leaders. We track competitor launches, pricing changes, G2 review trends, hiring signals, funding moves, website changes, SEC filings, Reddit/HN chatter, and sitemap diffs, then turn it into a Monday briefing your reps can use in call prep and objection handling.
+
+The paid product is not news monitoring. It is sales enablement powered by competitive intelligence.
+
+Every paid weekly report should include:
+
+- Monday Action Plan
+- Objection Handling
+- Account Targeting Angles
+- Sales Play
+- Enablement Update
+- What Changed Since Last Week
+- 30-Day Momentum once enough history exists
+- source-backed competitor activity
+
+## Pricing
+
+| Tier | Setup Fee | Monthly | Best Fit |
+| --- | ---: | ---: | --- |
+| Starter | $1,000 | $800 | 2 competitors, weekly email only |
+| Standard | $2,000 | $1,500 | 3 competitors, weekly briefing, monthly digest |
+| Growth | $2,500 | $2,500 | 6 competitors, Slack delivery, alerts, dashboard |
+| Strategic | $3,500 | $4,000 | 10 competitors, monthly strategy call, quarterly summary |
+
+Default pitch: anchor on **Growth at $2,500/month**, but offer Starter when the buyer has budget friction.
+
+Use the paid pilot before asking for a full retainer:
+
+> I will monitor your top 3 competitors for 2 weeks and send two Monday battle briefings: what changed, what objections reps should expect, and what to say in live deals. The pilot is $750, credited toward the first month if you keep it weekly.
+
+Pilot rules:
+
+- 2 weeks
+- 3 named competitors
+- 2 Monday reports
+- weekly briefing only
+- manual QA before delivery
+- no dashboard
+- no Slack Connect unless needed to close
+- no unlimited free reports
+
+Free reports prove quality. Paid pilots prove buying intent.
+
+## Client Acquisition Motion
+
+### Step 1: Build the wedge
+
+Pick one vertical and two competitors for the hosted proof brief.
+
+Recommended first wedge:
+
+- vertical: sales tech / RevOps
+- buyers: VP Sales, CRO, VP Revenue, Head of Sales Enablement, VP Product Marketing
+- company size: 50-300 employees first, then 201-500 once the message works
+- examples: sales engagement, revenue intelligence, conversation intelligence, enablement, GTM tooling
+
+### Step 2: Generate a fresh vertical brief
+
+From `intelligence-engine`:
 
 ```powershell
-# 1. Collect live signals for the two competitors.
-#    Claude auto-looks-up their website, G2 slug, and SEC ticker.
-#    First run per vendor takes ~60s; repeat runs are instant (cached).
 cd C:\MightX\intelligence-engine
-node scripts/collect-for-brief.js "Cybersecurity" "CrowdStrike" "SentinelOne"
+npm run collect-for-brief -- "Sales Tech" "Outreach" "Salesloft"
+```
 
-# 2. Turn those signals into a polished HTML brief.
+From `brief-app`:
+
+```powershell
 cd C:\MightX\brief-app
-npm run generate-html-brief -- "Cybersecurity" "CrowdStrike" "SentinelOne"
-
-# 3. Deploy to your live domain.
+npm run generate-html-brief -- "Sales Tech" "Outreach" "Salesloft"
 npm run deploy:vercel
 ```
 
-**Where the brief ends up:**
+For the current cybersecurity example:
 
-- Local file: `brief-app/public/cybersecurity-brief.html`
-- Live URL: `https://intel.nextbuildtech.com/cybersecurity-brief.html?id=<CompanyName>`
+```powershell
+cd C:\MightX\intelligence-engine
+npm run collect-for-brief -- "Cybersecurity" "CrowdStrike" "SentinelOne"
 
-If the vertical name has a hyphen (like `E-Learning`), the generator writes **two copies** of the file — one with the hyphen (`e-learning-brief.html`) and one without (`elearning-brief.html`) — so both URL styles resolve. This keeps older cold emails in Instantly working when the URL style shifts.
+cd C:\MightX\brief-app
+npm run generate-html-brief -- "Cybersecurity" "CrowdStrike" "SentinelOne"
+npm run deploy:vercel
+```
 
-### Flow B — Bulk cold-email generation (fill the top of the funnel)
+Production brief URL shape:
 
-**When to run it:** When you want to send 500 cold emails to a fresh batch of Apollo leads.
+```txt
+https://intel.nextbuildtech.com/<vertical>-brief.html?id=<CompanyName>
+```
 
-**What it does:** Pulls leads → enriches them → asks **Claude Sonnet** to write one short cold-email body per lead (cheap, fast, at scale) → pushes them to Instantly (or exports a CSV).
+Tracked links generated by `gtm-engine` include a signed `trk` token:
 
-**Command:**
+```txt
+https://intel.nextbuildtech.com/<vertical>-brief.html?id=<leadId>&trk=<signedToken>
+```
+
+### Step 3: Send the first email
+
+Best current deliverability posture: **do not put the brief link in email 1 unless you are deliberately testing link-first outreach.**
+
+Use email 1 to lead with one dated signal and a low-friction ask.
+
+Example:
+
+```txt
+Subject: Outreach vs Salesloft
+
+Saw one thing your reps may care about: Salesloft just shifted its messaging around [specific dated signal].
+
+My background is in engineering secure, enterprise-grade systems for tier-1 financial institutions, and I recently built a competitive intelligence engine for SaaS revenue teams.
+
+I am running a baseline on Outreach vs Salesloft this week to pull rep-ready talk tracks from live signals.
+
+Worth sending you the Monday version if it is useful?
+```
+
+Then use step 2 or a manual reply to deliver the tracked brief link.
+
+If you do use the current delivery-assuming CTA in the first touch, spot-check deliverability carefully and keep volume low.
+
+### Step 4: Use the brief as proof, not the product
+
+The hosted brief is for:
+
+- proof of quality
+- tracking engagement
+- giving the buyer something concrete to inspect
+- follow-up prioritization
+
+It is not a substitute for a custom report once the buyer replies.
+
+Tracked opens are useful, but they are not validation by themselves. Stronger signals:
+
+- reply asking for their competitor set
+- repeat opens from the same account
+- request for a custom run
+- discovery call booked
+- willingness to pay for a pilot
+
+### Step 5: Run a custom report for serious prospects
+
+If they reply with interest:
+
+1. Create a prospect config in `intelligence-engine/config/clients/prospect-<slug>.json`.
+2. Add their 2-4 actual competitors.
+3. Run the report without email.
+4. Review the HTML manually.
+5. Send it by the promised date.
+6. Ask: "Would something like this be useful for your team every Monday?"
+
+Command:
+
+```powershell
+cd C:\MightX\intelligence-engine
+node scripts/run-client.js prospect-<slug> --no-email
+```
+
+Manual QA is expected. If the report reads generic, rerun or tune the config before sending.
+
+### Step 6: Discovery call
+
+Goal: confirm pain, not pitch software.
+
+Ask:
+
+1. When a competitor announces something, how does your team find out?
+2. Have reps been caught off guard by a competitor on a call recently?
+3. Does anyone own competitive tracking consistently, or is it ad hoc?
+4. If you knew every Monday what your top competitors did last week, how would that change prep?
+
+Yes to question 2 and no to question 3 usually means buyer.
+
+### Step 7: Paid pilot
+
+If there is real interest, offer the pilot the same day.
+
+Use:
+
+> Rather than asking you to commit to the full retainer now, let's run a 2-week pilot. You get two Monday battle briefings on your actual competitors. If your team would not use it, we stop there.
+
+After the second pilot report, ask:
+
+> Was this useful enough to keep weekly?
+
+## Cold Email Rules
+
+Must-have:
+
+- one real, verifiable opener
+- no invented company facts
+- one specific competitor signal
+- plain text
+- under 140 words for bulk
+- no generic "AI" lead
+- no "quick question" subject
+- no attachments
+- no images
+- no URL shorteners
+- no primary-domain cold sending
+
+Recommended sequence:
+
+1. Email 1: signal-first, no link.
+2. Email 2: brief link if no reply.
+3. Email 3: one concrete implication for their reps.
+4. Manual reply: custom run offer.
+
+If using the bulk prompt, set these in `gtm-engine/.env` before generating copy:
+
+```txt
+GTM_BRIEF_CTA_BASE_URL=https://intel.nextbuildtech.com
+GTM_BRIEF_HTML_FILENAME=<vertical>-brief.html
+GTM_REPORT_COMPETITOR_A=<Competitor A exactly as in brief>
+GTM_REPORT_COMPETITOR_B=<Competitor B exactly as in brief>
+TRACKING_SIGNING_SECRET=<same secret as brief-app>
+```
+
+The generated email body must preserve:
+
+```txt
+{{trackingUrl}}
+```
+
+`scripts/4-push-instantly.js` replaces it with a signed per-lead URL.
+
+## Running The GTM Pipeline
+
+From `gtm-engine`:
 
 ```powershell
 cd C:\MightX\gtm-engine
-# The exact step-by-step commands live in gtm-engine/README.md.
-# Typical order: 1-pull-leads.js → 2-enrich-leads.js → 3-generate-copy.js → 4-push-instantly.js
+npm install
+npm run pull-leads
+npm run enrich
+npm run generate-copy
 ```
 
-**Why this is a separate tool from Flow C:** This runs over hundreds or thousands of leads. You pay for it per row, so it uses the cheaper **Sonnet** model and a shorter template. The cold-email body always references the vertical sample brief from Flow A.
+Review `gtm-engine/data/copy-*.json` before sending.
 
-### Flow C — One-off personalised email to a specific prospect (ABM / reply)
+If Instantly API is available:
 
-**When to run it:** A prospect replied to a cold email. Or a VP-of-Sales at a target account just showed up in Sales Navigator and you want one custom outreach to them specifically.
+```powershell
+npm run push-instantly
+```
 
-**What it does:** Reads the brief JSON from Flow A, picks the sharpest signal about the specific competitor the prospect fears, and asks **Claude Opus** to write **three** hand-crafted email variants (pattern-interrupt, helpful-frame, peer-reference). You pick the best one and paste it in.
+If Instantly API is not available:
 
-**Command:**
+```powershell
+npm run export-copy-csv
+```
+
+Upload the CSV to Instantly and map:
+
+- `email`
+- `first_name`
+- `last_name`
+- `company_name`
+- `ai_subject`
+- `ai_body`
+- `title`
+
+Batch examples:
+
+```powershell
+npm run pull-leads -- --max-leads 500
+npm run generate-copy -- --first 50
+npm run generate-copy -- --file data/processed-companyindustry-e-learning-equals-batch.json
+npm run push-instantly -- --first 50
+npm run export-copy-csv -- --first 500 --out data/batch-1.csv
+```
+
+## One-Off ABM Email
+
+Use this when a prospect replies or when you want one high-quality hand-written email for a named account.
+
+From `brief-app`:
 
 ```powershell
 cd C:\MightX\brief-app
@@ -86,113 +342,488 @@ npm run generate-cold-email -- `
   --industry "Cybersecurity" `
   --prospect-name "Jane Smith" `
   --prospect-company "Acme Corp" `
+  --prospect-role "VP Sales" `
   --competitor "CrowdStrike"
 ```
 
-Output lands in `brief-app/data/cold-emails/cybersecurity--acme-corp.md` (gitignored) and also prints to the terminal.
+This reads `public/<industry>-brief.json`, picks the strongest matching signal, and writes three variants to `brief-app/data/cold-emails/`.
 
-**The easy rule of thumb:**
+## Optional Admin Dashboard
 
-| How many emails? | Which flow? | Which Claude model? |
-|---|---|---|
-| Hundreds, bulk outbound | Flow B (`gtm-engine`) | Sonnet 4 |
-| One-off to a specific person | Flow C (`brief-app/generate-cold-email`) | Opus 4.7 |
+The `admin-dashboard` app is a local-only Next.js control plane. Use it when you want buttons for the same scripts instead of typing commands.
 
-### Flow D — Run the weekly client deliverable
+Run it locally:
 
-**When to run it:** Every Monday (but **n8n already runs it automatically** — you only do this by hand when onboarding, testing, or debugging).
+```powershell
+cd C:\MightX\admin-dashboard
+npm install
+npm run dev
+```
 
-**What it does:** For each configured client, collects their competitors' signals, scores how "loud" the week was, picks the right artifact (weekly briefing on normal weeks, single-topic deep-dive on silent weeks), generates the HTML report, validates it, and emails it.
+Open:
 
-**Commands:**
+```txt
+http://localhost:3000
+```
+
+Useful pages:
+
+- `/briefs`: collect signals, generate vertical HTML briefs, deploy, generate one-off cold emails
+- `/gtm`: set vertical brief env, generate copy, push to Instantly, inspect output
+- `/intelligence`: run client reports and collect-for-brief workflows
+
+Security model:
+
+- only allowlisted npm scripts can run
+- arguments are validated before execution
+- script execution is local-only and disabled in Vercel/serverless
+- `DASHBOARD_SCRIPT_SECRET` protects `POST /api/run-script` when configured
+
+The dashboard is operator convenience. The root playbook and package scripts remain the source of truth.
+
+## Client Delivery
+
+Onboard a client:
 
 ```powershell
 cd C:\MightX\intelligence-engine
-npm run onboard                     # First time only — add a new client
-node scripts/run-client.js <id>     # Run the full pipeline for one client
-npm run all-clients                 # Run all active clients (same as n8n cron)
+npm run onboard
 ```
 
-The pipeline self-validates before sending. If the report is too thin or contains an unfilled placeholder, it **blocks the send**, keeps the HTML on disk, and (if configured) pings you on Slack.
+Run without sending:
 
----
+```powershell
+node scripts/run-client.js <client-id> --no-email
+```
 
-## 3. The three URLs you need to remember
+Run and send:
 
-| URL | What it is | When it matters |
-|---|---|---|
-| `https://intel.nextbuildtech.com/<vertical>-brief.html?id=<Company>` | The **static vertical sample** for cold outbound. This is the URL Instantly links to. | Every cold email body |
-| `https://intel.nextbuildtech.com/brief?id=<LeadId>&trk=<SignedToken>` | The **dynamic per-lead page** with signed open-tracking. Sends a Slack alert the moment a prospect opens it. | Instantly campaigns that use tracked CTAs (see `gtm-engine/docs/VERTICAL-BRIEF-AND-EMAIL.md`) |
-| `https://might-x.vercel.app` | The **raw Vercel project URL**. Same content as `intel.nextbuildtech.com` — just the fallback host. | Only when the custom domain is down |
+```powershell
+node scripts/run-client.js <client-id>
+```
 
-All three point to the same Vercel project. `intel.nextbuildtech.com` is the production domain you want in client-facing copy.
+Run all active clients:
 
----
+```powershell
+npm run all-clients
+```
 
-## 4. Environment variables (the short list)
+Validate latest report:
 
-Defaults live in each package's `.env.example`. Copy it to `.env.local` (for `brief-app`) or `.env` (for the others) and fill in your keys. **Never commit the filled-in file.**
+```powershell
+npm run validate <client-id>
+```
 
-The ones you will actually touch:
+Generate dashboard:
 
-| Variable | Where | What it does |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | all three packages | Required for any Claude call (report writer, brief, cold email, vendor resolver). |
-| `BRIEF_URL_BASE` | `brief-app/.env.local` | Production URL the cold-email generator builds links from. Defaults to `https://intel.nextbuildtech.com`. |
-| `BRIEF_AUTHOR_NAME` + `TITLE` / `CREDENTIAL` / `LINKEDIN` / `AVATAR_URL` | `brief-app/.env.local` | Enables the **founder byline** on the vertical brief (trust boost). Leave `BRIEF_AUTHOR_NAME` blank to hide the whole block. |
-| `TRACKING_SIGNING_SECRET` | `gtm-engine/.env` **and** `brief-app/.env.local` | Must match exactly. Signs the `trk` token in tracked brief links. |
-| `SLACK_WEBHOOK_URL` | `brief-app/.env.local` | Where open-tracking alerts are posted. |
-| `BRIEF_STRICT_VALIDATION` | `brief-app/.env.local` | `1` / `true` makes the vertical-brief generator fail fast when quality gates fail (talk-track quota, unlinked sources, placeholder leaks in fully-worked entries). Default warn-only. Turn on for production brief runs. |
-| `REPORT_MODEL` / `ANALYSIS_MODEL` / `QUARTERLY_SUMMARY_MODEL` | `intelligence-engine/.env` | Override the Claude model (default is `claude-opus-4-7`). |
-| Email delivery (`EMAIL_DRIVER` + Resend or SMTP keys) | `intelligence-engine/.env` | Required for the weekly Monday email to actually send. |
+```powershell
+node scripts/generate-dashboard.js <client-id>
+```
 
-The full lists — including every tuning knob for each collector — are in:
+Generate quarterly summary:
 
-- `gtm-engine/.env.example`
-- `brief-app/.env.example`
-- `intelligence-engine/.env.example`
+```powershell
+node scripts/generate-quarterly-summary.js <client-id>
+```
 
----
+## Report Quality Gates
 
-## 5. Glossary (terms that may confuse you)
+Before sending any prospect or client report, check:
 
-- **Vertical sample** — the static HTML page at `intel.nextbuildtech.com/<vertical>-brief.html`. Public. Used as proof-of-quality in cold emails.
-- **Weekly briefing** — the HTML email the paying client receives every Monday. Private. Generated by `intelligence-engine`.
-- **Deep-dive** — the silent-week replacement for the weekly briefing. A single-topic analytical memo (positioning teardown, pricing forensics, etc.). Rotates through 5 topics per client.
-- **Signal** — a single dated observation about a competitor (a news article, a job post, a G2 review, a sitemap change). The raw material every artifact is built from.
-- **Collector** — a small script that pulls one type of signal (news-monitor, jobs-monitor, sitemap-monitor, etc.). Nine of them run in parallel.
-- **Signal richness** — a numeric score (`silent` / `normal` / `rich`) that decides whether this week ships a weekly briefing or a deep-dive.
-- **Trigger event** — a single high-importance signal that gets surfaced at the very top of the weekly briefing (e.g. "competitor hit 52-week stock low").
-- **`id=` parameter** — appended to every brief URL. It's the prospect's company name, URL-encoded (e.g. `?id=Salesoft`). Drives the "Prepared for Salesoft" header inside the brief.
-- **`trk=` parameter** — appended to the dynamic `/brief` URL only. A signed, short-lived token that authorises open tracking. Unsigned or tampered tokens are ignored.
+- findings are specific, not generic AI filler
+- at least one item a VP Sales would forward internally
+- sources are dated and defensible
+- competitor names are correct
+- no obvious false positives
+- Monday Action Plan is concrete
+- Objection Handling is rep-ready
+- Account Targeting Angles are useful
+- no unfilled placeholders
+- report is not thin on a quiet week
 
----
+The pipeline has automatic validation.
 
-## 6. When something breaks — first-check table
+Weekly report blocks delivery if:
 
-| Symptom | First thing to check |
-|---|---|
-| I generated a brief and the link in my email shows old content | You deployed, but Vercel is caching the old version. Hard-refresh the browser. If still stale, run `npm run deploy:vercel` again — the script verifies the new content after deploy. |
-| `collect-for-brief` says "ANTHROPIC_API_KEY not set" | `intelligence-engine/.env` is missing or the key isn't named exactly `ANTHROPIC_API_KEY`. |
-| Cold email variants all reference an empty brief | You ran `generate-cold-email` before running `generate-html-brief`. The `public/<slug>-brief.json` file doesn't exist yet. Do Flow A first. |
-| Slack never pings me when a prospect opens the brief | `TRACKING_SIGNING_SECRET` does not match across `gtm-engine` and `brief-app`. The proxy silently drops unsigned opens (by design). |
-| Monday client email didn't send | Check `intelligence-engine/data/<client>/reports/<timestamp>/validation-*.json`. The validation gate probably blocked it. Also check `OPS_SLACK_WEBHOOK_URL`. |
-| Weekly briefing is "too thin" | Signal richness was low that week → the pipeline should have shipped a deep-dive instead. If it shipped a thin weekly, check `signal-richness.js` thresholds in the client config. |
-| Live domain `intel.nextbuildtech.com` is 404-ing | DNS. The domain is a custom alias on the `might-x` Vercel project. Check Vercel → project → Domains. `might-x.vercel.app` should still work. |
+- `weekSummary` is too short
+- zero competitors have findings
+- final HTML is too short
+- placeholders remain
+- 50% or more of signals failed fact checks
 
----
+Deep-dive blocks delivery if:
 
-## 7. Deeper docs (reach for these second)
+- headline question is too short
+- executive answer is too short
+- fewer than 2 usable sections exist
+- HTML is too short
+- placeholders remain
+- 50% or more of signals failed fact checks
 
-Once you know the above, each of the other docs has a narrow job:
+If validation blocks:
 
-- `MASTER-RUNBOOK.md` — technical runbook: every CLI command, every env var, troubleshooting for engineers.
-- `intelligence-engine/BUSINESS-OPERATIONS.md` — strategy, pricing, ICP, projections, retention narrative. **Read once.**
-- `intelligence-engine/START-HERE.md` — day-1 onboarding playbook for adding a new client.
-- `intelligence-engine/docs/CLIENT-SLACK-CONNECT-PLAYBOOK.md` — the Slack Connect cadence you post each Monday.
-- `brief-app/README.md` — Vercel deploy mechanics + tracking behaviour.
-- `gtm-engine/README.md` — Apollo → Instantly pipeline commands.
-- `gtm-engine/docs/VERTICAL-BRIEF-AND-EMAIL.md` — how the bulk cold-email copy references the vertical brief.
-- `admin-dashboard/README.md` — optional internal RevOps dashboard (dark UI + allowlisted `npm run` via server actions). Run locally only; does not deploy to production serverless.
+```powershell
+cd C:\MightX\intelligence-engine
+npm run validate <client-id>
+node scripts/run-client.js <client-id> --no-email
+```
 
-If anything in those docs contradicts this README, **this README wins** — the others are technical appendices and may lag behind when scripts change.
+Review the HTML before sending manually.
+
+## Brief Quality Gates
+
+The public vertical brief is the most scrutinized surface in the funnel.
+
+Before sending traffic to it:
+
+- it must be generated from live signals, not sample mode
+- `BRIEF_STRICT_VALIDATION=1` should be on for production runs
+- at least 3 talk tracks must be fully worked examples
+- at least 2 talk tracks can be templates
+- every factual source must have a URL
+- no single signal should be repeated everywhere
+- pricing section should not look empty
+- named analyst byline should be enabled
+- CTA should live in the email, not distract from the brief
+
+If the generator fails strict validation, rerun until it passes before launching a campaign.
+
+## Silent Weeks
+
+Quiet weeks should not produce a thin "nothing happened" email.
+
+The intelligence engine scores signal richness:
+
+- `rich`: strong trigger event or high score
+- `normal`: enough useful signal for weekly briefing
+- `silent`: low score and no trigger event
+
+On silent weeks, the system should send a deep-dive artifact instead of a thin weekly report.
+
+Deep-dive topics include:
+
+- positioning teardown
+- pricing forensics
+- hiring signals
+- scenario essay
+- meta-analysis
+
+This protects retention because clients still receive useful analysis when the news cycle is quiet.
+
+## Client Onboarding Checklist
+
+For each new client:
+
+1. Confirm buyer, company, tier, billing, and contact email.
+2. Add 3-10 competitors.
+3. Add website, G2 slug, SEC ticker/CIK if relevant.
+4. Add client product description and ICP.
+5. Add known strengths and weaknesses.
+6. Run first report with `--no-email`.
+7. Review the HTML manually.
+8. Fix config issues.
+9. Run final delivery.
+10. Confirm the client received the report.
+11. Create Slack Connect if Growth or Strategic.
+
+Growth tier acceptance checklist:
+
+- full run completes with no fatal errors
+- dashboard exists if `includeDashboard` is true
+- coverage and data gaps are honest
+- at least one sharp forwardable insight exists
+- assets match the pitch
+- you can explain what was monitored and what was blocked
+
+## Slack Connect Retention
+
+For Growth and Strategic clients, create a shared Slack channel named:
+
+```txt
+client-<slug>
+```
+
+Pin this expectation:
+
+> This is your direct line to your competitive intelligence analyst. Monday briefing summaries go here, plus ad-hoc requests like "dig deeper on Competitor X", "ignore topic Y", or "add Competitor Z".
+
+Monday post template:
+
+```txt
+Your week in 30 seconds, <Client Name>:
+
+Top alert: <headline or no urgent triggers>
+
+What changed since last week: <2-3 bullets>
+
+Sales play for this week: <one sentence>
+
+Full report: <link or attached HTML>
+
+Reply in-thread with anything you want me to dig into before next Monday.
+```
+
+Retention signals:
+
+- silence for 3+ weeks means renewal risk
+- "add competitor" means expansion signal
+- long threads mean the report is becoming workflow
+- forwarding to more teammates means multi-seat or portal readiness
+
+## Weekly Operating Rhythm
+
+Monday:
+
+- confirm client jobs ran
+- review validation blocks
+- post Slack Connect summaries
+- send personal trigger-event notes
+
+Tuesday:
+
+- publish one anonymized LinkedIn insight
+- follow up on trigger events
+
+Wednesday:
+
+- run one outbound batch
+- review copy before send
+- monitor reply alerts
+
+Thursday:
+
+- discovery calls
+- proposal follow-ups
+
+Friday:
+
+- onboard signed clients
+- review pipeline
+- clear Slack Connect threads
+- update at-risk notes
+
+At 4 clients, expect roughly 4-6 hours per week. At 8 clients, expect roughly 6-10 hours per week.
+
+## Retention Mechanics
+
+Clients stay when the report becomes part of their Monday operating rhythm.
+
+Use:
+
+- Slack Connect for visibility
+- trigger-event personal notes
+- dashboard for Growth and Strategic clients
+- quarterly impact summaries
+- win story tracking
+- annual contracts with 10-15% discount
+
+When a client tells you the report helped a deal, log it in their config:
+
+```json
+"retention": {
+  "winStories": [
+    "March 2026: pricing alert helped close an $85k deal"
+  ]
+}
+```
+
+One documented win can justify years of subscription cost.
+
+## Revenue Model
+
+Conservative expectation:
+
+- first paying client around month 2-3
+- 7 active retainer clients by month 18
+- roughly $12.6k forward MRR by month 18
+- roughly $133k cumulative revenue over 18 months
+
+Active execution expectation:
+
+- 1 new client per month once motion works
+- referrals start around month 4-8
+- blended retainer approaches $2k/month
+- roughly $36k forward MRR by month 18
+
+Assumptions:
+
+- close rate around 15% from qualified cold-outbound opportunities
+- sales cycle 30-45 days
+- blended retainer around $1.8k-$2k/month
+- churn exists, especially months 2-4
+- annual contracts reduce churn
+
+Costs:
+
+- Apollo for outbound
+- Instantly for outbound
+- domains and hosting
+- Anthropic usage
+- Resend or SMTP for delivery
+- premium scraping APIs only after first paying client
+
+Do not buy Proxycurl, BrightData, Exa, or other premium APIs before the first paying client. The free collectors are enough to validate.
+
+## Environment Variables
+
+Common:
+
+```txt
+ANTHROPIC_API_KEY=
+```
+
+`gtm-engine/.env`:
+
+```txt
+APOLLO_API_KEY=
+INSTANTLY_API_KEY=
+INSTANTLY_CAMPAIGN_ID=
+GTM_BRIEF_CTA_BASE_URL=https://intel.nextbuildtech.com
+GTM_BRIEF_HTML_FILENAME=<vertical>-brief.html
+GTM_REPORT_COMPETITOR_A=
+GTM_REPORT_COMPETITOR_B=
+TRACKING_SIGNING_SECRET=
+N8N_WEBHOOK_URL=
+SLACK_WEBHOOK_URL=
+```
+
+`brief-app/.env.local`:
+
+```txt
+SLACK_WEBHOOK_URL=
+TRACKING_SIGNING_SECRET=
+ANTHROPIC_API_KEY=
+BRIEF_STRICT_VALIDATION=1
+BRIEF_AUTHOR_NAME=
+BRIEF_AUTHOR_TITLE=
+BRIEF_AUTHOR_CREDENTIAL=
+BRIEF_AUTHOR_LINKEDIN=
+BRIEF_AUTHOR_AVATAR_URL=
+```
+
+`intelligence-engine/.env`:
+
+```txt
+ANTHROPIC_API_KEY=
+EMAIL_DRIVER=resend
+RESEND_API_KEY=
+EMAIL_FROM=
+EMAIL_FROM_NAME=
+EMAIL_REPLY_TO=
+OPS_SLACK_WEBHOOK_URL=
+SEC_EDGAR_USER_AGENT=
+REDDIT_USER_AGENT=
+APIFY_API_TOKEN=
+```
+
+Email delivery can use Resend or SMTP. Resend is preferred once you have more clients or need cleaner operational delivery.
+
+## Data Sources
+
+Default/free collectors:
+
+- website monitor
+- Google News RSS
+- G2 public pages
+- jobs monitor
+- Wayback pricing archive
+- pricing buyer-chatter mining
+- sitemap diff
+- Hacker News
+- Reddit
+- SEC EDGAR 8-K for public companies when configured
+
+Optional/premium collectors:
+
+- LinkedIn
+- Glassdoor
+- GitHub
+- Crunchbase
+- richer full-text scraping via Apify or similar providers
+
+Be honest in sales copy. Do not claim full LinkedIn API enrichment unless that premium collector is actually enabled.
+
+## Troubleshooting
+
+| Problem | First Check |
+| --- | --- |
+| No Slack open alerts | `TRACKING_SIGNING_SECRET` must match in `gtm-engine` and `brief-app` |
+| Brief link 404s | `GTM_BRIEF_HTML_FILENAME` must match a deployed file |
+| Email names wrong competitors | Set `GTM_REPORT_COMPETITOR_A/B` to match the brief |
+| Brief is in sample mode | Run `collect-for-brief` before `generate-html-brief` |
+| Strict brief generation failed | Rerun generator until quality gates pass |
+| Instantly API fails | Use `npm run export-copy-csv` and upload manually |
+| Report blocked | Run `npm run validate <client-id>` |
+| Weekly report too thin | Confirm silent-week deep-dive selection |
+| Resend fails | Verify `EMAIL_FROM` domain in Resend |
+| SEC collector skipped | Add `secTicker` or `secCik` and `SEC_EDGAR_USER_AGENT` |
+| Reddit blocked | Set a descriptive `REDDIT_USER_AGENT` |
+| First sitemap diff empty | Expected on first snapshot |
+
+## The 30-Day Plan
+
+Week 1:
+
+- pick one wedge
+- regenerate one fresh strict-validated vertical brief
+- deploy `brief-app`
+- verify tracking health
+- generate Gold Standard demo report
+- set up domains, SPF, DKIM, DMARC
+
+Week 2:
+
+- build 30-account validation list
+- identify 2-3 competitors for each account
+- write/send low-volume signal-first outreach
+- do not scale until replies indicate the message works
+
+Week 3:
+
+- deliver custom reports to interested prospects
+- book discovery calls
+- offer paid pilot
+
+Week 4:
+
+- close 1 paid or discounted pilot
+- fulfill first Monday report
+- collect feedback
+- tighten ICP and copy
+
+Validation goal:
+
+- 2 buyers who move past polite interest
+- 1 discovery call
+- 1 paid or discounted pilot
+
+If you hit that, keep going. If you get opens but no replies, adjust copy or wedge. If people like the report but will not pay for a pilot, reposition the offer.
+
+## File Map
+
+The repo should be understood through code and this playbook:
+
+```txt
+C:\MightX
+├── README.md                         # this playbook
+├── admin-dashboard                    # optional local control plane
+├── gtm-engine                        # outbound pipeline
+│   ├── config\icp.json
+│   ├── prompts\personalization.txt
+│   └── scripts
+├── brief-app                         # hosted sample briefs and tracking
+│   ├── public
+│   ├── proxy.ts
+│   ├── app\brief\page.tsx
+│   └── scripts\generate-html-brief.js
+└── intelligence-engine               # paid client delivery
+    ├── config\clients
+    ├── prompts
+    ├── templates
+    ├── scripts\run-client.js
+    ├── scripts\generate-report.js
+    ├── scripts\validate-report.js
+    └── scripts\collectors
+```
+
+Policy: this `README.md` is the operating source of truth. Keep future strategy changes here instead of creating new playbook docs.

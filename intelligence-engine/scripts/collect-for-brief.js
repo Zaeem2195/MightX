@@ -15,6 +15,7 @@
  *   - g2-monitor               (G2 public search + listing pages)
  *   - jobs-monitor             (careers pages)
  *   - pricing-archive-monitor  (Wayback Machine)
+ *   - pricing-signals-monitor  (Reddit/HN $-figure mining + enterprise URL probes; fallback when /pricing is hidden)
  *   - sitemap-monitor          (sitemap.xml diff vs prior run)
  *   - hackernews-monitor       (Algolia HN search API)
  *   - reddit-monitor           (Reddit public JSON search)
@@ -70,6 +71,7 @@ import { collectNews }            from './collectors/news-monitor.js';
 import { collectG2 }              from './collectors/g2-monitor.js';
 import { collectJobs }            from './collectors/jobs-monitor.js';
 import { collectPricingArchive }  from './collectors/pricing-archive-monitor.js';
+import { collectPricingSignals }  from './collectors/pricing-signals-monitor.js';
 import { collectSECFilings }      from './collectors/sec-filings-monitor.js';
 import { collectReddit }          from './collectors/reddit-monitor.js';
 import { collectHackerNews }      from './collectors/hackernews-monitor.js';
@@ -319,6 +321,7 @@ async function collectForCompetitor(competitor) {
     safe('website',         collectWebsite(BRIEF_CLIENT_ID, competitor)),
     safe('news',            collectNews(competitor)),
     safe('pricing-archive', collectPricingArchive(BRIEF_CLIENT_ID, competitor)),
+    safe('pricing-signals', collectPricingSignals(competitor)),
     safe('sitemap',         collectSitemap(BRIEF_CLIENT_ID, competitor)),
     safe('hackernews',      collectHackerNews(competitor)),
     safe('reddit',          collectReddit(competitor)),

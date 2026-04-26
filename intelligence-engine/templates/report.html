@@ -261,6 +261,82 @@
       letter-spacing: -0.005em;
     }
 
+    /* ─── Sales-action modules (the paid product surface) ───────────────── */
+    .action-grid,
+    .objection-list,
+    .targeting-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .action-card,
+    .objection-card,
+    .targeting-card {
+      border: 1px solid var(--hairline);
+      background: #fefcf5;
+      padding: 14px 16px;
+    }
+    .action-topline,
+    .objection-topline,
+    .targeting-topline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .priority-pill,
+    .owner-pill,
+    .confidence-pill {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid var(--rule);
+      color: var(--muted);
+      padding: 2px 7px;
+      white-space: nowrap;
+    }
+    .priority-pill {
+      color: var(--success);
+      border-color: rgba(15, 61, 46, 0.28);
+      background: var(--success-tint);
+    }
+    .action-title,
+    .objection-title,
+    .targeting-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    .action-why,
+    .action-asset,
+    .objection-response,
+    .objection-proof,
+    .targeting-why,
+    .targeting-angle,
+    .targeting-signal {
+      font-size: 13px;
+      color: #2d3138;
+      line-height: 1.6;
+      margin-top: 7px;
+    }
+    .action-asset,
+    .objection-proof,
+    .targeting-signal {
+      color: var(--muted);
+      font-style: italic;
+    }
+    .field-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--faint);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-style: normal;
+    }
+
     /* ─── Trigger emails (mono, draft-feel) ─────────────────────────────── */
     .email-block {
       border: 1px solid var(--hairline);
@@ -395,6 +471,11 @@
 
     <!-- Top Alert (only rendered if exists) -->
     {{TOP_ALERT_SECTION}}
+
+    <!-- Sales Action Modules -->
+    {{MONDAY_ACTION_PLAN_SECTION}}
+    {{OBJECTION_HANDLING_SECTION}}
+    {{ACCOUNT_TARGETING_SECTION}}
 
     <!-- Competitor Sections -->
     <div class="section">

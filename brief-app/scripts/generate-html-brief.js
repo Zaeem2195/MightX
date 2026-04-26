@@ -79,10 +79,15 @@ function parseCliInputs() {
   const positional = [];
   const flags = {};
 
+  const BOOLEAN_FLAGS = new Set(["rerender"]);
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a.startsWith("--")) {
       const key = a.slice(2);
+      if (BOOLEAN_FLAGS.has(key)) {
+        flags[key] = true;
+        continue;
+      }
       const val = argv[i + 1];
       if (val === undefined || val.startsWith("--")) {
         console.error(`Missing value for --${key}`);
@@ -133,6 +138,7 @@ Omit all three positional arguments to use defaults:
     signalsPath: flags.signals || null,
     ctaUrl: flags["cta-url"] || DEFAULT_CTA_URL,
     brandName: flags.brand || DEFAULT_BRAND_NAME,
+    rerender: !!flags.rerender,
   };
 }
 
@@ -275,18 +281,21 @@ ${signalsBlock}
       "competitor": string,
       "headline":   string,
       "date":       string | null,
-      "sourceType": string,                              // "news" | "pricing_archive" | "sec_filings" | "g2" | "jobs" | "website" | ...
+      "sourceType": string,                              // "news" | "pricing_archive" | "pricing_signals" | "sec_filings" | "g2" | "jobs" | "website" | "reddit" | "hackernews" | ...
       "sources":    [ { "url": string, "label": string, "date": string | null, "type": string } ]
     }
   ],
   "pricingIntelligence": {
-    "exists": boolean,                                   // true only if raw pricing_archive signals were provided
+    "exists": boolean,                                   // true if raw pricing_archive OR pricing_signals had any payload
+    "evidenceMode": "archive" | "buyer-chatter" | "mixed" | "none",  // "archive" = Wayback /pricing diffs; "buyer-chatter" = Reddit/HN $-figure mining + enterprise URL probes; "mixed" = both; "none" = vendor pricing is opaque
     "findings": [
       {
         "competitor": string,
-        "summary":    string,                            // e.g. "Docebo /pricing changed 4x in the last 90 days; last change removed explicit price tokens."
-        "priceChanges": string[],                        // short bullets of concrete diffs pulled from the signal text
-        "sources":    [ { "url": string, "label": string, "date": string | null, "type": string } ]
+        "summary":    string,                            // e.g. "Docebo /pricing changed 4x in the last 90 days; last change removed explicit price tokens." OR "CrowdStrike /pricing is hidden — buyer-public chatter shows $X-Y/endpoint quotes from MMM YYYY."
+        "priceChanges": string[],                        // short bullets of concrete diffs (archive) OR $-figures + structure phrases (buyer-chatter), each with its own provenance
+        "confidence": "High" | "Medium" | "Low",         // High only when archive-evidenced; buyer-chatter caps at Medium; single-source/older caps at Low
+        "changesIn90d": number | null,                   // pull the integer from the raw signal text when it appears literally as "(N content change(s) in Wayback)" or similar. Used to render an inline sparkline. Null when no count is given.
+        "sources":    [ { "url": string, "label": string, "date": string | null, "type": string } ]   // include reddit/hackernews/web.archive.org/pricing_archive URLs as appropriate
       }
     ]
   },
@@ -356,7 +365,12 @@ HARD REQUIREMENTS:
 - marketMoves, thisWeekSignals, pricingIntelligence.findings, secFilings.items, and triggerEvents.items each have at least one "sources" entry with a real URL.
 - When the raw signals contain URLs, those URLs MUST appear in the "sources" arrays.
 - No single underlying signal (same news article, same Reddit thread, same 8-K) may appear in more than 2 sections. Talk tracks should reference earlier sections instead of re-narrating.
-- If raw pricing_archive signals show no material change, pricingIntelligence.exists may still be true but findings[].priceChanges should plainly say "No material pricing-page changes detected in the archive window."
+- pricingIntelligence fallback rules — this section MUST NEVER appear empty if either pricing_archive OR pricing_signals provided usable data:
+  - If pricing_archive shows real diffs: evidenceMode="archive", confidence may be "High" when explicitly evidenced; cite the web.archive.org URLs.
+  - If pricing_archive is empty/uninformative BUT pricing_signals contains Reddit/HN posts with $-figures, pricing-structure phrases, or enterprise-URL archaeology: evidenceMode="buyer-chatter", confidence MUST cap at "Medium" (or "Low" for a single weakly-scored post). priceChanges bullets should quote the $-figure or structure phrase verbatim and name the source channel ("Reddit r/sysadmin, MMM YYYY: $X/endpoint quote"). Sources MUST be the actual reddit.com / news.ycombinator.com / web.archive.org URLs from the signal text.
+  - If both have data: evidenceMode="mixed", lead with archive findings then add buyer-chatter as corroboration.
+  - If both are empty: evidenceMode="none", exists=false, findings=[]. Do NOT fabricate a "no material changes" filler — say nothing in the brief and let the section render its empty state.
+- NEVER pull a $-figure that is not literally present in the raw pricing_signals text. NEVER cite a vendor's own /pricing page as a source for a buyer-chatter finding.
 - If raw sec_filings signals are not present, secFilings.exists = false and items = [].
 
 Return only the JSON.`;
@@ -537,36 +551,75 @@ function renderThisWeekSignals(list, a, b) {
       ${renderSources(s.sources)}
     </div>`;
   }).join("");
-  return `<section id="this-week">
+  return `<section id="this-week" data-section="signals">
+    <span class="section-numeral">I</span>
     <span class="section-label">Section 1</span>
     <h2>This Week's Signals</h2>
     <div class="signal-grid">${cards}</div>
   </section>`;
 }
 
+function renderSnapshotSparkline(n) {
+  const count = Number.isFinite(n) ? Math.max(0, Math.min(12, Math.floor(n))) : 0;
+  if (count === 0) return "";
+  const slots = 12;
+  const dots = Array.from({ length: slots }, (_, i) => {
+    const filled = i < count;
+    const cx = 6 + i * 14;
+    const r = filled ? 3.2 : 2;
+    const fill = filled ? "var(--accent)" : "transparent";
+    const stroke = filled ? "var(--accent)" : "var(--rule)";
+    return `<circle cx="${cx}" cy="10" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1"/>`;
+  }).join("");
+  return `<div class="snapshot-sparkline" aria-label="${count} archived pricing-page change${count === 1 ? "" : "s"} in the last 90 days">
+    <svg viewBox="0 0 178 20" width="178" height="20" role="img">${dots}</svg>
+    <span class="snapshot-sparkline-caption">${count} change${count === 1 ? "" : "s"} · 90d</span>
+  </div>`;
+}
+
 function renderPricingIntelligence(pi, a, b) {
   if (!pi || !pi.exists || !Array.isArray(pi.findings) || pi.findings.length === 0) {
-    return `<section id="pricing-intel">
+    return `<section id="pricing-intel" data-section="pricing">
+      <span class="section-numeral">II</span>
       <span class="section-label">Section 2</span>
       <h2>Pricing Intelligence</h2>
-      <p class="muted">No pricing-archive signals attached this run. Pricing intelligence requires the Wayback Machine collector from the intelligence-engine to have run against each competitor's /pricing and /plans pages.</p>
+      <p class="muted">Pricing-archive and buyer-chatter collectors both came back empty for this pair. Pricing intelligence requires either the Wayback Machine collector to find diffs on /pricing and /plans pages, or the buyer-chatter collector to find Reddit/HN posts with explicit $-figures.</p>
     </section>`;
   }
+
+  const mode = String(pi.evidenceMode || "archive").toLowerCase();
+  const badgeLabel =
+    mode === "buyer-chatter" ? "Buyer Chatter ($-mining)" :
+    mode === "mixed"         ? "Wayback + Buyer Chatter" :
+    mode === "none"          ? "Empty" :
+    "Wayback Machine";
+  const intro =
+    mode === "buyer-chatter"
+      ? "Vendor /pricing pages are gated behind \"contact sales\" — these findings are mined from Reddit and Hacker News posts that contain explicit $-figures or pricing-structure phrases. Confidence caps at Medium because these are buyer reports, not vendor disclosures."
+      : mode === "mixed"
+      ? "Pricing-page diffs from the archive, corroborated by buyer-channel chatter where prospects discussed actual quote ranges. Most prospects cannot replicate this with ChatGPT."
+      : "Pricing-page changes detected by diffing archived snapshots. Most prospects cannot replicate this with ChatGPT.";
+
   const cards = pi.findings.map((f) => {
     const bullets = Array.isArray(f.priceChanges) && f.priceChanges.length
       ? `<ul class="price-bullets">${f.priceChanges.map((b2) => `<li>${esc(b2)}</li>`).join("")}</ul>`
       : "";
-    return `<div class="insight-card">
+    const conf = f.confidence ? `<span class="confidence-pill">${esc(f.confidence)} confidence</span>` : "";
+    const sparkline = renderSnapshotSparkline(f.changesIn90d);
+    return `<div class="insight-card proprietary-card">
+      <span class="proprietary-mark" aria-hidden="true">PROPRIETARY SIGNAL</span>
       ${renderCompetitorTags([f.competitor], a, b)}
-      <h3>${esc(f.summary)}</h3>
+      <h3>${esc(f.summary)} ${conf}</h3>
+      ${sparkline}
       ${bullets}
       ${renderSources(f.sources)}
     </div>`;
   }).join("");
-  return `<section id="pricing-intel">
+  return `<section id="pricing-intel" data-section="pricing">
+    <span class="section-numeral">II</span>
     <span class="section-label">Section 2</span>
-    <h2>Pricing Intelligence <span class="badge-src">Wayback Machine</span></h2>
-    <p class="muted">Pricing-page changes detected by diffing archived snapshots. Most prospects cannot replicate this with ChatGPT.</p>
+    <h2>Pricing Intelligence <span class="badge-src">${esc(badgeLabel)}</span></h2>
+    <p class="muted">${esc(intro)}</p>
     ${cards}
   </section>`;
 }
@@ -603,7 +656,8 @@ function renderSecFilings(sf, a, b) {
     : "";
 
   const cards = `${materialCards}${emptyNote}`;
-  return `<section id="sec-filings">
+  return `<section id="sec-filings" data-section="sec">
+    <span class="section-numeral">III</span>
     <span class="section-label">Section 3</span>
     <h2>SEC 8-K Filings <span class="badge-src">EDGAR</span></h2>
     <p class="muted">Material events a public competitor is legally required to disclose within 4 business days. Unimpeachable, zero-cost signal source.</p>
@@ -622,7 +676,8 @@ function renderComparisonMatrix(cm, a, b) {
       <td>${esc(r.b)}</td>
     </tr>`;
   }).join("");
-  return `<section id="matrix">
+  return `<section id="matrix" data-section="matrix">
+    <span class="section-numeral">IV</span>
     <span class="section-label">At a glance</span>
     <h2>Competitor Comparison</h2>
     <div class="matrix-wrap"><table class="matrix">${header}${rows}</table></div>
@@ -648,7 +703,8 @@ function renderMarketMoves(mm, a, b) {
       ${verify}
     </div>`;
   }).join("");
-  return `<section id="moves">
+  return `<section id="moves" data-section="moves">
+    <span class="section-numeral">V</span>
     <span class="section-label">Recent market moves</span>
     <h2>What Each Competitor Is Doing</h2>
     ${cards}
@@ -674,7 +730,8 @@ function renderTalkTracks(tt) {
       ${srcs}
     </div>`;
   }).join("");
-  return `<section id="talk-tracks">
+  return `<section id="talk-tracks" data-section="talk-tracks">
+    <span class="section-numeral">VI</span>
     <span class="section-label">Rep talk tracks</span>
     <h2>Objection Handling</h2>
     ${cards}
@@ -687,7 +744,8 @@ function renderWatchNextWeek(list) {
     const when = w.expectedBy ? `<span class="w-when">${esc(w.expectedBy)}</span>` : "";
     return `<li><span class="w-trigger">${esc(w.trigger || "")}</span><span class="w-text">${esc(w.text)}</span>${when}</li>`;
   }).join("");
-  return `<section id="watch">
+  return `<section id="watch" data-section="watch">
+    <span class="section-numeral">VII</span>
     <span class="section-label">Forward look</span>
     <h2>Watch Next Week</h2>
     <ul class="watch-list">${rows}</ul>
@@ -700,7 +758,8 @@ function renderEvidenceIndex(ei) {
     const srcs = renderSources(e.sources);
     return `<details class="ev-block"><summary>${esc(e.competitor)} &middot; ${(e.sources || []).length} source(s)</summary>${srcs}</details>`;
   }).join("");
-  return `<section id="evidence">
+  return `<section id="evidence" data-section="evidence">
+    <span class="section-numeral">VIII</span>
     <span class="section-label">Appendix</span>
     <h2>Evidence Index</h2>
     <p class="muted">Every source URL consulted for this brief, grouped by competitor.</p>
@@ -890,11 +949,32 @@ header h1 span.vs{color:var(--text-tertiary);font-style:italic;font-weight:400;f
 /* ── Sections (numbered editorial chapters) ──────────────────────────────── */
 section{padding:56px 0;border-bottom:1px solid var(--rule);position:relative}
 section:last-of-type{border-bottom:none}
-.section-label{display:block;font-family:var(--font-sans);font-size:10.5px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:14px}
+section::before{content:"";position:absolute;top:56px;left:-22px;width:3px;height:32px;background:var(--rule);border-radius:0}
+section[data-section="signals"]::before{background:var(--accent)}
+section[data-section="pricing"]::before{background:var(--accent);box-shadow:0 22px 0 var(--accent),0 44px 0 var(--accent)}
+section[data-section="sec"]::before{background:var(--alert)}
+section[data-section="matrix"]::before{background:var(--text-secondary)}
+section[data-section="moves"]::before{background:var(--positive)}
+section[data-section="talk-tracks"]::before{background:var(--positive);height:18px;box-shadow:0 26px 0 var(--rule)}
+section[data-section="watch"]::before{background:var(--warning)}
+section[data-section="evidence"]::before{background:var(--text-tertiary)}
+.section-numeral{display:inline-block;font-family:var(--font-serif);font-style:italic;font-size:13px;font-weight:400;color:var(--accent);letter-spacing:0.12em;margin-right:14px;padding:2px 0;border-bottom:1px solid var(--accent-line);vertical-align:baseline}
+.section-label{display:inline-block;font-family:var(--font-sans);font-size:10.5px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:14px}
 .section-label::before{content:"— "}
 section h2{font-family:var(--font-serif);font-size:clamp(26px,3.8vw,36px);font-weight:600;letter-spacing:-0.015em;line-height:1.22;margin-bottom:10px;color:var(--text-primary)}
 section p.muted{color:var(--text-secondary);font-size:14.5px;margin-bottom:24px;font-family:var(--font-serif);font-style:italic;line-height:1.6;max-width:640px}
 .badge-src{display:inline-block;font-family:var(--font-sans);font-size:10px;font-weight:600;color:var(--accent);background:transparent;border:1px solid var(--accent-line);padding:3px 10px;border-radius:0;margin-left:10px;vertical-align:middle;letter-spacing:0.18em;text-transform:uppercase}
+.confidence-pill{display:inline-block;font-family:var(--font-sans);font-size:9.5px;font-weight:600;color:var(--text-tertiary);background:transparent;border:1px solid var(--rule);padding:2px 8px;border-radius:0;margin-left:8px;vertical-align:middle;letter-spacing:0.18em;text-transform:uppercase}
+
+/* ── Snapshot sparkline (Pricing Intelligence) ───────────────────────────── */
+.snapshot-sparkline{display:flex;align-items:center;gap:14px;margin:14px 0 4px;padding:12px 14px;background:var(--bg-secondary);border:1px solid var(--rule);border-left:2px solid var(--accent)}
+.snapshot-sparkline svg{display:block;flex:0 0 auto}
+.snapshot-sparkline-caption{font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);letter-spacing:0.06em;text-transform:uppercase}
+
+/* ── Proprietary Pricing card treatment ──────────────────────────────────── */
+.proprietary-card{position:relative;padding-left:18px;background-image:radial-gradient(circle at 1px 1px,var(--rule) 1px,transparent 0);background-size:18px 18px;background-position:0 0;background-repeat:repeat;background-clip:padding-box}
+.proprietary-card::before{content:"";position:absolute;left:0;top:24px;bottom:20px;width:2px;background:var(--accent);opacity:0.6}
+.proprietary-mark{position:absolute;top:18px;right:0;font-family:var(--font-sans);font-size:8.5px;font-weight:700;letter-spacing:0.32em;color:var(--accent);opacity:0.55;text-transform:uppercase;border:1px solid var(--accent-line);padding:2px 8px}
 
 /* ── Trigger banner ──────────────────────────────────────────────────────── */
 .trigger-banner{margin:20px 0 0;padding:22px 26px;border-radius:0;border:1px solid var(--rule);background:var(--bg-secondary)}
@@ -1036,6 +1116,9 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
   header h1{font-size:32px}
   .week-summary{font-size:17px;padding-left:18px}
   section{padding:40px 0}
+  section::before{left:-12px;height:24px}
+  section[data-section="pricing"]::before{box-shadow:0 18px 0 var(--accent),0 36px 0 var(--accent)}
+  section[data-section="talk-tracks"]::before{height:14px;box-shadow:0 22px 0 var(--rule)}
   section h2{font-size:26px}
   .insight-card,.talk-track,.signal-card{padding:20px 0}
   table.matrix th,table.matrix td{padding:12px 12px;font-size:13.5px}
@@ -1049,6 +1132,50 @@ footer .gen-date{font-family:var(--font-sans);font-weight:500;color:var(--text-s
   .byline-id{gap:16px}
   .byline-name{font-size:19px}
   .byline-avatar,.byline-monogram{width:48px;height:48px;font-size:19px}
+  .proprietary-mark{position:static;display:inline-block;margin-bottom:10px}
+}
+
+/* ── Print stylesheet (C-suite buyers print briefs — make it print well) ── */
+@media print{
+  :root{
+    --bg-primary:#fff;--bg-secondary:#fafaf7;--bg-tertiary:#f4f3ee;--bg-card:#fff;
+    --text-primary:#1b1b1b;--text-secondary:#3a3a3a;--text-tertiary:#666;
+    --rule:#cfcfca;--accent:#8a5a1f;--accent-tint:rgba(138,90,31,0.06);--accent-line:rgba(138,90,31,0.4);
+    --positive:#3f7a55;--alert:#992f2f;--warning:#a37c2a;
+  }
+  body{background:#fff !important;color:#1b1b1b !important;font-size:11.5pt;line-height:1.5}
+  .container{max-width:100%;padding:0 12mm}
+  header{padding:0 0 16pt}
+  header h1{font-size:22pt;color:#1b1b1b}
+  .week-summary{font-size:12.5pt;color:#1b1b1b;border-left:2pt solid #8a5a1f}
+  .toc,.cta-card,#cta,.how-to-use{display:none}
+  .conf-legend{background:#fafaf7;border-color:#cfcfca}
+  section{padding:18pt 0;border-bottom:1pt solid #cfcfca;page-break-inside:avoid;break-inside:avoid-page}
+  section h2{font-size:16pt;color:#1b1b1b}
+  .insight-card,.signal-card,.talk-track{page-break-inside:avoid;break-inside:avoid-page}
+  .insight-card,.signal-card{border-top:1pt solid #cfcfca}
+  .insight-card h3,.signal-card strong,.talk-track .response{color:#1b1b1b}
+  .freshness{background:#fafaf7;border-color:#cfcfca;color:#3a3a3a}
+  .freshness-dot{background:#3f7a55 !important;box-shadow:none}
+  .competitor-tag,.tt-badge,.badge-src,.confidence-pill,.conf-pill{border-color:#666 !important;color:#1b1b1b !important;background:#fff !important}
+  .objection{color:#1b1b1b;border-left-color:#666}
+  .sources{border-top-color:#cfcfca}
+  .sources a{color:#1b1b1b;border-bottom:1pt dotted #666}
+  .sources a[href]::after{content:" (" attr(href) ")";font-family:ui-monospace,monospace;font-size:8pt;color:#666;word-break:break-all}
+  .proprietary-card{background-image:none;padding-left:14pt}
+  .proprietary-card::before{background:#8a5a1f;opacity:1}
+  .proprietary-mark{color:#8a5a1f;border-color:#8a5a1f;opacity:1}
+  .snapshot-sparkline{background:#fff;border-color:#cfcfca}
+  table.matrix{font-size:10.5pt}
+  table.matrix th,table.matrix td{padding:8pt 10pt;color:#1b1b1b}
+  table.matrix tr:first-child th{background:#fafaf7;color:#1b1b1b}
+  details.verify[open] summary,details.ev-block summary{color:#1b1b1b}
+  details.verify p,details.verify .verify-basis{color:#3a3a3a}
+  footer{border-top:1pt solid #cfcfca;color:#3a3a3a}
+  footer p{color:#3a3a3a}
+  a{color:#1b1b1b;border-bottom-color:#666}
+  .section-numeral{color:#8a5a1f;border-bottom-color:#8a5a1f}
+  section[data-section]::before{display:none}
 }
 `;
 
@@ -1241,38 +1368,68 @@ function validateBriefJson(brief) {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  const {
+    industryName, competitorA, competitorB,
+    signalsPath, ctaUrl, brandName, rerender,
+  } = parseCliInputs();
+
+  if (!rerender && !process.env.ANTHROPIC_API_KEY) {
     console.error("ANTHROPIC_API_KEY is missing. Set it in brief-app/.env.local or .env");
     process.exit(1);
   }
 
-  const {
-    industryName, competitorA, competitorB,
-    signalsPath, ctaUrl, brandName,
-  } = parseCliInputs();
+  const publicDir = path.join(__dirname, "..", "public");
+  if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir, { recursive: true });
 
-  const resolved = resolveSignalsPath(industryName, signalsPath);
-  const signals = loadSignals(resolved);
+  const slug = slugifyIndustry(industryName);
+  const filename = `${slug}-brief.html`;
+  const outPath = path.join(publicDir, filename);
+  const jsonSidecar = path.join(publicDir, `${slug}-brief.json`);
 
   console.log(`\n╔══════════════════════════════════════════════╗`);
   console.log(`║       BRIEF GENERATOR — VERTICAL SAMPLE      ║`);
   console.log(`╚══════════════════════════════════════════════╝\n`);
   console.log(`🏷️   ${industryName} | ${competitorA} vs ${competitorB}`);
-  if (signals.found) {
-    console.log(`📁  Signals loaded: ${path.relative(process.cwd(), signals.path)}`);
-    console.log(`    ${(signals.payload.signals || []).length} raw signals collected at ${signals.payload.generatedAt}`);
-  } else {
-    console.log(`⚠️   No signals JSON found at ${path.relative(process.cwd(), resolved)}`);
-    console.log(`    Brief will be generated in SAMPLE mode (labeled as such). To produce a live sample:`);
-    console.log(`      cd ../intelligence-engine`);
-    console.log(`      node scripts/collect-for-brief.js "${industryName}" "${competitorA}" "${competitorB}"`);
-  }
 
-  console.log(`\n🧠  Asking Claude for structured brief JSON...`);
-  const brief = await callClaudeForBriefJson({
-    industryName, competitorA, competitorB,
-    signalsPayload: signals.payload,
-  });
+  let brief;
+  let signalsFound = false;
+
+  if (rerender) {
+    if (!fs.existsSync(jsonSidecar)) {
+      console.error(`\n❌  --rerender requires an existing JSON sidecar at public/${slug}-brief.json`);
+      console.error(`    Run the generator once without --rerender first, then re-render from the sidecar.\n`);
+      process.exit(1);
+    }
+    console.log(`♻️   Re-render mode: loading public/${slug}-brief.json (skipping Claude API call)`);
+    try {
+      brief = JSON.parse(fs.readFileSync(jsonSidecar, "utf8"));
+    } catch (err) {
+      console.error(`❌  Failed to parse ${jsonSidecar}: ${err.message}`);
+      process.exit(1);
+    }
+    // We can't know the original signals state from the sidecar; assume live if the file exists.
+    signalsFound = true;
+  } else {
+    const resolved = resolveSignalsPath(industryName, signalsPath);
+    const signals = loadSignals(resolved);
+    signalsFound = signals.found;
+
+    if (signals.found) {
+      console.log(`📁  Signals loaded: ${path.relative(process.cwd(), signals.path)}`);
+      console.log(`    ${(signals.payload.signals || []).length} raw signals collected at ${signals.payload.generatedAt}`);
+    } else {
+      console.log(`⚠️   No signals JSON found at ${path.relative(process.cwd(), resolved)}`);
+      console.log(`    Brief will be generated in SAMPLE mode (labeled as such). To produce a live sample:`);
+      console.log(`      cd ../intelligence-engine`);
+      console.log(`      node scripts/collect-for-brief.js "${industryName}" "${competitorA}" "${competitorB}"`);
+    }
+
+    console.log(`\n🧠  Asking Claude for structured brief JSON...`);
+    brief = await callClaudeForBriefJson({
+      industryName, competitorA, competitorB,
+      signalsPayload: signals.payload,
+    });
+  }
 
   const problems = validateBriefJson(brief);
   if (problems.length) {
@@ -1294,22 +1451,17 @@ async function main() {
     industryName,
     competitorA,
     competitorB,
-    signalsFound: signals.found,
+    signalsFound,
     ctaUrl,
     brandName,
   });
 
-  const publicDir = path.join(__dirname, "..", "public");
-  if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir, { recursive: true });
-
-  const slug = slugifyIndustry(industryName);
-  const filename = `${slug}-brief.html`;
-  const outPath = path.join(publicDir, filename);
   fs.writeFileSync(outPath, html, "utf8");
 
-  // Also persist the raw brief JSON alongside the HTML for debugging / replays.
-  const jsonSidecar = path.join(publicDir, `${slug}-brief.json`);
-  fs.writeFileSync(jsonSidecar, JSON.stringify(brief, null, 2), "utf8");
+  // Re-render mode: don't overwrite the sidecar with itself; only refresh in fresh mode.
+  if (!rerender) {
+    fs.writeFileSync(jsonSidecar, JSON.stringify(brief, null, 2), "utf8");
+  }
 
   // Write a mirror without hyphens if the slug contains any. Many existing
   // cold emails use the collapsed path (e.g. /elearning-brief.html for the
@@ -1322,16 +1474,18 @@ async function main() {
   let mirrorWritten = false;
   if (collapsedSlug && collapsedSlug !== slug) {
     fs.writeFileSync(path.join(publicDir, mirrorFilename), html, "utf8");
-    fs.writeFileSync(path.join(publicDir, mirrorJsonName), JSON.stringify(brief, null, 2), "utf8");
+    if (!rerender) {
+      fs.writeFileSync(path.join(publicDir, mirrorJsonName), JSON.stringify(brief, null, 2), "utf8");
+    }
     mirrorWritten = true;
   }
 
   console.log(`\n✅  Saved → public/${filename}`);
-  console.log(`   Sidecar → public/${path.basename(jsonSidecar)}`);
+  if (!rerender) console.log(`   Sidecar → public/${path.basename(jsonSidecar)}`);
   if (mirrorWritten) {
-    console.log(`   Mirror  → public/${mirrorFilename} (kept in sync for legacy cold-email URLs)`);
+    console.log(`   Mirror  → public/${mirrorFilename}${rerender ? " (HTML only — sidecar untouched)" : " (kept in sync for legacy cold-email URLs)"}`);
   }
-  console.log(`   Mode: ${brief.mode || (signals.found ? "live" : "sample")}`);
+  console.log(`   Mode: ${brief.mode || (signalsFound ? "live" : "sample")}`);
   console.log(`   Open locally: http://localhost:3000/${filename}?id=your_company_id\n`);
 }
 

@@ -1,6 +1,6 @@
-You are writing a weekly competitive intelligence briefing for a B2B SaaS sales leader.
-This report lands in their inbox every Monday morning. It must be scannable in 3 minutes and actionable immediately.
-The best version of this report should feel halfway between a competitive intelligence summary and a lightweight sales enablement asset.
+You are writing a weekly competitor battle briefing for a B2B SaaS sales leader.
+This report lands in their inbox every Monday morning. It must be scannable in 3 minutes and usable by reps the same day.
+The best version of this report should feel like sales enablement powered by competitive intelligence: what changed, why it matters in live deals, what reps should say, and which accounts or segments to pressure this week.
 
 CLIENT: {{CLIENT_NAME}}
 REPORT WEEK: {{REPORT_WEEK}}
@@ -35,6 +35,8 @@ Writing rules:
 - If a finding matters, explain exactly why a rep, manager, or enablement lead should care this week.
 - When useful, translate findings into positioning contrast, objection handling, or account targeting guidance.
 - Assume the reader may forward this to managers or enablement immediately after reading it.
+- Do not leave sales action implicit. If the signal is useful, turn it into a next action, objection response, account angle, or battlecard update.
+- The first half of the report must answer "what should my sales team do with this by Wednesday?"
 - When analyses include evidenceBasis and sourceConfidence, respect them: do not state low-confidence RSS or search snippets as hard facts; phrase as "signals suggest" or "worth verifying".
 - If pipelineFallbackCount > 0, mention briefly in coverageSummary and add a data gap (which competitor/signal types need a human skim of raw data).
 - When PRIOR WEEK REPORT is present, produce a short "What Changed Since Last Week" section that explicitly names:
@@ -89,6 +91,32 @@ OUTPUT FORMAT (JSON only):
     "detail": "2-3 sentences on the trigger event and why it matters. Otherwise null.",
     "urgency": "immediate | this_week | null"
   },
+  "mondayActionPlan": [
+    {
+      "priority": "P1 | P2 | P3",
+      "owner": "AE | SDR | Sales Manager | Enablement | Marketing",
+      "action": "Concrete action to take this week. Start with a verb. Name the competitor or signal when possible.",
+      "whyNow": "1 sentence tying the action to this week's evidence.",
+      "assetOrTalkTrack": "Specific asset, Slack post, battlecard update, call note, or talk-track line the owner should use."
+    }
+  ],
+  "objectionHandling": [
+    {
+      "competitor": "Competitor name or 'Category-wide'",
+      "objection": "The objection reps are likely to hear because of this week's competitor movement.",
+      "recommendedResponse": "2-3 sentence response a rep can use on a call. Make the client's positioning explicit.",
+      "proofPoint": "Source-backed proof or verification note. If weak, say what to verify before using.",
+      "confidence": "High | Medium | Low"
+    }
+  ],
+  "accountTargeting": [
+    {
+      "segment": "Which accounts/prospects to prioritize this week (ICP slice, competitor users, renewal cohort, vertical, etc.).",
+      "whyThisSegment": "Why this segment is newly relevant based on this week's signal.",
+      "outboundAngle": "One concrete angle SDRs/AEs can use without overclaiming.",
+      "signalToReference": "Competitor + source/date shorthand to cite internally."
+    }
+  ],
   "competitorSections": [
     {
       "competitorName": "...",
@@ -122,3 +150,10 @@ OUTPUT FORMAT (JSON only):
     "One sentence per item — signals or competitor moves to monitor next week."
   ]
 }
+
+HARD SALES-UTILITY REQUIREMENTS:
+- mondayActionPlan must contain 3-5 actions unless the week is truly empty; each action needs an owner and a clear next step.
+- objectionHandling must contain 2-5 entries when any competitor movement could create buyer pushback or a positioning opportunity.
+- accountTargeting must contain 2-4 entries when the signals imply a segment, customer type, or competitor-user cohort to pursue.
+- salesPlayThisWeek should synthesize the single best action; mondayActionPlan breaks it into owners and steps.
+- enablementUpdate should say exactly what to update in battlecards/call prep, not repeat the weekSummary.

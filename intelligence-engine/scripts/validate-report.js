@@ -173,6 +173,31 @@ export function validateReport({ reportContent, html, analyses, clientConfig }, 
         );
       }
     }
+
+    const salesArrays = [
+      ['mondayActionPlan', 3, 'Monday action plan should have at least 3 owner-level actions.'],
+      ['objectionHandling', 2, 'Objection handling should have at least 2 rep-ready responses when there are findings.'],
+      ['accountTargeting', 2, 'Account targeting should have at least 2 segment or cohort angles when there are findings.'],
+    ];
+    for (const [field, min, guidance] of salesArrays) {
+      const rows = Array.isArray(reportContent[field]) ? reportContent[field].filter(Boolean) : [];
+      const shouldExpect = sectionsWithFindings.length > 0;
+      if (shouldExpect && rows.length < min) {
+        record(
+          `sales_enablement_${field}`,
+          false,
+          'warning',
+          `${field} has ${rows.length} item(s); expected at least ${min}. ${guidance}`
+        );
+      } else {
+        record(
+          `sales_enablement_${field}`,
+          true,
+          'warning',
+          `${field} populated sufficiently (${rows.length} item(s)).`
+        );
+      }
+    }
   }
 
   if (Array.isArray(analyses) && analyses.length > 0) {

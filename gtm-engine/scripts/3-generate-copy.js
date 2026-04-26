@@ -21,7 +21,7 @@
  * plus https://yourdomain.com — both are substituted before the prompt is sent to Claude.
  *
  * Competitors vs static brief: set GTM_REPORT_COMPETITOR_A and GTM_REPORT_COMPETITOR_B to match
- * the pair in the hosted HTML brief. See docs/VERTICAL-BRIEF-AND-EMAIL.md.
+ * the pair in the hosted HTML brief. See the root README.md for the operating playbook.
  */
 
 import 'dotenv/config';

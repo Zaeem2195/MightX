@@ -399,6 +399,18 @@ async function writeReportContent(clientConfig, analyses, priorReport, rollingHi
                 : `This week ${pipelineMeta.totalSignals} signal batches were analysed successfully across all configured sources.`;
           }
           if (!Array.isArray(v.dataGapsThisWeek)) v.dataGapsThisWeek = [];
+          if (!Array.isArray(v.mondayActionPlan)) v.mondayActionPlan = [];
+          if (!Array.isArray(v.objectionHandling)) v.objectionHandling = [];
+          if (!Array.isArray(v.accountTargeting)) v.accountTargeting = [];
+          if (!v.mondayActionPlan.length && v.salesPlayThisWeek) {
+            v.mondayActionPlan.push({
+              priority: 'P1',
+              owner: 'Sales Manager',
+              action: 'Share the weekly sales play with reps before pipeline review.',
+              whyNow: 'The report identified a useful sales play but did not break it into owner-level actions.',
+              assetOrTalkTrack: v.salesPlayThisWeek,
+            });
+          }
           if (!priorReport) {
             v.changesSinceLastWeek = { exists: false };
           } else if (!v.changesSinceLastWeek || typeof v.changesSinceLastWeek !== 'object') {
@@ -657,6 +669,78 @@ function renderDataGapsSection(gaps) {
     </div>`;
 }
 
+function renderMondayActionPlan(actions) {
+  const rows = Array.isArray(actions)
+    ? actions.filter((a) => a && (a.action || a.assetOrTalkTrack || a.whyNow))
+    : [];
+  if (!rows.length) return '';
+
+  const cards = rows.map((a) => `
+    <div class="action-card">
+      <div class="action-topline">
+        <span class="priority-pill">${escapeHtml(a.priority || 'P1')}</span>
+        <span class="owner-pill">${escapeHtml(a.owner || 'Owner')}</span>
+      </div>
+      <div class="action-title">${escapeHtml(a.action || '')}</div>
+      ${a.whyNow ? `<div class="action-why"><span class="field-label">Why now</span> ${escapeHtml(a.whyNow)}</div>` : ''}
+      ${a.assetOrTalkTrack ? `<div class="action-asset"><span class="field-label">Use</span> ${escapeHtml(a.assetOrTalkTrack)}</div>` : ''}
+    </div>`).join('');
+
+  return `
+    <div class="section">
+      <div class="section-title"><span>Monday Action Plan</span></div>
+      <div class="action-grid">${cards}</div>
+    </div>`;
+}
+
+function renderObjectionHandling(items) {
+  const rows = Array.isArray(items)
+    ? items.filter((i) => i && (i.objection || i.recommendedResponse))
+    : [];
+  if (!rows.length) return '';
+
+  const cards = rows.map((i) => `
+    <div class="objection-card">
+      <div class="objection-topline">
+        <span class="owner-pill">${escapeHtml(i.competitor || 'Category-wide')}</span>
+        <span class="confidence-pill">${escapeHtml(i.confidence || 'Medium')}</span>
+      </div>
+      <div class="objection-title">${escapeHtml(i.objection || '')}</div>
+      ${i.recommendedResponse ? `<div class="objection-response"><span class="field-label">Response</span> ${escapeHtml(i.recommendedResponse)}</div>` : ''}
+      ${i.proofPoint ? `<div class="objection-proof"><span class="field-label">Proof</span> ${escapeHtml(i.proofPoint)}</div>` : ''}
+    </div>`).join('');
+
+  return `
+    <div class="section">
+      <div class="section-title"><span>Objection Handling</span></div>
+      <div class="objection-list">${cards}</div>
+    </div>`;
+}
+
+function renderAccountTargeting(items) {
+  const rows = Array.isArray(items)
+    ? items.filter((i) => i && (i.segment || i.outboundAngle))
+    : [];
+  if (!rows.length) return '';
+
+  const cards = rows.map((i) => `
+    <div class="targeting-card">
+      <div class="targeting-topline">
+        <span class="owner-pill">Target Segment</span>
+      </div>
+      <div class="targeting-title">${escapeHtml(i.segment || '')}</div>
+      ${i.whyThisSegment ? `<div class="targeting-why"><span class="field-label">Why</span> ${escapeHtml(i.whyThisSegment)}</div>` : ''}
+      ${i.outboundAngle ? `<div class="targeting-angle"><span class="field-label">Angle</span> ${escapeHtml(i.outboundAngle)}</div>` : ''}
+      ${i.signalToReference ? `<div class="targeting-signal"><span class="field-label">Signal</span> ${escapeHtml(i.signalToReference)}</div>` : ''}
+    </div>`).join('');
+
+  return `
+    <div class="section">
+      <div class="section-title"><span>Account Targeting Angles</span></div>
+      <div class="targeting-list">${cards}</div>
+    </div>`;
+}
+
 // ── Build Competitor Sections HTML ────────────────────────────────────────────
 function renderCompetitorSections(sections) {
   if (!sections?.length) return '<p class="no-findings">No significant competitor activity this week.</p>';
@@ -729,6 +813,9 @@ function buildHTML(clientConfig, reportContent) {
     .replace('{{COVERAGE_SECTION}}', renderCoverageSection(reportContent.coverageSummary))
     .replace('{{DATA_GAPS_SECTION}}', renderDataGapsSection(reportContent.dataGapsThisWeek))
     .replace('{{TOP_ALERT_SECTION}}', renderTopAlert(reportContent.topAlert))
+    .replace('{{MONDAY_ACTION_PLAN_SECTION}}', renderMondayActionPlan(reportContent.mondayActionPlan))
+    .replace('{{OBJECTION_HANDLING_SECTION}}', renderObjectionHandling(reportContent.objectionHandling))
+    .replace('{{ACCOUNT_TARGETING_SECTION}}', renderAccountTargeting(reportContent.accountTargeting))
     .replace('{{COMPETITOR_SECTIONS}}', renderCompetitorSections(reportContent.competitorSections))
     .replace('{{SALES_PLAY}}',      escapeHtml(reportContent.salesPlayThisWeek || ''))
     .replace('{{ENABLEMENT_UPDATE_SECTION}}', renderEnablementUpdate(reportContent.enablementUpdate))
