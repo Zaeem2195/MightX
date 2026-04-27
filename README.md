@@ -276,13 +276,13 @@ GTM_REPORT_COMPETITOR_B=<Competitor B exactly as in brief>
 TRACKING_SIGNING_SECRET=<same secret as brief-app>
 ```
 
-The generated email body must preserve:
+Email 2 must preserve:
 
 ```txt
 {{trackingUrl}}
 ```
 
-`scripts/4-push-instantly.js` replaces it with a signed per-lead URL.
+`scripts/4-push-instantly.js` replaces it with a signed per-lead URL. `scripts/6-export-copy-csv.js` does the same for manual CSV exports when `TRACKING_SIGNING_SECRET` and `GTM_BRIEF_CTA_BASE_URL` are set.
 
 ## Running The GTM Pipeline
 
@@ -318,7 +318,29 @@ Upload the CSV to Instantly and map:
 - `company_name`
 - `ai_subject`
 - `ai_body`
+- `email_1_subject`
+- `email_1_body`
+- `email_2_subject`
+- `email_2_body`
+- `email_3_subject`
+- `email_3_body`
+- `trackingUrl`
 - `title`
+
+Use the sequence fields in Instantly:
+
+```txt
+Email 1 subject: {{email_1_subject}}
+Email 1 body:    {{email_1_body}}
+
+Email 2 subject: {{email_2_subject}}
+Email 2 body:    {{email_2_body}}
+
+Email 3 subject: {{email_3_subject}}
+Email 3 body:    {{email_3_body}}
+```
+
+`ai_subject` and `ai_body` remain aliases for Email 1 so old single-email campaign templates do not break, but the recommended campaign uses the three explicit sequence steps.
 
 Batch examples:
 

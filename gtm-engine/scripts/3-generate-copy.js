@@ -17,8 +17,8 @@
  *   npm run generate-copy -- --file data/processed-companyindustry-e-learning-equals-batch.json
  *
  * CTA URL: set GTM_BRIEF_CTA_BASE_URL (host) and GTM_BRIEF_HTML_FILENAME (e.g. elearning-brief.html
- * or management-consulting-brief.html) in .env. personalization.txt uses __BRIEF_HTML_FILENAME__
- * plus https://yourdomain.com — both are substituted before the prompt is sent to Claude.
+ * or management-consulting-brief.html) in .env. Email 2 must preserve {{trackingUrl}};
+ * push/export scripts replace it with the signed per-lead URL.
  *
  * Competitors vs static brief: set GTM_REPORT_COMPETITOR_A and GTM_REPORT_COMPETITOR_B to match
  * the pair in the hosted HTML brief. See the root README.md for the operating playbook.
@@ -40,8 +40,8 @@ const MODEL =
   process.env.GTM_GENERATE_COPY_MODEL?.trim() || 'claude-opus-4-7';
 const BATCH_DELAY   = 1200;   // ms between API calls — stay well within rate limits
 const MAX_RETRIES   = 2;
-/** More headroom now that Claude also returns industry / pain / outcomes. */
-const MAX_TOKENS_COPY = 600;
+/** More headroom now that Claude returns a three-email sequence plus fields. */
+const MAX_TOKENS_COPY = 1200;
 
 if (!process.env.ANTHROPIC_API_KEY) {
   console.error('❌  ANTHROPIC_API_KEY missing from .env');
@@ -263,6 +263,42 @@ function normalizePainPointField(value, lead) {
   return fallbackPainPointTrigger(lead);
 }
 
+function firstString(...values) {
+  for (const value of values) {
+    if (typeof value === 'string' && value.trim()) {
+      return value.trim();
+    }
+  }
+  return '';
+}
+
+function normalizeSequence(parsed) {
+  const email1 = {
+    subject: firstString(parsed.email_1_subject, parsed.email1_subject, parsed.email1?.subject, parsed.subject),
+    body: firstString(parsed.email_1_body, parsed.email1_body, parsed.email1?.body, parsed.body),
+  };
+  const email2 = {
+    subject: firstString(parsed.email_2_subject, parsed.email2_subject, parsed.email2?.subject),
+    body: firstString(parsed.email_2_body, parsed.email2_body, parsed.email2?.body),
+  };
+  const email3 = {
+    subject: firstString(parsed.email_3_subject, parsed.email3_subject, parsed.email3?.subject),
+    body: firstString(parsed.email_3_body, parsed.email3_body, parsed.email3?.body),
+  };
+
+  for (const [label, email] of Object.entries({ email1, email2, email3 })) {
+    if (!email.subject || !email.body) {
+      throw new Error(`Claude returned malformed JSON — missing ${label} subject or body`);
+    }
+  }
+
+  if (!email2.body.includes('{{trackingUrl}}')) {
+    throw new Error('Claude returned malformed JSON — email 2 body must include {{trackingUrl}}');
+  }
+
+  return { email1, email2, email3 };
+}
+
 function buildLeadBlock(lead) {
   const p = lead.personalization;
   return [
@@ -299,14 +335,18 @@ async function generateCopy(lead, promptTemplate, attempt = 0) {
 
     const parsed = JSON.parse(cleaned);
 
-    if (!parsed.subject || !parsed.body) {
-      throw new Error('Claude returned malformed JSON — missing subject or body');
-    }
+    const sequence = normalizeSequence(parsed);
 
     return {
       ok:                true,
-      subject:           parsed.subject,
-      body:              parsed.body,
+      subject:           sequence.email1.subject,
+      body:              sequence.email1.body,
+      email_1_subject:   sequence.email1.subject,
+      email_1_body:      sequence.email1.body,
+      email_2_subject:   sequence.email2.subject,
+      email_2_body:      sequence.email2.body,
+      email_3_subject:   sequence.email3.subject,
+      email_3_body:      sequence.email3.body,
       industry:          normalizeIndustryField(parsed.industry, lead),
       painPointTrigger:  normalizePainPointField(parsed.painPointTrigger, lead),
       serviceOutcomes:   normalizeServiceOutcomes(parsed.serviceOutcomes, lead),
@@ -363,12 +403,18 @@ async function main() {
         title:             lead.title,
         subject:           result.subject,
         body:              result.body,
+        email_1_subject:   result.email_1_subject,
+        email_1_body:      result.email_1_body,
+        email_2_subject:   result.email_2_subject,
+        email_2_body:      result.email_2_body,
+        email_3_subject:   result.email_3_subject,
+        email_3_body:      result.email_3_body,
         industry:          result.industry,
         painPointTrigger:  result.painPointTrigger,
         serviceOutcomes:   result.serviceOutcomes,
         generatedAt:       new Date().toISOString(),
       });
-      cost_estimate_tokens += 650;   // rough avg tokens per call
+      cost_estimate_tokens += 1200;   // rough avg tokens per call for 3-email sequence
       process.stdout.write(`✅\n`);
     } else {
       failures.push({ leadId: lead.id, label, error: result.error });
@@ -401,7 +447,7 @@ async function main() {
       console.log(`       serviceOutcomes: ${outcomes}`);
     }
     console.log(
-      '    Also passed on push: ai_subject, ai_body, title, trackingUrl, leadId, service_outcome_1…3\n',
+      '    Also passed on push: email_1_subject/body, email_2_subject/body, email_3_subject/body, trackingUrl, leadId, service_outcome_1…3\n',
     );
   }
 

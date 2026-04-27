@@ -236,9 +236,36 @@ function serviceOutcomesForInstantly(entry) {
   return { o1: three[0], o2: three[1], o3: three[2], joined: three.filter(Boolean).join(' | ') };
 }
 
+function firstString(...values) {
+  for (const value of values) {
+    if (typeof value === 'string' && value.trim()) {
+      return value.trim();
+    }
+  }
+  return '';
+}
+
+function sequenceFieldsForInstantly(entry, trackingUrl) {
+  const email1Subject = firstString(entry.email_1_subject, entry.subject);
+  const email1Body = firstString(entry.email_1_body, entry.body);
+  const email2Subject = firstString(entry.email_2_subject);
+  const email2Body = buildTrackedBody(firstString(entry.email_2_body), trackingUrl);
+  const email3Subject = firstString(entry.email_3_subject);
+  const email3Body = firstString(entry.email_3_body);
+
+  return {
+    email1Subject,
+    email1Body,
+    email2Subject,
+    email2Body,
+    email3Subject,
+    email3Body,
+  };
+}
+
 async function pushLead(entry) {
   const trackingUrl = buildTrackingUrl(entry);
-  const trackedBody = buildTrackedBody(entry.body, trackingUrl);
+  const sequence = sequenceFieldsForInstantly(entry, trackingUrl);
   const outcomes = serviceOutcomesForInstantly(entry);
   const body = {
     campaign: INSTANTLY_CAMPAIGN_ID,
@@ -248,8 +275,14 @@ async function pushLead(entry) {
     company_name: entry.companyName,
     skip_if_in_workspace: true,
     custom_variables: {
-      ai_subject: entry.subject,
-      ai_body: trackedBody,
+      ai_subject: sequence.email1Subject,
+      ai_body: sequence.email1Body,
+      email_1_subject: sequence.email1Subject,
+      email_1_body: sequence.email1Body,
+      email_2_subject: sequence.email2Subject,
+      email_2_body: sequence.email2Body,
+      email_3_subject: sequence.email3Subject,
+      email_3_body: sequence.email3Body,
       title: entry.title,
       trackingUrl,
       leadId: normalizeLeadId(entry.companyName || entry.email),
