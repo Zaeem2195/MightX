@@ -1,0 +1,576 @@
+{
+  "mode": "live",
+  "hero": {
+    "industry": "Telecommunication / CPaaS",
+    "competitorA": "Twilio",
+    "competitorB": "Bird",
+    "weekSummary": "Twilio just delivered a category-defining Q1 FY26 print — voice revenue +20% YoY (highest in 19 quarters), AI Voice product cited as 'unprecedented demand,' stock +23.83% on the day, and Wall Street flooding in with price-target hikes. Bird produced no material CPaaS news this week — the public signal stream is dominated by unrelated 'Bird' namesakes (Allbirds, Sue Bird, bird flu), reinforcing a brand-discoverability gap right as buyers are actively researching CPaaS+AI. Net: Twilio is consolidating mindshare on the AI-communications layer while Bird is silent in buyer-public channels."
+  },
+  "freshness": {
+    "generatedAt": "2026-05-04T17:54:02.354Z",
+    "signalWindowLabel": "Last 7-30 days (multi-source)",
+    "signalCount": 48,
+    "sourceTypeCount": 9
+  },
+  "triggerEvents": {
+    "exists": true,
+    "items": [
+      {
+        "competitor": "Twilio",
+        "headline": "Twilio files 8-K (Items 2.02 + 9.01) on April 30 — Q1 FY26 earnings beat with 'unprecedented demand' for AI Voice",
+        "detail": "Twilio's 8-K filed 2026-04-30 disclosed the Q1 FY26 results, followed by an earnings beat with raised guidance and Voice revenue +20% YoY — its highest growth rate in 19 consecutive quarters, explicitly attributed to AI use cases moving into production. The stock closed +23.83% to $183.34. This is the inflection point that reframes Twilio from 'SaaSpocalypse loser' to the default AI-communications layer in buyer conversations.",
+        "date": "2026-04-30",
+        "sources": [
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1447669/000144766926000046/twlo-20260430.htm",
+            "label": "Twilio 8-K — 2026-04-30",
+            "date": "2026-04-30",
+            "type": "sec_filings"
+          },
+          {
+            "url": "https://www.investors.com/news/technology/twilio-stock-twlo-q1-earnings-2026/",
+            "label": "IBD: Twilio Delivers Earnings Beat, Strong Guidance As AI Voice Product Ramps",
+            "date": "2026-05-01",
+            "type": "news"
+          },
+          {
+            "url": "https://www.marketwatch.com/story/twilios-stock-is-soaring-the-software-group-says-its-ai-voice-tool-is-seeing-unprecedented-demand",
+            "label": "MarketWatch: Twilio AI-voice tool seeing 'unprecedented demand'",
+            "date": "2026-05-01",
+            "type": "news"
+          }
+        ]
+      }
+    ]
+  },
+  "thisWeekSignals": [
+    {
+      "competitor": "Twilio",
+      "headline": "Wall Street floods Twilio with price-target hikes; analysts now framing it as 'the AI Communications Layer'",
+      "date": "2026-05-01",
+      "sourceType": "news",
+      "sources": [
+        {
+          "url": "https://247wallst.com/investing/2026/05/01/wall-street-floods-twilio-with-price-target-hikes-is-this-truly-the-ai-communications-layer/",
+          "label": "24/7 Wall St. — Wall Street Floods Twilio With Price Target Hikes",
+          "date": "2026-05-01",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitor": "Twilio",
+      "headline": "Fortune profile of CEO Khozema Shipchandler: turnaround narrative, beating SaaSpocalypse fears",
+      "date": "2026-05-04",
+      "sourceType": "news",
+      "sources": [
+        {
+          "url": "https://fortune.com/2026/05/04/twilio-ceo-khozema-shipchandler-turnaround-saaspocalypse/",
+          "label": "Fortune: How Twilio CEO is turning the company around",
+          "date": "2026-05-04",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitor": "Twilio",
+      "headline": "r/telecom thread surfaces production pain with Twilio/SIP/WebRTC AI voice workloads — latency, one-way audio, jitter",
+      "date": "2026-05-04",
+      "sourceType": "reddit",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/telecom/comments/1t3mu8l/new_types_of_latency_audio_issues_with_ai_voice/",
+          "label": "r/telecom — new latency/audio issues with AI voice workloads",
+          "date": "2026-05-04",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitor": "Twilio",
+      "headline": "r/nocode practitioner rant: 'Twilio is great if you actually know how to code' — TwiML/webhook complexity blocking SMB use cases",
+      "date": "2026-05-04",
+      "sourceType": "reddit",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/nocode/comments/1t3i3ag/i_swear_telecom_apis_are_the_final_boss_of_nocode/",
+          "label": "r/nocode — telecom APIs are the final boss of no-code",
+          "date": "2026-05-04",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitor": "Bird",
+      "headline": "Bird produced zero CPaaS-relevant news in window; public-signal stream dominated by namesake noise (Allbirds, Sue Bird, bird flu)",
+      "date": "2026-05-04",
+      "sourceType": "news",
+      "sources": [
+        {
+          "url": "https://news.ycombinator.com/item?id=47778762",
+          "label": "HN — Allbirds pivot story (illustrates Bird brand-noise problem)",
+          "date": "2026-04-15",
+          "type": "hackernews"
+        },
+        {
+          "url": "https://bird.com",
+          "label": "Bird homepage (first snapshot, no diffs)",
+          "date": null,
+          "type": "website"
+        }
+      ]
+    }
+  ],
+  "pricingIntelligence": {
+    "exists": true,
+    "evidenceMode": "buyer-chatter",
+    "findings": [
+      {
+        "competitor": "Twilio",
+        "summary": "Wayback CDX timed out for /pricing and /plans this run, so archive diffs are unavailable. Buyer-public chatter is thin: only one Reddit thread in the 90-day window contains explicit $-figures tied to Twilio (a job listing, not product pricing), and zero HN posts contain a $-figure with a Twilio pricing-structure phrase. Net: Twilio's per-unit pricing remains transparent on the public site, but enterprise/committed-spend deal economics are NOT being discussed in public buyer channels this window.",
+        "priceChanges": [
+          "Reddit r/remotearmy, 2026-05-03: '$90K - $150K USD' — Twilio Senior Business Systems Analyst posting (compensation, not product pricing — included only as the sole $-figure tied to Twilio in the window)",
+          "Wayback CDX query failed (cdx_timeout) for both https://www.twilio.com/pricing and https://www.twilio.com/plans — no archive-evidenced diffs this run",
+          "Zero HN posts in last 90 days mention Twilio alongside an explicit $-figure or pricing-structure phrase"
+        ],
+        "confidence": "Low",
+        "changesIn90d": null,
+        "sources": [
+          {
+            "url": "https://www.reddit.com/r/remotearmy/comments/1t3092g/remote_management_and_business_opportunity_senior/",
+            "label": "r/remotearmy — Twilio Sr BSA posting ($90K-$150K)",
+            "date": "2026-05-03",
+            "type": "reddit"
+          }
+        ]
+      },
+      {
+        "competitor": "Bird",
+        "summary": "Bird pricing is fully opaque in buyer-public channels. Wayback CDX timed out for bird.com/pricing and bird.com/plans, no Reddit posts in the 90-day window contain Bird alongside a $-figure or pricing-structure phrase, and no HN posts qualify either. Combined with the namesake-noise problem (Allbirds, Sue Bird, bird flu drowning out Bird-the-CPaaS), there is effectively zero buyer-side price discovery happening on Bird right now.",
+        "priceChanges": [
+          "No Reddit posts in last 90 days mention Bird alongside an explicit $-figure or pricing-structure phrase",
+          "No HN posts in last 90 days mention Bird alongside an explicit $-figure or pricing-structure phrase",
+          "Wayback CDX query failed (cdx_timeout) for https://bird.com/pricing and https://bird.com/plans — no archive-evidenced diffs"
+        ],
+        "confidence": "Low",
+        "changesIn90d": null,
+        "sources": [
+          {
+            "url": "https://bird.com/pricing",
+            "label": "Bird /pricing (live page; archive unavailable this run)",
+            "date": null,
+            "type": "website"
+          }
+        ]
+      }
+    ]
+  },
+  "secFilings": {
+    "exists": true,
+    "items": [
+      {
+        "competitor": "Twilio",
+        "form": "8-K",
+        "filedDate": "2026-04-30",
+        "items": "Item 2.02 (Results of Operations and Financial Condition); Item 9.01 (Financial Statements and Exhibits)",
+        "summary": "Q1 FY26 earnings 8-K. The accompanying release and call drove the +23.83% stock move and analyst PT-hike wave; Voice revenue +20% YoY (highest in 19 consecutive quarters) was the headline metric, attributed to AI use cases reaching production deployment.",
+        "sources": [
+          {
+            "url": "https://www.sec.gov/Archives/edgar/data/1447669/000144766926000046/twlo-20260430.htm",
+            "label": "Twilio 8-K (CIK 0001447669) — 2026-04-30",
+            "date": "2026-04-30",
+            "type": "sec_filings"
+          }
+        ]
+      }
+    ]
+  },
+  "comparisonMatrix": {
+    "rows": [
+      {
+        "axis": "Public-market validation",
+        "a": "NYSE:TWLO, +23.83% on 2026-05-01 post-earnings; multiple analyst PT hikes",
+        "b": "Private; no public-market signal",
+        "note": "Twilio carries a clear 'safe choice' narrative into procurement reviews this quarter."
+      },
+      {
+        "axis": "AI Voice positioning",
+        "a": "Explicitly called 'unprecedented demand' on Q1 FY26 call; Voice +20% YoY",
+        "b": "No AI-Voice press, filings, or HN/Reddit chatter in window",
+        "note": "If the buyer's project is voice-AI, Twilio currently has the louder reference story."
+      },
+      {
+        "axis": "Developer surface area",
+        "a": "~8,000 URLs in sitemap (5 locales); active developer hub + WhatsApp series; community subreddit r/twilio",
+        "b": "~1,101 URLs in sitemap; no developer community signal",
+        "note": "Twilio has ~7x the indexed surface; informs SEO/RFP-research dominance."
+      },
+      {
+        "axis": "Buyer-public pricing transparency",
+        "a": "Per-unit pricing public; enterprise quotes opaque (no buyer chatter this window)",
+        "b": "Fully opaque; zero $-figures in Reddit/HN in 90 days",
+        "note": "Bird forces a sales cycle for any price discovery; weaponize this in deals where speed matters."
+      },
+      {
+        "axis": "Brand discoverability",
+        "a": "Unambiguous — 'Twilio' returns CPaaS results",
+        "b": "Drowned by Allbirds (NASDAQ:BIRD), Sue Bird, bird flu, Angry Birds in this week's news cycle",
+        "note": "Bird's SEO/PR ceiling is structurally lower; mention it in mindshare conversations."
+      },
+      {
+        "axis": "Practitioner pain points (this week)",
+        "a": "Production AI-voice latency/jitter complaints (r/telecom); no-code complexity (r/nocode)",
+        "b": "No public practitioner complaints — but also no public practitioners visible",
+        "note": "Twilio pain is the pain of scale; Bird's silence isn't a feature."
+      },
+      {
+        "axis": "Hiring posture",
+        "a": "Active reqs across Staff Data Scientist, Principal PM, Product/Backend Engineer, Salesforce BSA — building",
+        "b": "Most LinkedIn 'Bird' reqs map to Bird & Bird (law firm) or Bird scooters, not CPaaS Bird",
+        "note": "Twilio is investing into the AI-voice tailwind; Bird CPaaS hiring is not visible in public ATS signal."
+      }
+    ]
+  },
+  "marketMoves": [
+    {
+      "competitors": [
+        "Twilio"
+      ],
+      "title": "Twilio reframed as 'the AI Communications Layer' — analyst PT hikes flooding in",
+      "body": "On 2026-05-01, 24/7 Wall St. published 'Wall Street Floods Twilio With Price Target Hikes: Is This Truly the AI Communications Layer?' alongside MarketWatch's 'unprecedented demand' coverage. Combined with the Q1 FY26 8-K (Voice +20% YoY, 19-quarter high), the analyst community has shifted the consensus narrative from 'SaaSpocalypse turnaround' to 'AI-comms category leader.' Expect this framing to show up in your competitor's RFP language within 2-3 weeks.",
+      "confidence": "High",
+      "confidenceBasis": "Directly evidenced by dated 8-K, MarketWatch story, 24/7 Wall St. headline, and IBD coverage.",
+      "verify": "Search inbound RFPs for the exact phrase 'AI communications layer' over the next 30 days.",
+      "date": "2026-05-01",
+      "sources": [
+        {
+          "url": "https://247wallst.com/investing/2026/05/01/wall-street-floods-twilio-with-price-target-hikes-is-this-truly-the-ai-communications-layer/",
+          "label": "24/7 Wall St. — Twilio PT hikes",
+          "date": "2026-05-01",
+          "type": "news"
+        },
+        {
+          "url": "https://www.marketwatch.com/story/twilios-stock-is-soaring-the-software-group-says-its-ai-voice-tool-is-seeing-unprecedented-demand",
+          "label": "MarketWatch — 'unprecedented demand'",
+          "date": "2026-05-01",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Twilio"
+      ],
+      "title": "Production-grade AI-voice pain on Twilio/SIP surfacing in r/telecom",
+      "body": "An r/telecom thread on 2026-05-04 explicitly flags 'inconsistent end-to-end latency, one-way audio, jitter, and routing-path-dependent call quality' on Twilio/SIP/WebRTC AI-voice setups. Demos look fine; production breaks. This is a wedge: the same week analysts call Twilio 'the AI Communications Layer,' practitioners are publicly debugging it. Buyers running >100k/day voice minutes will feel this first.",
+      "confidence": "Medium",
+      "confidenceBasis": "Single dated Reddit thread with low-but-real engagement; pattern is consistent with prior CPaaS scale-out complaints.",
+      "verify": "Ask any Twilio-shortlisted prospect for their P95 end-to-end latency target and current observed value.",
+      "date": "2026-05-04",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/telecom/comments/1t3mu8l/new_types_of_latency_audio_issues_with_ai_voice/",
+          "label": "r/telecom — AI voice latency/audio issues",
+          "date": "2026-05-04",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Twilio"
+      ],
+      "title": "Developer-experience drag at the SMB/no-code edge",
+      "body": "An r/nocode post on 2026-05-04 captures the SMB pain: 'Twilio is great if you actually know how to code… the second you step outside basic SMS, it becomes an absolute nightmare of TwiML bins, webhooks, and documentation that assumes you're a senior backend dev.' This is the soft underbelly of the 'AI-comms layer' narrative — the buyer who needs voice-AI for a 5-location SMB doesn't have a backend engineer.",
+      "confidence": "Medium",
+      "confidenceBasis": "Single dated practitioner post; corroborates a long-running pattern in CPaaS DX feedback.",
+      "verify": "On SMB discovery calls, ask: 'Do you have a backend engineer who can own webhook reliability?' If no, Twilio is a poor fit.",
+      "date": "2026-05-04",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/nocode/comments/1t3i3ag/i_swear_telecom_apis_are_the_final_boss_of_nocode/",
+          "label": "r/nocode — TwiML/webhook pain",
+          "date": "2026-05-04",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Bird"
+      ],
+      "title": "Bird is structurally invisible in this news cycle — namesake collisions are eating its share of voice",
+      "body": "In the last 7 days, Bird's news mentions are dominated by Allbirds (NASDAQ:BIRD pivoting to AI data centers, +175% on HN), Sue Bird at the Kentucky Derby, RFK Jr. holding a live bird, and bird flu vaccine trials. Zero items in the news/HN/Reddit pull this run reference Bird-the-CPaaS. The same week Twilio is grabbing the AI-comms narrative, Bird is producing no countervailing signal.",
+      "confidence": "High",
+      "confidenceBasis": "Directly evidenced by the absence of any Bird-CPaaS payload in news/Reddit/HN/G2 RSS pulls this run.",
+      "verify": "Run a brand-mention search ('Bird CPaaS' OR 'bird.com') for the next 30 days and track signal volume vs. Twilio.",
+      "date": "2026-05-04",
+      "sources": [
+        {
+          "url": "https://news.ycombinator.com/item?id=47778762",
+          "label": "HN — Allbirds (BIRD ticker) pivot, +175%",
+          "date": "2026-04-15",
+          "type": "hackernews"
+        }
+      ]
+    },
+    {
+      "competitors": [
+        "Twilio"
+      ],
+      "title": "Voice-AI ecosystem is consolidating on Twilio as the default telephony substrate",
+      "body": "Reddit signal across r/SideProject (Estonian AI hotel receptionist 'runs on a real Twilio number'), r/VoiceAutomationAI ('SaaS embeds via Twilio, custom APIs'), and r/mcp (TwilioManager MCP for Claude) shows the indie/startup voice-AI builder community treating Twilio as the assumed default. SoundHound's pop on 2026-05-04 was explicitly 'riding the wave of Twilio's strong earnings.' This is ecosystem gravity, and it accrues to Twilio at the expense of every other CPaaS — Bird included.",
+      "confidence": "Medium",
+      "confidenceBasis": "Multiple dated independent Reddit threads in the same window plus a public sympathy-trade reference.",
+      "verify": "Track GitHub repo creations referencing 'twilio' + 'voice ai' month-over-month.",
+      "date": "2026-05-04",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/SideProject/comments/1t392kb/i_built_the_first_estonian_ai_hotel_voice_agent/",
+          "label": "r/SideProject — Estonian AI hotel agent on Twilio",
+          "date": "2026-05-04",
+          "type": "reddit"
+        },
+        {
+          "url": "https://www.reddit.com/r/VoiceAutomationAI/comments/1t2v0y4/how_are_you_actually_deploying_voice_ai_into/",
+          "label": "r/VoiceAutomationAI — deploying voice AI via Twilio",
+          "date": "2026-05-03",
+          "type": "reddit"
+        },
+        {
+          "url": "https://www.reddit.com/r/Soundhound/comments/1t3awz6/here_is_why_soundhound_is_not_a_meme_stock_but_a/",
+          "label": "r/Soundhound — riding Twilio's voice-AI wave",
+          "date": "2026-05-04",
+          "type": "reddit"
+        }
+      ]
+    }
+  ],
+  "talkTracks": [
+    {
+      "objection": "We're already evaluating Twilio — they just blew out earnings and analysts are calling them 'the AI Communications Layer.'",
+      "response": "Congrats — you're evaluating them at the most expensive moment of their narrative arc. Twilio's 8-K on April 30, 2026 drove a 23.83% one-day pop and a wave of analyst PT hikes (24/7 Wall St., May 1) — which means every Twilio AE you talk to for the next two quarters has zero discount authority. Procurement teams that signed Twilio in Q4 2025 are getting better unit economics than anyone signing in Q2 2026. That's a quantifiable cost of waiting on the hype cycle.",
+      "example": true,
+      "confidence": "High",
+      "confidenceBasis": "Directly evidenced by 8-K filing, IBD/MarketWatch/24-7 Wall St. coverage, and Reddit premarket trading data.",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1447669/000144766926000046/twlo-20260430.htm",
+          "label": "Twilio 8-K — 2026-04-30",
+          "date": "2026-04-30",
+          "type": "sec_filings"
+        },
+        {
+          "url": "https://247wallst.com/investing/2026/05/01/wall-street-floods-twilio-with-price-target-hikes-is-this-truly-the-ai-communications-layer/",
+          "label": "24/7 Wall St. — PT hikes",
+          "date": "2026-05-01",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "objection": "Twilio's developer experience is mature — we'll just hand it to engineering.",
+      "response": "Sure, if you have a senior backend engineer who wants to own webhook reliability. The r/nocode post from May 4, 2026 is brutal on this: 'Twilio is great if you actually know how to code… the second you step outside basic SMS it becomes an absolute nightmare of TwiML bins, webhooks, and documentation that assumes you're a senior backend dev.' That post is from a no-code builder trying to ship a missed-appointment SMS+voicemail flow — three days lost. If your use case is anything beyond plain SMS, Twilio's DX cost is real.",
+      "example": true,
+      "confidence": "Medium",
+      "confidenceBasis": "Single dated practitioner post; consistent with long-running CPaaS DX pattern.",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/nocode/comments/1t3i3ag/i_swear_telecom_apis_are_the_final_boss_of_nocode/",
+          "label": "r/nocode — TwiML/webhook pain",
+          "date": "2026-05-04",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "objection": "Bird is cheaper / we can just go with Bird.",
+      "response": "Bird is cheaper than what, exactly? Across our 90-day pull of Reddit and Hacker News, there are zero posts containing Bird alongside any $-figure or pricing-structure phrase. Their pricing isn't 'cheaper' — it's opaque. Compare that to Twilio, where per-unit pricing is published. Going with Bird means a sales cycle for every price discovery question; if your team is moving fast, that's weeks of friction. And if Bird-the-CPaaS is winning anywhere, the public signal — news, HN, G2, developer Reddit — would show it. This week, the only 'Bird' news on HN is Allbirds pivoting to AI data centers.",
+      "example": true,
+      "confidence": "High",
+      "confidenceBasis": "Directly evidenced by the empty pricing_signals payload and the dominance of Allbirds/non-CPaaS Bird mentions in the news pull.",
+      "sources": [
+        {
+          "url": "https://news.ycombinator.com/item?id=47778762",
+          "label": "HN — Allbirds pivot (illustrates Bird brand-noise problem)",
+          "date": "2026-04-15",
+          "type": "hackernews"
+        }
+      ]
+    },
+    {
+      "objection": "Twilio's voice quality is fine — the AI Voice product is the future.",
+      "response": "On [your specific use case — high-concurrency voice, multi-region, 24/7], here's what we'd want you to validate: ask any Twilio AE for their published P95 end-to-end latency and one-way-audio rates on AI-voice workloads at [your expected concurrent-call volume]. Then compare that to what [your platform] commits in its SLA. The point isn't that Twilio is bad — it's that 'unprecedented demand' is also 'unprecedented load,' and your team will be the one carrying the pager.",
+      "example": false,
+      "confidence": "Medium",
+      "confidenceBasis": "Practitioner-reported pattern (r/telecom 2026-05-04) consistent with rapid demand growth disclosed on Q1 FY26 call.",
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/telecom/comments/1t3mu8l/new_types_of_latency_audio_issues_with_ai_voice/",
+          "label": "r/telecom — latency/audio issues with AI voice",
+          "date": "2026-05-04",
+          "type": "reddit"
+        }
+      ]
+    },
+    {
+      "objection": "We need a CPaaS that's clearly committed to AI — Twilio's earnings just proved they are.",
+      "response": "AI-Voice momentum on Twilio is real (Voice +20% YoY, 19-quarter high — see Market Moves). The question is whether 'committed to AI' means 'will give you a fair commercial deal in [your renewal window]' or 'will price you against Wall Street's new expectations.' For [your use case + volume], we'd ask: what does Twilio's 3-year TCO look like at your projected growth, and how does that compare to [your platform]'s committed pricing? On a hot-narrative quarter, list-price economics rarely move in the buyer's favor.",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Earnings narrative directly evidenced by 8-K + multiple analyst reports.",
+      "sources": [
+        {
+          "url": "https://www.futurumgroup.com/insights/twilio-q1-fy-2026-earnings-voice-messaging/",
+          "label": "Futurum Group — Twilio Q1 FY26 voice & messaging demand",
+          "date": "2026-05-04",
+          "type": "news"
+        }
+      ]
+    },
+    {
+      "objection": "We've already standardized on Twilio for SMS — adding their voice/AI is a no-brainer.",
+      "response": "It's a no-brainer until consolidation pricing kicks in. Twilio's commercial team in Q2 FY26 — post-earnings-pop, post-PT-hikes — has the strongest renewal posture they've had in 19 quarters. Use that as leverage now: ask Twilio to lock multi-product pricing for [your contract length] before their next earnings reset (Q2 FY26 reports in ~90 days). If they won't, that's your signal to put [your platform] on the shortlist for the voice/AI workload specifically — single-vendor lock-in only pays off if the vendor is willing to share the upside.",
+      "example": false,
+      "confidence": "High",
+      "confidenceBasis": "Earnings-driven commercial leverage shift directly evidenced by 8-K and analyst PT-hike coverage.",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1447669/000144766926000046/twlo-20260430.htm",
+          "label": "Twilio 8-K — 2026-04-30",
+          "date": "2026-04-30",
+          "type": "sec_filings"
+        }
+      ]
+    }
+  ],
+  "watchNextWeek": [
+    {
+      "text": "Re-run Wayback CDX on twilio.com/pricing and bird.com/pricing — this run timed out; a successful pull may surface 90-day diffs we can't see today.",
+      "trigger": "Pricing snapshot recheck",
+      "expectedBy": "2026-05-11"
+    },
+    {
+      "text": "Watch for Twilio AI-Voice case studies and customer logos to start landing on /customers as the post-earnings PR engine spins up.",
+      "trigger": "Sitemap diff vs. this run's 8,000-URL baseline",
+      "expectedBy": "2026-05-18"
+    },
+    {
+      "text": "Track whether Bird produces any countervailing AI-voice or AI-comms announcement in the next 14 days; continued silence widens Twilio's narrative lead.",
+      "trigger": "News + HN + sitemap diff for bird.com",
+      "expectedBy": "2026-05-18"
+    },
+    {
+      "text": "Monitor r/telecom and r/twilio for follow-on threads detailing specific production AI-voice failures — these become live talk-track ammunition.",
+      "trigger": "Reddit thread monitoring",
+      "expectedBy": "2026-05-11"
+    },
+    {
+      "text": "Twilio Q2 FY26 earnings will arrive in roughly 90 days; commercial leverage window closes around the next print.",
+      "trigger": "Earnings call",
+      "expectedBy": "2026-08-01"
+    }
+  ],
+  "evidenceIndex": [
+    {
+      "competitor": "Twilio",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1447669/000144766926000046/twlo-20260430.htm",
+          "label": "Twilio 8-K — Q1 FY26",
+          "type": "sec_filings",
+          "date": "2026-04-30"
+        },
+        {
+          "url": "https://www.investors.com/news/technology/twilio-stock-twlo-q1-earnings-2026/",
+          "label": "IBD — Twilio earnings beat, AI Voice ramps",
+          "type": "news",
+          "date": "2026-05-01"
+        },
+        {
+          "url": "https://www.marketwatch.com/story/twilios-stock-is-soaring-the-software-group-says-its-ai-voice-tool-is-seeing-unprecedented-demand",
+          "label": "MarketWatch — 'unprecedented demand'",
+          "type": "news",
+          "date": "2026-05-01"
+        },
+        {
+          "url": "https://247wallst.com/investing/2026/05/01/wall-street-floods-twilio-with-price-target-hikes-is-this-truly-the-ai-communications-layer/",
+          "label": "24/7 Wall St. — PT hikes",
+          "type": "news",
+          "date": "2026-05-01"
+        },
+        {
+          "url": "https://fortune.com/2026/05/04/twilio-ceo-khozema-shipchandler-turnaround-saaspocalypse/",
+          "label": "Fortune — CEO Shipchandler turnaround",
+          "type": "news",
+          "date": "2026-05-04"
+        },
+        {
+          "url": "https://www.futurumgroup.com/insights/twilio-q1-fy-2026-earnings-voice-messaging/",
+          "label": "Futurum Group — Q1 FY26 voice/messaging",
+          "type": "news",
+          "date": "2026-05-04"
+        },
+        {
+          "url": "https://www.reddit.com/r/telecom/comments/1t3mu8l/new_types_of_latency_audio_issues_with_ai_voice/",
+          "label": "r/telecom — AI voice latency",
+          "type": "reddit",
+          "date": "2026-05-04"
+        },
+        {
+          "url": "https://www.reddit.com/r/nocode/comments/1t3i3ag/i_swear_telecom_apis_are_the_final_boss_of_nocode/",
+          "label": "r/nocode — TwiML/webhook pain",
+          "type": "reddit",
+          "date": "2026-05-04"
+        },
+        {
+          "url": "https://www.reddit.com/r/SideProject/comments/1t392kb/i_built_the_first_estonian_ai_hotel_voice_agent/",
+          "label": "r/SideProject — Estonian AI hotel agent on Twilio",
+          "type": "reddit",
+          "date": "2026-05-04"
+        },
+        {
+          "url": "https://www.reddit.com/r/VoiceAutomationAI/comments/1t2v0y4/how_are_you_actually_deploying_voice_ai_into/",
+          "label": "r/VoiceAutomationAI — deploying voice AI via Twilio",
+          "type": "reddit",
+          "date": "2026-05-03"
+        },
+        {
+          "url": "https://www.reddit.com/r/Soundhound/comments/1t3awz6/here_is_why_soundhound_is_not_a_meme_stock_but_a/",
+          "label": "r/Soundhound — riding Twilio's voice-AI wave",
+          "type": "reddit",
+          "date": "2026-05-04"
+        },
+        {
+          "url": "https://www.reddit.com/r/remotearmy/comments/1t3092g/remote_management_and_business_opportunity_senior/",
+          "label": "r/remotearmy — Twilio Sr BSA posting",
+          "type": "reddit",
+          "date": "2026-05-03"
+        }
+      ]
+    },
+    {
+      "competitor": "Bird",
+      "sources": [
+        {
+          "url": "https://bird.com",
+          "label": "Bird homepage (first snapshot)",
+          "type": "website",
+          "date": null
+        },
+        {
+          "url": "https://bird.com/pricing",
+          "label": "Bird /pricing (live; archive unavailable)",
+          "type": "website",
+          "date": null
+        },
+        {
+          "url": "https://news.ycombinator.com/item?id=47778762",
+          "label": "HN — Allbirds (BIRD ticker) pivot, +175%",
+          "type": "hackernews",
+          "date": "2026-04-15"
+        }
+      ]
+    }
+  ]
+}
